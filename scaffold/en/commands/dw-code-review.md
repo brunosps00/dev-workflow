@@ -24,6 +24,7 @@ When available in the project under `./.agents/skills/`, use these skills as ana
 - `dw-review-rigor`: **ALWAYS** — applies de-duplication (same pattern in N files = 1 finding), severity ordering (critical → high → medium → low), verify-before-flag, skip-what-linter-catches, and signal-over-volume. The report's "Issues Found" table follows this discipline.
 - `dw-verify`: **ALWAYS** — invoked before emitting an `APPROVED` or `APPROVED WITH CAVEATS` verdict. Without a VERIFICATION REPORT PASS (test + lint + build), the verdict cannot be APPROVED.
 - `/dw-security-check`: **ALWAYS for TS/Python/C#/Rust projects** — invoked as step 6.7 (Security Layer) before emitting a verdict. If the project uses a supported language and `security-check.md` is missing OR has REJECTED status, the verdict is **REJECTED** — no exception.
+- `dw-simplification`: use when the diff touches dense or twisty code — applies Chesterton's Fence (understand WHY before flagging removal), behavior-preserving refactor protocol (test gate before/after), and complexity metrics (cyclomatic, cognitive, depth, fan-out) so that "simplify this" findings are concrete, not vibes-based.
 - `security-review`: use when auth, authorization, external input, upload, SQL, external integration, secrets, SSRF, XSS, or sensitive surfaces are present
 - `vercel-react-best-practices`: use when the diff touches React/Next.js to review rendering, fetching, bundle, hydration, and performance patterns
 

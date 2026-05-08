@@ -21,6 +21,7 @@ Prerequisite: Run `/dw-analyze-project` first to understand project patterns and
 When available in the project under `./.agents/skills/`, use these skills as analytical support without replacing this command:
 
 - `dw-review-rigor`: **ALWAYS** — when cataloging code smells, apply de-duplication (same smell in N files = 1 entry with affected list), severity ordering across P0-P3, signal-over-volume (max ~20 findings; keep criticals, prune marginal ones). A smell with a justifying ADR drops to `low` at most.
+- `dw-simplification`: **ALWAYS** — every flagged smell is filtered through Chesterton's Fence (what does the construct DO, why was it added, what breaks if removed). Smells with no clear "why-was-it-there" answer get downgraded to `info` and a research note instead of a refactor proposal. Complexity metrics back the severity (cognitive complexity ≥16 or nesting depth ≥4 = `high` candidate; <10 = `low` at most).
 - `security-review`: defer security concerns to this skill — do not duplicate
 - `vercel-react-best-practices`: defer React/Next.js performance patterns to this skill
 
