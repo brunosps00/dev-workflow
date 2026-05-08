@@ -131,3 +131,8 @@ try {
 ## Helper Functions
 
 Some helper functions are available in [`test-helper.js`](./assets/test-helper.js) to simplify common tasks like waiting for elements, capturing screenshots, and handling errors. You can import and use these functions in your tests to improve readability and maintainability.
+
+## References
+
+- `references/security-boundary.md` — every byte from a browser is potentially attacker-controlled. Test that server-side authorization, validation, and CSRF protection hold even when the UI is bypassed via direct API calls or DevTools manipulation. Adapted from [`addyosmani/agent-skills/browser-devtools`](https://github.com/addyosmani/agent-skills/tree/main/browser-devtools) (MIT).
+- `references/three-workflow-patterns.md` — UI bugs vs network issues vs performance investigations are three distinct testing workflows with different signals and failure modes. Pick the right workflow for the verification you actually need; don't conflate them in a single mega-test. Adapted from the same upstream skill.

@@ -144,3 +144,7 @@ Each rule file contains:
 ## Full Compiled Document
 
 For the complete guide with all rules expanded: `AGENTS.md`
+
+## References
+
+- `references/perf-discipline.md` — workflow discipline (measure → identify → fix → verify → guard) that wraps the per-rule recipes above. Use when tackling performance work; cite the metric and tool before applying any rule. Adapted from [`addyosmani/agent-skills/performance-optimization`](https://github.com/addyosmani/agent-skills/tree/main/performance-optimization) (MIT).

@@ -33,6 +33,7 @@
     <critical>If `.dw/intel/` exists, querying it via `/dw-intel` is MANDATORY before writing the techspec. Do NOT skip this step.</critical>
     - Internally run: `/dw-intel "architectural patterns and technical decisions in the project"`
     - Align proposals with existing patterns; flag deviations explicitly
+    - When the techspec defines API endpoints, ALSO consult `dw-codebase-intel/references/api-design-discipline.md` (Hyrum's Law, contract-first, error semantics, boundary validation, versioning) — the new endpoint must match conventions surfaced in `apis.json`, not impose external "best practices" that conflict with existing patterns.
 
     If `.dw/intel/` does NOT exist:
     - Use `.dw/rules/` as context, falling back to grep

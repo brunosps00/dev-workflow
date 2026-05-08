@@ -95,6 +95,7 @@ If no `.dw/intel/` exists at all, `/dw-intel` falls back to `.dw/rules/` (seeded
 - `references/intel-format.md` — schema for each `.dw/intel/` file with examples.
 - `references/incremental-update.md` — how partial updates work (which files to re-read, how to merge with existing entries).
 - `references/query-patterns.md` — how `/dw-intel` answers different question shapes (where-is, what-uses, architecture-of, dependency-of).
+- `references/api-design-discipline.md` — Hyrum's Law, contract-first design, error semantics, boundary validation, versioning. Use when intel feeds techspec authoring (`/dw-create-techspec`) for endpoints — design must respect existing project conventions surfaced in `apis.json`. Adapted from [`addyosmani/agent-skills/api-design`](https://github.com/addyosmani/agent-skills/tree/main/api-design) (MIT).
 
 ## Inspired by
 
