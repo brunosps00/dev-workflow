@@ -14,6 +14,7 @@ You are an assistant specialized in creating well-documented Pull Requests. Your
 | Skill | Trigger |
 |-------|---------|
 | `dw-verify` | **ALWAYS** — invoked before `git push`. Without a VERIFICATION REPORT PASS in the current session AFTER the last code edit, the PR **CANNOT** be created. |
+| `dw-git-discipline` | **ALWAYS** — validates branch naming (`<type>/<scope>` kebab-case), atomic-commit history (each commit single-intent, conventional message), branch lifetime (flag if >7 days old), and PR scope (suggest split if diff > ~400 lines). PR description follows summary + test plan structure, not a `git log` dump. |
 | `/dw-security-check` | **ALWAYS for TS/Python/C#/Rust projects** — `security-check.md` with status ≠ REJECTED is required for supported-language projects. |
 
 <critical>Hard gate 1 (verify): if the current session has no VERIFICATION REPORT PASS from `dw-verify` produced AFTER the last edit/commit, STOP and invoke `dw-verify` before proceeding. A PR is a permanent artifact — it demands the highest verification standard.</critical>
