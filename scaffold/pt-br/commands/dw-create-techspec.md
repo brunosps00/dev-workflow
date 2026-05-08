@@ -23,6 +23,7 @@
     Quando disponíveis no projeto em `./.agents/skills/`, use como apoio:
 
     - `dw-council` (opt-in via `--council`): debate multi-advisor da decisão arquitetural principal com steel-manning. **NÃO invocar por padrão**.
+    - `dw-source-grounding` (**SEMPRE**): cada decisão de framework/library segue Detect → Fetch → Implement → Cite. O techspec emite citações inline `[source: <url>, version: X.Y, retrieved: YYYY-MM-DD]` ao lado de cada decisão arquitetural.
     - `vercel-react-best-practices`: use quando definir arquitetura frontend para projetos React/Next.js
     - `ui-ux-pro-max`: use quando definir decisões de design system, paletas de cores, tipografia e estilo UI no TechSpec
     - `security-review`: use quando a feature tocar auth, autorização ou manipulação de dados sensíveis

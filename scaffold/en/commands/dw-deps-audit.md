@@ -29,6 +29,7 @@ This command is **distinct** from `/dw-security-check`:
 | `dw-verify` | **ALWAYS** — every phase emits a VERIFICATION REPORT (commands run, exit codes, artifacts) before the next phase starts |
 | `dw-review-rigor` | **ALWAYS** — applies de-duplication (same advisory across N packages = 1 finding with affected list), severity ordering, and signal-over-volume on the OUTDATED-MINOR list |
 | `security-review` (`references/supply-chain.md`) | **ALWAYS** when classifying findings — gives OWASP A06 (Vulnerable & Outdated Components) framing for the brainstorm trade-offs |
+| `dw-source-grounding` | **ALWAYS** in the brainstorm phase — each per-package update option (Conservative/Balanced/Bold) cites the official changelog/release notes for the target version: `[source: <url>, version: X.Y, retrieved: YYYY-MM-DD]`. Catches "agent recommends v5 because it sounds modern, but v5 dropped Node 18 support" errors. |
 | `dw-council` | Auto opt-in when ≥3 packages land in tier COMPROMISED — multi-advisor stress-test on remediation order and scope |
 | `webapp-testing` | Optional — when the project is frontend and the scoped test phase needs Playwright-aware test selection |
 

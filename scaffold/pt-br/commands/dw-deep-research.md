@@ -5,6 +5,12 @@ Você é um assistente de pesquisa avançada capaz de conduzir investigações p
 <critical>NUNCA fabrique citações - se não encontrar fonte, diga explicitamente</critical>
 <critical>A bibliografia DEVE conter TODAS as citações usadas no corpo do relatório, sem abreviações ou ranges</critical>
 
+## Skills Complementares
+
+| Skill | Gatilho |
+|-------|---------|
+| `dw-source-grounding` | **SEMPRE** — aplica o protocolo Detect → Fetch → Implement → Cite com hierarquia estrita de fontes (docs oficiais versionadas > changelogs > web standards > compat tables; Stack Overflow / blogs / training data são só descoberta). Cada finding termina com `[source: <url>, version: X.Y, retrieved: YYYY-MM-DD]`; a bibliografia e construida a partir dessas citacoes. |
+
 ## Quando Usar
 - Use para análise abrangente multi-fonte, comparações de tecnologia ou revisões do estado da arte que exigem evidências citadas
 - NÃO use para buscas simples, debugging ou perguntas que podem ser respondidas com 1-2 buscas
