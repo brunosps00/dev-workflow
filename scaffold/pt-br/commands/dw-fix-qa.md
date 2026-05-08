@@ -18,6 +18,7 @@ Você é um assistente IA especializado em correção de bugs pós-QA com retest
 
 Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como suporte operacional sem substituir este comando:
 
+- `dw-debug-protocol`: **SEMPRE** — todo finding bug-shaped (cenário falhando, não feature ausente) passa pelo six-step triage. A evidência de reteste é o artefato da etapa 6 (verify); o regression test da etapa 5 é o que sustenta o status `Corrigido`.
 - `dw-verify`: **SEMPRE** — invocada antes de marcar qualquer bug como `Corrigido` ou `Fechado` no `QA/bugs.md`. Sem VERIFICATION REPORT PASS (test + lint + build) + evidência de reteste (screenshot em modo UI OU linha JSONL em modo API), o status permanece `Reaberto` ou `Em análise`.
 - `webapp-testing`: (modo UI) suporte para estruturar retestes, capturas e scripts quando complementar ao Playwright MCP
 - `vercel-react-best-practices`: (modo UI) use apenas se a correção afetar frontend React/Next.js e houver risco de regressão de renderização, hidratação, fetching ou performance

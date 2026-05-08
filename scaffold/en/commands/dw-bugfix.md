@@ -15,6 +15,7 @@
 
     When available in the project at `./.agents/skills/`, use these skills as contextual support without replacing this command:
 
+    - `dw-debug-protocol`: **ALWAYS** — runs the bug through the six-step triage (Reproduce → Localize → Reduce → Fix Root Cause → Guard → Verify End-to-End). Stop-the-line discipline; root-cause over symptom; regression test committed in the same atomic commit. Non-reproducible bugs follow the instrument-first sub-protocol — no guess fixes without explicit acknowledgement.
     - `dw-verify`: **ALWAYS** — in Direct mode, invoked before committing the fix. The VERIFICATION REPORT must show the original bug symptom no longer reproduces (not just that tests pass).
     - `vercel-react-best-practices`: use when the bug affects React/Next.js and there is suspicion of render, hydration, fetching, waterfall, bundle, or re-render issues
     - `webapp-testing`: use when the fix requires a reproducible E2E/retest flow in a web app

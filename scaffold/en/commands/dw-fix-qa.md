@@ -18,6 +18,7 @@ You are an AI assistant specialized in post-QA bug fixing with evidence-driven r
 
 When available in the project under `./.agents/skills/`, use these skills as operational support without replacing this command:
 
+- `dw-debug-protocol`: **ALWAYS** — every bug-shaped finding (failing scenario, not missing feature) flows through the six-step triage. The retest evidence is the step-6 verification artifact; the regression test added in step 5 is what allows `Fixed` status to stick.
 - `dw-verify`: **ALWAYS** — invoked before marking any bug as `Fixed` or `Closed` in `QA/bugs.md`. Without a VERIFICATION REPORT PASS (test + lint + build) **and** retest evidence (screenshot in UI mode OR JSONL log line in API mode), status stays `Reopened` or `Under review`.
 - `webapp-testing`: (UI mode) support for structuring retests, captures, and scripts when complementary to Playwright MCP
 - `vercel-react-best-practices`: (UI mode) use only if the fix affects React/Next.js frontend and there is risk of rendering, hydration, fetching, or performance regression
