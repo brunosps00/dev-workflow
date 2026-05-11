@@ -645,6 +645,67 @@ packages/auth → packages/db
 - Crie o diretório .dw/rules/ se não existir
 </critical>
 
+### Step 8: Constitution Generation (Opcional, mas Recomendado)
+
+Após escrever `.dw/rules/`, oferecer gerar `.dw/constitution.md` — os princípios declarativos que o time quer ver enforçados em PRDs, TechSpecs e Code Reviews.
+
+**Diferença vs `.dw/rules/`:**
+- `.dw/rules/` é **analítico** — o que o código É (padrões observados, anti-patterns, convenções).
+- `.dw/constitution.md` é **declarativo** — o que o código DEVE SER (regras às quais o time se compromete).
+
+**Comportamento:**
+
+Se `.dw/constitution.md` já existir, imprimir "Constituição já existe em `.dw/constitution.md` — pulando (edite manualmente se quiser atualizar)" e encerrar.
+
+Caso contrário, apresentar 3 opções no chat (use a UI de pergunta preferida quando disponível; caso contrário texto puro):
+
+```
+Uma constitution ajudaria PRDs/TechSpecs/PRs a permanecerem alinhados aos padrões.
+Três opções:
+
+  A) Sintetizar dos padrões observados (recomendado)
+     Leio `.dw/rules/` e proponho 5–8 princípios fundamentados no código real,
+     cada um com `Why:` ligado a evidência e `severity: info` (não bloqueia).
+     Você revisa e aprova antes de qualquer escrita.
+
+  B) Instalar template de defaults
+     Copia `templates/constitution-template.md` para `.dw/constitution.md` com
+     5 princípios canônicos (Qualidade, Testes, UX, Performance, Segurança)
+     pré-preenchidos em `severity: info`. Você customiza manualmente.
+
+  C) Pular
+     Sem constitution. Comandos downstream operam sem o gate.
+     Você pode rodar este step novamente re-executando `/dw-analyze-project`.
+```
+
+**Opção A — Sintetizar:**
+
+1. Ler `.dw/rules/index.md` + cada `.dw/rules/{module}.md`.
+2. Propor 5–8 princípios. Cada um deve:
+   - Ter ID único `P-NNN`.
+   - Mapear para uma observação em `.dw/rules/` (citar o arquivo + seção).
+   - Começar em `severity: info` (nunca propor `high`/`critical` automaticamente — isso é decisão do time).
+   - Seguir formato: `**P-NNN — <nome>** (severity: info): <regra>. **Why:** <fundamentar em evidência>. **Enforcement:** <como checar>.`
+3. **Mostrar os princípios propostos no chat como lista markdown** (não escreva o arquivo ainda). Incluir a citação de evidência para cada um.
+4. Perguntar: "Edita algum antes de eu gravar? Responda com os IDs para descartar/editar, ou 'aprovar' para escrever como está."
+5. Após aprovação (com edits aplicados), gravar em `.dw/constitution.md` usando a mesma estrutura de `templates/constitution-template.md`.
+6. Setar frontmatter `mode: custom` e `last_updated: <data ISO de hoje>`.
+
+**Opção B — Defaults:**
+
+1. Localizar `templates/constitution-template.md` (projeto-local em `.dw/templates/constitution-template.md`, com fallback para scaffold bundled).
+2. Copiar para `.dw/constitution.md` literalmente. Setar frontmatter `mode: defaults`.
+3. Imprimir: "Constituição defaults instalada em `.dw/constitution.md`. Todos os 10 princípios começam em `severity: info` — reportam mas não bloqueiam. Edite o arquivo para customizar, depois promova severities para `high`/`critical` quando confiar."
+
+**Opção C — Pular:**
+
+1. Nada a fazer.
+2. Imprimir: "Pulado. PRD/TechSpec/CodeReview rodarão sem o constitution gate. Re-rode `/dw-analyze-project` mais tarde se quiser habilitar."
+
+**Em qualquer opção:**
+- Nunca escrever `.dw/constitution.md` sem aprovação explícita (opção A) ou escolha explícita (opções B/C).
+- Constitution é commitada ao repositório como qualquer outro artefato do projeto — nunca gitignored.
+
 ## Checklist de Qualidade
 
 - [ ] Estrutura do repositório escaneada

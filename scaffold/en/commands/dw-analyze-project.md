@@ -705,6 +705,67 @@ packages/auth → packages/db
 6. {apps/web} — depends on ui, db, auth
 ```
 
+### Step 8: Constitution Generation (Optional but Recommended)
+
+After `.dw/rules/` is written, offer to generate `.dw/constitution.md` — the declarative principles the team wants enforced on PRDs, TechSpecs, and Code Reviews.
+
+**Difference from `.dw/rules/`:**
+- `.dw/rules/` is **analytical** — what the code IS (observed patterns, anti-patterns, conventions).
+- `.dw/constitution.md` is **declarative** — what the code SHOULD BE (rules the team commits to).
+
+**Behavior:**
+
+If `.dw/constitution.md` already exists, print "Constitution already present at `.dw/constitution.md` — skipping (edit it manually if you want to update)" and finish.
+
+Otherwise, present 3 options in the chat (use the user's preferred question UI when available; otherwise plain text):
+
+```
+A constitution would help PRDs/TechSpecs/PRs stay aligned with project standards.
+Three options:
+
+  A) Synthesize from observed patterns (recommended)
+     I read `.dw/rules/` and propose 5–8 principles grounded in real code,
+     each with `Why:` linked to evidence and `severity: info` (won't block).
+     You review and approve before anything is written.
+
+  B) Install defaults template
+     Copy `templates/constitution-template.md` to `.dw/constitution.md` with
+     5 canonical principles (Code Quality, Testing, UX, Performance, Security)
+     pre-filled at `severity: info`. You customize manually.
+
+  C) Skip
+     No constitution. Downstream commands will operate without the gate.
+     You can run this step again later by re-running `/dw-analyze-project`.
+```
+
+**Option A — Synthesize:**
+
+1. Read `.dw/rules/index.md` + each `.dw/rules/{module}.md`.
+2. Propose 5–8 principles. Each must:
+   - Have a unique `P-NNN` ID.
+   - Map to an observation in `.dw/rules/` (cite the rule file + section).
+   - Start at `severity: info` (never propose `high`/`critical` automatically — that's the team's call).
+   - Follow the format: `**P-NNN — <name>** (severity: info): <rule>. **Why:** <ground in evidence>. **Enforcement:** <how to check>.`
+3. **Show the proposed principles in the chat as a markdown list** (do not write the file yet). Include the evidence citation for each.
+4. Ask: "Edit any of these before I write the file? Reply with the IDs to drop/edit, or 'approve' to write as-is."
+5. After user approves (with edits applied), write to `.dw/constitution.md` using the same template structure as `templates/constitution-template.md`.
+6. Set frontmatter `mode: custom` and `last_updated: <today's ISO date>`.
+
+**Option B — Defaults:**
+
+1. Locate `templates/constitution-template.md` (project-local at `.dw/templates/constitution-template.md`, falling back to the bundled scaffold).
+2. Copy to `.dw/constitution.md` verbatim. Set frontmatter `mode: defaults`.
+3. Print: "Installed defaults constitution at `.dw/constitution.md`. All 10 principles start at `severity: info` — they report but don't block. Edit the file to customize, then promote severities to `high`/`critical` when you trust the project enforces them."
+
+**Option C — Skip:**
+
+1. Do nothing.
+2. Print: "Skipped. PRD/TechSpec/CodeReview will run without the constitution gate. Re-run `/dw-analyze-project` later if you want to enable it."
+
+**No matter which option:**
+- Never write `.dw/constitution.md` without explicit user approval (option A) or explicit choice (options B/C).
+- Constitution file is committed to the repository like any other project artifact — never gitignored.
+
 ## Quality Checklist
 
 Before declaring the analysis complete, verify:
