@@ -158,6 +158,31 @@ Shortcuts:
   /dw-redesign-ui "target"     Visual redesign of a page or component
 ```
 
+## Constitution
+
+A **constitution** is a declarative list of principles your team commits to (e.g., "every state-changing endpoint requires server-side authorization", "every bug fix ships with a regression test"). It lives at `.dw/constitution.md` and complements `.dw/rules/`:
+
+| File | Type | Authored by |
+|------|------|-------------|
+| `.dw/rules/` | Analytical — describes what the code IS (observed patterns) | `/dw-analyze-project` |
+| `.dw/constitution.md` | Declarative — describes what the code SHOULD BE (committed principles) | `/dw-analyze-project` (Step 8) or auto-installed defaults |
+
+**How it works:**
+
+- `/dw-analyze-project` offers three paths: synthesize from observed patterns (with your approval), install canonical defaults, or skip.
+- If `/dw-create-prd`, `/dw-create-techspec`, or `/dw-code-review` run **without** a constitution, they auto-install the defaults template (10 canonical principles at `severity: info`), notify in chat, and continue. Ausência nunca bloqueia.
+- Once principles exist:
+  - `severity: info` → reported, never blocks.
+  - `severity: high` → blocks PR/techspec when violated, unless an ADR justifies the deviation.
+  - `severity: critical` → blocks plus requires reviewer sign-off in the ADR.
+- Defaults start at `info`; you promote severities as your team trusts enforcement.
+
+**Tasks consistency check.** At the end of `/dw-create-tasks`, a 5-dimension consistency check validates PRD ↔ TechSpec ↔ Tasks alignment (FR coverage, task grounding, test coverage, dependency DAG, constitution alignment) and writes `.dw/spec/prd-<feature>/tasks-validation.md`. Any FAIL blocks user approval until resolved or explicitly overridden.
+
+## Template Overrides
+
+Customize templates locally without losing dev-workflow updates. Drop a file at `.dw/templates/overrides/<name>.md`; the override is used in place of the bundled core template on every `update`. Subdirectories work too (e.g., `.dw/templates/overrides/functional-doc/e2e-runbook.md`). See `.dw/templates/overrides/README.md` (created on init) for the workflow and `diff` cadence guidance.
+
 ## Platform Support
 
 | Platform | Wrapper Location | Status |
@@ -176,10 +201,12 @@ your-project/
 ├── .dw/
 │   ├── commands/          # 30 workflow command files
 │   ├── templates/         # Document templates (PRD, TechSpec, etc.)
+│   │   └── overrides/     # Project-local template customizations (override > core)
 │   ├── rules/             # Project-specific rules (run /dw-analyze-project)
+│   ├── constitution.md    # Declarative principles (auto-installed when missing)
 │   ├── references/        # Reference documentation
 │   ├── scripts/           # Utility scripts
-│   └── spec/              # PRD directories created by commands
+│   └── spec/              # PRD directories — each contains tasks-validation.md
 ├── .claude/
 │   ├── skills/            # Claude Code wrappers
 │   └── settings.json      # MCP servers (Context7, Playwright)
@@ -258,6 +285,8 @@ After running `npx @brunosps00/dev-workflow init`:
 Codebase intelligence (`/dw-intel`, `/dw-map-codebase`, the `dw-codebase-intel` bundled skill) and phase execution patterns (the `dw-execute-phase` bundled skill, with its `plan-checker` and `executor` agents) were adapted from [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) by gsd-build (MIT). Schemas (`stack.json`, `files.json`, `apis.json`, `deps.json`, `arch.md`), the goal-backward verification protocol, and the wave-based parallel execution pattern come from there. dev-workflow specifics: `.dw/` namespace instead of `.planning/`, agent-driven runtime instead of `gsd-sdk` CLI, integration with the rest of the `dw-*` command surface.
 
 Source-driven development, code simplification, debugging discipline, and git workflow patterns adapted from [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT) into the bundled `dw-source-grounding`, `dw-simplification`, `dw-debug-protocol`, and `dw-git-discipline` skills. Performance-optimization workflow (`vercel-react-best-practices/references/perf-discipline.md`), API-design discipline (`dw-codebase-intel/references/api-design-discipline.md`), and browser-DevTools patterns (`webapp-testing/references/{security-boundary, three-workflow-patterns}`) also incorporated as enhancements to existing bundled skills.
+
+Spec-Driven Development patterns — declarative constitution (`.dw/constitution.md`), cross-artifact consistency check (PRD ↔ TechSpec ↔ Tasks), and template override layer (`.dw/templates/overrides/`) — adapted from [`github/spec-kit`](https://github.com/github/spec-kit) by GitHub (MIT). dev-workflow specifics: embedded into existing commands instead of new slash commands, severity-graded enforcement (`info`/`high`/`critical`) with ADR-justified deviation as the escape hatch, ausência-of-constitution never blocks (auto-installs defaults and continues), and integration with the analytical `.dw/rules/` already produced by `/dw-analyze-project`.
 
 ## License
 
