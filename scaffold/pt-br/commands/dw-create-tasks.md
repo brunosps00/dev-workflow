@@ -149,5 +149,47 @@
     3. /dw-generate-pr [branch-alvo] quando todas tasks concluídas
     ```
 
+    ## Final Consistency Check (Auto-invocado antes da aprovação do usuário)
+
+    <critical>ANTES de apresentar tasks ao usuário, rode um check de consistência em 5 dimensões. Isto é mandatório; não pule mesmo se confiante de que as tasks estão limpas.</critical>
+
+    Rode estes 5 checks contra o conjunto PRD + TechSpec + tasks gerado:
+
+    1. **Cobertura de RF** — cada RF numerada no PRD mapeia para ≥1 task. RFs órfãs (PRD tem; nenhuma task cobre) são FAIL.
+    2. **Grounding das tasks** — cada task gerada referencia ≥1 RF em seu corpo (`Cobre: RF-N.M`). Tasks sem referência a RF sinalizam scope creep.
+    3. **Cobertura de teste** — cada RF com comportamento user-facing (UI, endpoint de API, mutação de dado) tem ≥1 task que adiciona teste (subtask contendo "test", "spec", "e2e" ou equivalente).
+    4. **Grafo de dependências** — dependências entre tasks (X.0 → Y.0 declarado como "Depende de") formam DAG. Sem ciclos. Ordem topológica válida.
+    5. **Alinhamento com constitution** (só se `.dw/constitution.md` existir) — cada task lista `Constitution: respects P-NNN, P-MMM` OU `Constitution: deviates P-NNN — ADR planejado: <slug>` OU `Constitution: n/a — motivo: <one-liner>`. Linha ausente = FAIL.
+
+    Escreva findings em `.dw/spec/prd-[nome-funcionalidade]/tasks-validation.md` com esta estrutura exata:
+
+    ```markdown
+    # Relatório de Validação de Tasks
+
+    Gerado por /dw-create-tasks em YYYY-MM-DD.
+
+    | Dimensão | Status | Findings |
+    |----------|--------|----------|
+    | 1. Cobertura de RF | PASS / FAIL | <lista de RFs órfãs ou "todas RFs cobertas"> |
+    | 2. Grounding de tasks | PASS / FAIL | <lista de tasks sem RF ou "todas tasks referenciam RFs"> |
+    | 3. Cobertura de teste | PASS / FAIL | <RFs sem testes ou "todas RFs user-facing cobertas"> |
+    | 4. Grafo de dependências | PASS / FAIL | <ciclos ou "DAG válido"> |
+    | 5. Alinhamento constitution | PASS / FAIL / N/A | <tasks não-alinhadas ou "todas alinhadas" ou "sem constitution"> |
+
+    ## Findings Detalhados
+
+    <uma seção por dimensão FAIL com fixes concretos; vazio se tudo PASS>
+    ```
+
+    **Comportamento do gate:**
+
+    - **Todas as 5 dimensões PASS (ou N/A)** → apresente tasks ao usuário normalmente e peça aprovação.
+    - **Qualquer dimensão FAIL** → PARE. Mostre a tabela no chat como markdown (NÃO esconda no arquivo de validação; o usuário precisa ver antes de aprovar). Depois pergunte ao usuário:
+      - "(a) Quer que eu conserte as tasks automaticamente?" → regenerar tasks afetadas, re-rodar o check.
+      - "(b) Vai editar tasks.md manualmente?" → aguardar usuário sinalizar conclusão, re-rodar o check.
+      - "(c) Override e seguir mesmo com FAIL?" → exigir mensagem de override explícita ("override: aceito o gap porque <motivo>"). Persistir o override em `tasks-validation.md` para auditabilidade.
+
+    O arquivo `tasks-validation.md` é commitado junto com `tasks.md`. Comandos downstream (`/dw-run-plan`, `/dw-code-review`, `/dw-review-implementation`) podem referenciá-lo.
+
     Após completar a análise e gerar todos os arquivos necessários, apresente os resultados ao usuário e aguarde confirmação para prosseguir com a implementação.
 </system_instructions>
