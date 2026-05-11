@@ -50,6 +50,22 @@
     - Use `.dw/rules/` como contexto, caindo para grep
     - Sugira rodar `/dw-map-codebase` para enriquecer contexto downstream
 
+    ## Constitution Gate
+
+    <critical>ANTES das clarification questions, cheque `.dw/constitution.md`:
+
+    **Se AUSENTE**: copie `templates/constitution-template.md` (project-local em `.dw/templates/constitution-template.md`, com fallback para scaffold bundled) literalmente para `.dw/constitution.md`. Setar frontmatter `mode: defaults` e `last_updated` para data ISO de hoje. Imprimir no chat:
+
+    > "Notei que `.dw/constitution.md` estava ausente. Instalei defaults em `.dw/constitution.md` (10 princípios canônicos, todos em `severity: info` — reportam mas não bloqueiam). Pode customizar a qualquer momento — ou re-rodar `/dw-analyze-project` para versão sob medida. Seguindo com o PRD."
+
+    Depois prossiga normalmente, tratando o arquivo recém-criado como a constitution.
+
+    **Se PRESENTE**: leia antes de redigir requisitos. Cada FR no PRD DEVE incluir linha "Constitution Alignment" mapeando para ≥1 princípio relevante (`Respects: P-001, P-009`) OU declarando explicitamente "no applicable principle" com motivo em uma linha. Sem alignment = FR está incompleto.
+
+    **Regras de severity** (aplicadas pelos comandos downstream, não enforçadas aqui):
+    - Violações `severity: info` → reportadas, nunca bloqueiam.
+    - Violações `severity: high` / `critical` → bloqueiam em `dw-create-techspec` e `dw-code-review` exceto se ADR justificar.</critical>
+
     ## Features Multi-Projeto
 
     Muitas funcionalidades podem envolver mais de um projeto no workspace.

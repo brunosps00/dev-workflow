@@ -159,6 +159,34 @@ Para cada projeto impactado, verificar rules específicas em `.dw/rules/`:
 - [ ] Chamadas de API usam utilitários fetch do projeto
 - [ ] UI segue o design system do projeto
 
+### 4.1. Constitution Compliance (Obrigatório quando `.dw/constitution.md` existe)
+
+<critical>**Auto-create se ausente**: se `.dw/constitution.md` NÃO existir, copie `templates/constitution-template.md` (project-local `.dw/templates/constitution-template.md` primeiro, com fallback para scaffold bundled) literalmente com frontmatter `mode: defaults`. Imprimir no chat: "Constituição defaults instalada em `.dw/constitution.md` (todos os princípios em `severity: info` — reportam mas não bloqueiam este review). Seguindo." Depois prossiga.</critical>
+
+Para cada princípio em `.dw/constitution.md`, verificar o diff por violações:
+
+1. **Parsear princípios**: ler cada entrada `**P-NNN — <nome>** (severity: <S>)`; capturar `P-NNN`, `severity` e descrição de `Enforcement`.
+2. **Aplicar enforcement**: para cada princípio, rodar a checagem de enforcement contra o diff (grep, inspeção de arquivo ou pattern match conforme a linha Enforcement).
+3. **Classificar violações**:
+   - Princípio `severity: info` → adicione linha à tabela "Issues Found" com severity `low`. **Não bloqueia** o verdict.
+   - Princípio `severity: high` → adicione linha com severity `critical`. **Bloqueia** o verdict como `REJECTED` EXCETO se um ADR no `adrs/` do mesmo PRD documenta o desvio (busque `Deviates: P-NNN` no corpo de qualquer ADR).
+   - Princípio `severity: critical` → adicione linha com severity `critical` E exigir que o ADR tenha campo `Approved by:` não-vazio. Campo ausente = ainda `REJECTED`.
+4. **Sem skip silencioso**: se o diff for grande demais para analisar todos os princípios, reportar quais foram checados e quais foram pulados por escopo.
+
+**Formato de saída no relatório:**
+
+```markdown
+## Constitution Compliance
+
+| Princípio | Severity | Status | Evidência | ADR escape |
+|-----------|----------|--------|-----------|------------|
+| P-001 — Sem `any` casts | info | VIOLATED | src/foo.ts:42 | n/a |
+| P-009 — Auth server-side | high | VIOLATED | src/api/order.ts:18 sem auth middleware | none → BLOQUEIA |
+| P-010 — Secrets no repo | critical | PASS | — | — |
+```
+
+Se houver violação `high`/`critical` sem ADR escape: adicionar à linha de verdict "REPROVADO — violação(ões) de constitution sem ADR (ver seção Constitution Compliance)".
+
 ### 5. Análise de Qualidade de Código (Obrigatório)
 
 | Aspecto | Verificação |

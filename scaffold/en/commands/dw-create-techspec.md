@@ -39,6 +39,23 @@
     - Use `.dw/rules/` as context, falling back to grep
     - Suggest running `/dw-map-codebase` to enrich downstream context
 
+    ## Constitution Gate
+
+    <critical>BEFORE drafting architectural decisions, check `.dw/constitution.md`:
+
+    **If MISSING**: copy `templates/constitution-template.md` (project-local at `.dw/templates/constitution-template.md`, falling back to bundled scaffold) verbatim to `.dw/constitution.md`. Set frontmatter `mode: defaults`. Print in chat: "Installed defaults constitution at `.dw/constitution.md` (severity: info — won't block this techspec). Continuing." Then proceed.
+
+    **If PRESENT**: read it. Every framework / library / architectural choice in the techspec MUST carry one of:
+    - `Respects: P-NNN` — the decision actively honors the named principle(s).
+    - `Deviates: P-NNN — justification: <ADR slug or one-line rationale>` — the decision intentionally departs from the principle.
+
+    **Severity-graded gate:**
+    - Deviation from a `severity: info` principle → record only, never blocks.
+    - Deviation from a `severity: high` principle without a linked ADR (`.dw/spec/<prd>/adrs/adr-NNN.md`) → BLOCK the techspec. Instruct the user to either revise the decision OR create an ADR via `/dw-adr` documenting the trade-off.
+    - Deviation from a `severity: critical` principle → BLOCK the techspec with the same ADR requirement, additionally requiring reviewer acknowledgment captured in the ADR's `Approved by` field.
+
+    No exceptions for `high`/`critical` without an ADR. If the user pushes back, point them to `/dw-adr` — that's the escape hatch by design.</critical>
+
     ## Multi-Project Decision Flowchart
 
     ```dot

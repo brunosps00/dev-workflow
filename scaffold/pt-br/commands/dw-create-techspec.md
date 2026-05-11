@@ -39,6 +39,23 @@
     - Use `.dw/rules/` como contexto, caindo para grep
     - Sugira rodar `/dw-map-codebase` para enriquecer contexto downstream
 
+    ## Constitution Gate
+
+    <critical>ANTES de redigir decisões arquiteturais, cheque `.dw/constitution.md`:
+
+    **Se AUSENTE**: copie `templates/constitution-template.md` (project-local em `.dw/templates/constitution-template.md`, com fallback para scaffold bundled) literalmente para `.dw/constitution.md`. Setar frontmatter `mode: defaults`. Imprimir no chat: "Constituição defaults instalada em `.dw/constitution.md` (severity: info — não bloqueia este techspec). Seguindo." Depois prossiga.
+
+    **Se PRESENTE**: leia. Toda escolha de framework / library / arquitetura no techspec DEVE carregar uma de:
+    - `Respects: P-NNN` — a decisão honra ativamente o(s) princípio(s) nomeado(s).
+    - `Deviates: P-NNN — justification: <slug do ADR ou racional em uma linha>` — a decisão se afasta intencionalmente do princípio.
+
+    **Gate graduado por severity:**
+    - Desvio de princípio `severity: info` → apenas registra, nunca bloqueia.
+    - Desvio de princípio `severity: high` sem ADR linkado (`.dw/spec/<prd>/adrs/adr-NNN.md`) → BLOQUEIA o techspec. Instrua o usuário a revisar a decisão OU criar ADR via `/dw-adr` documentando o trade-off.
+    - Desvio de princípio `severity: critical` → BLOQUEIA o techspec com mesma exigência de ADR, adicionalmente exigindo acknowledgment de reviewer no campo `Approved by` do ADR.
+
+    Sem exceções para `high`/`critical` sem ADR. Se o usuário resistir, aponte para `/dw-adr` — esse é o escape hatch por design.</critical>
+
     ## Fluxograma de Decisão Multi-Projeto
 
     ```dot

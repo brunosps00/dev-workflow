@@ -166,6 +166,34 @@ For each impacted project, verify project-specific rules from `.dw/rules/`:
 - [ ] API calls use project fetch utilities
 - [ ] UI follows project design system
 
+### 4.1. Constitution Compliance (Required when `.dw/constitution.md` exists)
+
+<critical>**Auto-create if missing**: if `.dw/constitution.md` does NOT exist, copy `templates/constitution-template.md` (project-local `.dw/templates/constitution-template.md` first, falling back to bundled scaffold) verbatim with frontmatter `mode: defaults`. Print in chat: "Installed defaults constitution at `.dw/constitution.md` (all principles at `severity: info` — reported but not blocking this review). Continuing." Then proceed.</critical>
+
+For each principle in `.dw/constitution.md`, check the diff for violations:
+
+1. **Parse principles**: read each `**P-NNN — <name>** (severity: <S>)` entry; capture `P-NNN`, `severity`, and the `Enforcement` description.
+2. **Apply enforcement**: for each principle, run the enforcement check against the diff (grep, file inspection, or pattern match per the Enforcement line).
+3. **Classify violations**:
+   - Principle severity `info` → add row to "Issues Found" table with severity `low`. **Does not block** the verdict.
+   - Principle severity `high` → add row with severity `critical`. **Blocks** the verdict to `REJECTED` UNLESS an ADR in the same PRD's `adrs/` directory documents the deviation (look for `Deviates: P-NNN` in any ADR body).
+   - Principle severity `critical` → add row with severity `critical` AND require the ADR to have a non-empty `Approved by:` field. Missing field = still `REJECTED`.
+4. **No silent skips**: if the diff is too large to analyze every principle, report which were checked and which were skipped due to scope.
+
+**Output format in the report:**
+
+```markdown
+## Constitution Compliance
+
+| Principle | Severity | Status | Evidence | ADR escape |
+|-----------|----------|--------|----------|------------|
+| P-001 — No `any` casts | info | VIOLATED | src/foo.ts:42 | n/a |
+| P-009 — Server-side auth | high | VIOLATED | src/api/order.ts:18 missing auth middleware | none → BLOCKS |
+| P-010 — Secrets in repo | critical | PASS | — | — |
+```
+
+If any `high`/`critical` violation has no ADR escape: append to the verdict line "REJECTED — constitution violation(s) without ADR (see Constitution Compliance section)".
+
 ### 5. Code Quality Analysis (Required)
 
 | Aspect | Verification |
