@@ -13,7 +13,7 @@ This will:
 2. Create `.dw/commands/` with 31 workflow commands
 3. Create `.dw/templates/` with document templates (PRD, TechSpec, Tasks, ADR, etc.)
 4. Create `.dw/rules/` (populated by `/dw-analyze-project`)
-5. Install bundled skills (`dw-verify`, `dw-memory`, `dw-review-rigor`, `ui-ux-pro-max`, `security-review`, etc.) to `.agents/skills/`
+5. Install bundled skills (`dw-verify`, `dw-memory`, `dw-review-rigor`, `dw-ui-discipline`, `dw-testing-discipline`, `security-review`, etc.) to `.agents/skills/`
 6. Generate skill wrappers for Claude Code, Codex, Copilot, and OpenCode
 7. Configure MCP servers (Context7 + Playwright)
 
@@ -55,7 +55,7 @@ Executes all pending tasks via the `dw-execute-phase` bundled skill — gated by
 Analyzes and fixes bugs with automatic triage that distinguishes between bugs, feature requests, and excessive scope. Asks exactly 3 clarification questions before proposing a solution. Supports Direct mode (executes fix immediately) and Analysis mode (`--analysis`) that generates a document for the techspec/tasks pipeline.
 
 #### `/dw-redesign-ui`
-Audits existing frontend pages or components, proposes 2-3 design directions using `ui-ux-pro-max` (colors, typography, layout), waits for user approval, then implements the redesign following the project's CSS methodology. Framework-agnostic (React, Angular, Vue). Generates a design contract persisted for consistency across tasks.
+Audits existing frontend pages or components, then runs the `dw-ui-discipline` hard-gate (brand authorities or curated defaults, surface job sentence, complete state matrix, scene sentence) before proposing 2-3 design directions. Each direction self-checks against the 14 anti-slop patterns. WCAG 2.2 AA floor is non-negotiable at validation. Framework-agnostic (React, Angular, Vue). Generates a design contract persisted for consistency across tasks.
 
 ### Quality
 
@@ -269,12 +269,12 @@ These are not slash commands — they are primitives other commands call to enfo
 
 | Skill | Description | Source | License |
 |-------|-------------|--------|---------|
-| **ui-ux-pro-max** | Design intelligence: 50+ styles, 161 color palettes, 57 font pairings, 99 UX guidelines across 10 stacks | [Next Level Builder](https://github.com/skills-sh) | MIT |
+| **dw-ui-discipline** | UI doctrine: 4-checkpoint hard-gate (brand authorities or curated defaults, surface job sentence, state matrix, scene sentence), 14 anti-slop patterns + 17 anti-defaults, WCAG 2.2 AA floor with verification recipes, 10 curated palette/font defaults for bootstrap | [pedronauck/skills](https://github.com/pedronauck/skills) `ui-craft` | MIT |
+| **dw-testing-discipline** | Testing doctrine: Six Iron Laws, 12 positive patterns, 25 anti-patterns across 5 families (Brittleness/Flakiness/Mock-misuse/Process/AI-specific), 7 mandatory AI agent gates, flaky discipline + SLOs, Playwright recipes, browser security-boundary patterns | [pedronauck/skills](https://github.com/pedronauck/skills) `testing-boss` + [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) | MIT |
 | **vercel-react-best-practices** | 67 React/Next.js performance optimization rules across 8 priority categories. Wraps the rules with `references/perf-discipline.md` (measure → identify → fix → verify → guard) so perf work is data-driven, not vibes-based | [Vercel Labs](https://github.com/vercel-labs/agent-skills) + [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) | MIT |
 | **security-review** | Systematic vulnerability review based on OWASP with confidence-based reporting | [OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/) | CC BY-SA 4.0 |
 | **humanizer** | Detects and removes 24 AI writing patterns based on Wikipedia's "Signs of AI Writing" guide | [Wikipedia AI Writing Guide](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) | -- |
 | **remotion-best-practices** | 25+ rules for video creation in React with Remotion | [Remotion](https://www.remotion.dev/) | -- |
-| **webapp-testing** | Playwright-based browser testing toolkit for E2E validation and screenshots. Cross-cutting references: `security-boundary` (every byte from a browser is potentially attacker-controlled) and `three-workflow-patterns` (UI bugs vs network issues vs perf — distinct workflows, don't conflate) | [Playwright](https://playwright.dev/) + [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) | -- |
 
 ## Dependencies
 
@@ -314,9 +314,22 @@ After running `npx @brunosps00/dev-workflow init`:
 
 Codebase intelligence (`/dw-intel`, `/dw-map-codebase`, the `dw-codebase-intel` bundled skill) and phase execution patterns (the `dw-execute-phase` bundled skill, with its `plan-checker` and `executor` agents) were adapted from [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) by gsd-build (MIT). Schemas (`stack.json`, `files.json`, `apis.json`, `deps.json`, `arch.md`), the goal-backward verification protocol, and the wave-based parallel execution pattern come from there. dev-workflow specifics: `.dw/` namespace instead of `.planning/`, agent-driven runtime instead of `gsd-sdk` CLI, integration with the rest of the `dw-*` command surface.
 
-Source-driven development, code simplification, debugging discipline, and git workflow patterns adapted from [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT) into the bundled `dw-source-grounding`, `dw-simplification`, `dw-debug-protocol`, and `dw-git-discipline` skills. Performance-optimization workflow (`vercel-react-best-practices/references/perf-discipline.md`), API-design discipline (`dw-codebase-intel/references/api-design-discipline.md`), and browser-DevTools patterns (`webapp-testing/references/{security-boundary, three-workflow-patterns}`) also incorporated as enhancements to existing bundled skills.
+Source-driven development, code simplification, debugging discipline, and git workflow patterns adapted from [`addyosmani/agent-skills`](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT) into the bundled `dw-source-grounding`, `dw-simplification`, `dw-debug-protocol`, and `dw-git-discipline` skills. Performance-optimization workflow (`vercel-react-best-practices/references/perf-discipline.md`) and API-design discipline (`dw-codebase-intel/references/api-design-discipline.md`) also incorporated as enhancements to existing bundled skills. Browser security-boundary and three-workflow-patterns (originally from `addyosmani/agent-skills/browser-devtools`) now live inside `dw-testing-discipline/references/`.
 
 Spec-Driven Development patterns — declarative constitution (`.dw/constitution.md`), cross-artifact consistency check (PRD ↔ TechSpec ↔ Tasks), and template override layer (`.dw/templates/overrides/`) — adapted from [`github/spec-kit`](https://github.com/github/spec-kit) by GitHub (MIT). dev-workflow specifics: embedded into existing commands instead of new slash commands, severity-graded enforcement (`info`/`high`/`critical`) with ADR-justified deviation as the escape hatch, ausência-of-constitution never blocks (auto-installs defaults and continues), and integration with the analytical `.dw/rules/` already produced by `/dw-analyze-project`.
+
+UI discipline (hard-gate, 14 anti-slop patterns, 17 anti-defaults, WCAG 2.2 AA floor) and testing doctrine (Six Iron Laws, 25 anti-patterns across 5 families, 7 AI agent gates, flaky discipline) adapted from [`pedronauck/skills`](https://github.com/pedronauck/skills) `ui-craft` and `testing-boss` (MIT) into the bundled `dw-ui-discipline` and `dw-testing-discipline` skills. dev-workflow specifics: 10 curated palette/font defaults bootstrap discipline when no design authority exists; Playwright recipes from earlier `webapp-testing` migrate into `dw-testing-discipline/references/playwright-recipes.md`; both skills wire into 11 commands across the pipeline.
+
+## Migration from v0.12.x
+
+The `dev-workflow update` command automatically removes the two replaced skills and installs the new ones — no manual action required:
+
+- `ui-ux-pro-max` → replaced by `dw-ui-discipline` (auto-removed on update)
+- `webapp-testing` → replaced by `dw-testing-discipline` (auto-removed on update)
+
+The cleanup also detects and removes any **orphan `dw-*` wrappers** in `.claude/skills/`, `.agents/skills/`, and `.opencode/commands/` whose names no longer exist in the current scaffold (e.g., commands removed in v0.10 like `dw-execute-phase`, `dw-quick` that may still have wrappers from older installs).
+
+If you had **custom edits** inside `.agents/skills/ui-ux-pro-max/` or `.agents/skills/webapp-testing/`, back them up before running update — the migrator removes the entire directory. If you customized templates instead, those live in `.dw/templates/overrides/` (introduced in v0.11) and are preserved.
 
 ## License
 
