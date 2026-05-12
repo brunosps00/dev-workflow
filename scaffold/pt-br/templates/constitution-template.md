@@ -79,7 +79,7 @@ mode: defaults | custom
 
 **P-009 — Authorization server-side em todo endpoint que altera estado** (severity: info)
 **Regra:** Endpoint que cria, atualiza ou deleta dado deve verificar autorização do caller no servidor. Gating em UI (botões escondidos, formulários disabled) não é segurança.
-**Why:** Browsers são untrusted (ver `webapp-testing/security-boundary.md`). Gating em UI é conveniência; só checks server-side protegem dado.
+**Why:** Browsers são untrusted (ver `dw-testing-discipline/references/security-boundary.md`). Gating em UI é conveniência; só checks server-side protegem dado.
 **Enforcement:** `dw-code-review` e `dw-security-check` exigem check de auth explícito (decorator, middleware ou assertion in-handler) em rotas POST/PUT/PATCH/DELETE.
 
 **P-010 — Secrets nunca entram no repositório** (severity: info)

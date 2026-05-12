@@ -22,7 +22,7 @@ A real embedded subagent workflow — not inline roleplay. Each archetype is dis
 
 - Low-stakes or obviously-reversible decisions (a council is expensive; reserve for meaningful debates)
 - Decisions already covered by an existing ADR
-- When a single specialized skill suffices (e.g., `security-review` for auth concerns, `ui-ux-pro-max` for visual direction)
+- When a single specialized skill suffices (e.g., `security-review` for auth concerns, `dw-ui-discipline` for visual direction)
 
 ## Required Inputs
 

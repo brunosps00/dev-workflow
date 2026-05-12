@@ -1,6 +1,6 @@
 # Security boundary — every browser is hostile
 
-> Adapted from [`addyosmani/agent-skills/browser-devtools`](https://github.com/addyosmani/agent-skills/tree/main/browser-devtools) (MIT). Adopts the security-boundary principle to inform how webapp-testing scenarios should validate trust boundaries.
+> Adapted from [`addyosmani/agent-skills/browser-devtools`](https://github.com/addyosmani/agent-skills/tree/main/browser-devtools) (MIT). Adopts the security-boundary principle to inform how browser-based testing scenarios validate trust boundaries.
 
 The browser is not a secure environment. Anything that runs there — JS, CSS, HTML, devtools — is under the user's control. When you write a webapp test, you're not just verifying functionality; you're often verifying that this assumption holds.
 

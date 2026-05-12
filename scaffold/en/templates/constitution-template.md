@@ -79,7 +79,7 @@ mode: defaults | custom
 
 **P-009 — Server-side authorization on every state-changing endpoint** (severity: info)
 **Rule:** Any endpoint that creates, updates, or deletes data must verify caller authorization on the server. UI-level gating (hidden buttons, disabled forms) is not security.
-**Why:** Browsers are untrusted (see `webapp-testing/security-boundary.md`). UI gating is convenience; only server checks protect data.
+**Why:** Browsers are untrusted (see `dw-testing-discipline/references/security-boundary.md`). UI gating is convenience; only server checks protect data.
 **Enforcement:** `dw-code-review` and `dw-security-check` require an explicit auth check (decorator, middleware, or in-handler assertion) on POST/PUT/PATCH/DELETE routes.
 
 **P-010 — Secrets never enter the repository** (severity: info)
