@@ -1,6 +1,9 @@
 ---
 name: dw-git-discipline
-description: Use when committing or opening a PR — applies trunk-based development, atomic commit discipline (one intent per commit, refactor separate from feature), conventional commit messages, and branch hygiene so history is bisectable and reviewable.
+description: Use when committing or opening a PR. Atomic commits (one intent), Conventional Commits, trunk-based pattern, branch hygiene. Triggers before /dw-commit, /dw-generate-pr, or any git operation.
+allowed-tools:
+  - Read
+  - Bash
 ---
 
 # Git Discipline

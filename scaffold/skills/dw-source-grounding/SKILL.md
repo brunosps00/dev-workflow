@@ -1,6 +1,6 @@
 ---
 name: dw-source-grounding
-description: Discipline of grounding architectural and dependency decisions in versioned official documentation, with mandatory citations. Other commands invoke this skill when they need to decide based on framework/library behavior — never on hallucinated APIs or stale Stack Overflow answers. Adapted from addyosmani/agent-skills (MIT).
+description: "Use when citing frameworks or libraries. Detect → Fetch → Implement → Cite with [source: url, version, retrieved]. Triggers on every framework decision in techspec, deps audit, research."
 allowed-tools:
   - Read
   - Bash

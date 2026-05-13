@@ -1,6 +1,6 @@
 ---
 name: dw-execute-phase
-description: Phase execution and plan verification for dev-workflow. Two agents (executor for wave-based parallel task dispatch with deviation handling, plan-checker for goal-backward plan verification before execution). Used by /dw-execute-phase, /dw-plan-checker, /dw-run, /dw-autopilot. Adapted from get-shit-done-cc (MIT).
+description: "Use for task execution. Two agents: executor (wave-based parallel dispatch + deviation handling) and plan-checker (goal-backward verification). Invoked by /dw-run and /dw-autopilot."
 allowed-tools:
   - Read
   - Write

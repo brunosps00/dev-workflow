@@ -1,6 +1,6 @@
 ---
 name: dw-codebase-intel
-description: Codebase intelligence for dev-workflow. The intel-updater agent maintains a queryable index in .dw/intel/ (stack.json, files.json, apis.json, deps.json, arch.md) that other commands read instead of doing expensive codebase exploration. Used by /dw-intel and /dw-intel --build. Adapted from get-shit-done-cc (MIT).
+description: Use to query or build codebase intel (.dw/intel/ — stack, files, apis, deps, arch). Powers /dw-intel queries and /dw-intel --build. Invoke on 'where is X', 'what uses Y', or after refactors.
 allowed-tools:
   - Read
   - Write

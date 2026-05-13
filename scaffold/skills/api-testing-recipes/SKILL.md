@@ -1,6 +1,6 @@
 ---
 name: api-testing-recipes
-description: Validated API-testing snippets (.http, pytest+httpx, supertest, WebApplicationFactory, reqwest) used by /dw-qa and /dw-qa --fix when the project has no UI. Default format is .http (REST Client) for IDE portability.
+description: Use for API testing recipes (.http, pytest+httpx, supertest, WebApplicationFactory, reqwest). Invoked by /dw-qa in API mode and when authoring API tests. Default format is .http for IDE portability.
 allowed-tools:
   - Read
   - Write

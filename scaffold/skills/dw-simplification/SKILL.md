@@ -1,6 +1,6 @@
 ---
 name: dw-simplification
-description: Disciplined code simplification — understand WHY code exists before changing it (Chesterton's Fence), preserve behavior exactly, prefer clarity over cleverness, scope to recent changes. Used by /dw-review --code-only and /dw-brainstorm --refactor. Adapted from addyosmani/agent-skills (MIT).
+description: Use when simplifying code. Chesterton's Fence (understand WHY first), behavior-preserving refactor, complexity metrics. Triggers from /dw-review --code-only and /dw-brainstorm --refactor.
 allowed-tools:
   - Read
   - Edit

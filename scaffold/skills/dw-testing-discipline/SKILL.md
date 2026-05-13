@@ -1,6 +1,8 @@
 ---
 name: dw-testing-discipline
-description: Use when authoring, reviewing, or debugging tests — enforces six core rules (assert behavior, push to lowest layer, fix prod first on red, real systems gate merge, mutation > coverage, no test backdoors), a catalog of anti-patterns, agent-authoring guardrails, and flaky-test discipline so tests reveal bugs instead of decorating CI.
+description: Use when authoring, reviewing, or debugging tests. Six core rules, 25 anti-patterns, 6 agent guardrails, flaky discipline. Triggers on every test diff, /dw-qa, or test-writing session.
+allowed-tools:
+  - Read
 ---
 
 # Testing Discipline

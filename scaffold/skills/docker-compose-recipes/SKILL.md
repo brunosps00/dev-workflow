@@ -1,6 +1,6 @@
 ---
 name: docker-compose-recipes
-description: Validated docker-compose service blocks (postgres, redis, mailhog, minio, meilisearch, jaeger, traefik, etc.) for dev and prod, composed by /dw-new-project and /dw-dockerize. Each service is a standalone YAML with healthcheck, named volume, and env conventions.
+description: Use for docker-compose service blocks (postgres, redis, mailhog, minio, meilisearch, jaeger, traefik). Invoked by /dw-new-project, /dw-dockerize, or when composing dev/prod compose files.
 allowed-tools:
   - Read
   - Write

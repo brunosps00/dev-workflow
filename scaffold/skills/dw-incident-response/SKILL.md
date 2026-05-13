@@ -1,6 +1,10 @@
 ---
 name: dw-incident-response
-description: Use when a production incident is reported, when writing a postmortem, or when an on-call handoff is needed. Five-phase guided workflow (triage → investigation → resolution → communication → postmortem) with checkpoints between phases and structured output files persisted to .dw/incidents/.
+description: Use when production breaks or for postmortems. 5 phases (triage → investigation → resolution → comms → postmortem), runbook templates. Triggers on outage, SEV-1, SEV-2, on-call handoff.
+allowed-tools:
+  - Read
+  - Write
+  - Bash
 ---
 
 # Incident Response

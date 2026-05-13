@@ -1,6 +1,8 @@
 ---
 name: dw-ui-discipline
-description: Use BEFORE any UI work — runs a 4-question grounding (where do design decisions come from, what does this surface help the user do, what states does it have, who uses it where), then enforces the WCAG 2.2 AA floor and 14 visual-slop checks so UI ships with intent instead of training-data defaults.
+description: Use BEFORE any UI work. 4 grounding questions (design source, surface job, state matrix, scene), 14 anti-slop patterns, WCAG 2.2 AA floor. Triggers on UI design, /dw-redesign-ui, UI diffs.
+allowed-tools:
+  - Read
 ---
 
 # UI Discipline

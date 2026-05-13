@@ -1,6 +1,8 @@
 ---
 name: dw-debug-protocol
-description: Use when investigating a bug — applies stop-the-line discipline plus a six-step triage (reproduce → localize → reduce → fix root cause → guard → verify) so you fix what's actually broken instead of papering over symptoms.
+description: Use when investigating a bug. Stop-the-line discipline + six-step triage (reproduce → localize → reduce → fix root cause → guard → verify). Triggers on every bug report, test failure, or /dw-bugfix.
+allowed-tools:
+  - Read
 ---
 
 # Debug Protocol

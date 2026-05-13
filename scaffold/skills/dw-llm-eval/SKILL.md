@@ -1,6 +1,8 @@
 ---
 name: dw-llm-eval
-description: Use when authoring or reviewing AI/LLM features (chat, RAG, summarization, classifiers, agents) — enforces an oracle ladder (climb from exact match up to LLM-as-judge), reference-dataset discipline, judge calibration (Spearman ≥0.80), and trajectory-vs-outcome agent eval so AI features ship with measurable behavior instead of "looks good to me" QA.
+description: Use when authoring or reviewing AI/LLM features (chat, RAG, agents, classifiers). Oracle ladder, reference dataset, judge calibration (Spearman ≥0.80), trajectory eval. Triggers on every AI code path.
+allowed-tools:
+  - Read
 ---
 
 # LLM Evaluation
