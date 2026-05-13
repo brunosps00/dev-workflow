@@ -13,11 +13,11 @@ Voce e o lider de bootstrap de workspace do dev-workflow. Sua funcao e pegar um 
 - Subindo uma sandbox de aprendizado onde voce quer um stack realista (db + cache + email + observability) sem 30 minutos de YAML
 - NAO use para adicionar servicos a um projeto existente — use `/dw-dockerize --audit`
 - NAO use para adicionar app novo dentro de um monorepo existente — outra release vai cobrir isso
-- NAO substitui `/dw-create-prd` — este aqui gera o workspace, nao a spec do produto
+- NAO substitui `/dw-plan prd` — este aqui gera o workspace, nao a spec do produto
 
 ## Posicao no Pipeline
 
-**Predecessor:** `npx dev-workflow init` (rodado de dentro do diretorio alvo) | **Sucessor:** `/dw-create-prd` para a primeira feature, ou `/dw-analyze-project` apos o primeiro commit substancial para enriquecer o `.dw/rules/`
+**Predecessor:** `npx dev-workflow init` (rodado de dentro do diretorio alvo) | **Sucessor:** `/dw-plan prd` para a primeira feature, ou `/dw-analyze-project` apos o primeiro commit substancial para enriquecer o `.dw/rules/`
 
 ## Skills Complementares
 
@@ -242,7 +242,7 @@ Gere um README inicial:
 - Local Dev (tabela de portas dos servicos selecionados + URLs das UIs + credenciais default)
 - Diagrama da arquitetura (ASCII do one-pager)
 - Layout do projeto (arvore dos diretorios top-level)
-- Integracao com dev-workflow (mencione `/dw-create-prd`, `/dw-run-task`, `/dw-run-qa`, `/dw-deps-audit`, `/dw-security-check`)
+- Integracao com dev-workflow (mencione `/dw-plan prd`, `/dw-run`, `/dw-qa`, `/dw-secure-audit --plan`, `/dw-secure-audit`)
 
 Se `create-*` ja gerou README, **anexe** sob "## Local Dev"; nao sobrescreva.
 
@@ -303,7 +303,7 @@ monorepo: <pnpm-workspaces|turborepo|nx|none>
 2. `pnpm install` (ou seu package manager).
 3. `pnpm dev:up` para subir todos os servicos. Aguarde os healthchecks.
 4. Abra a UI do MailHog em http://localhost:8025 para confirmar a captura de email.
-5. `/dw-create-prd` para a primeira feature.
+5. `/dw-plan prd` para a primeira feature.
 6. Apos o primeiro commit substancial, rode `/dw-analyze-project` para enriquecer `.dw/rules/`.
 ```
 
@@ -336,15 +336,15 @@ monorepo: <pnpm-workspaces|turborepo|nx|none>
 
 ## Integracao com Outros dw-* Commands
 
-- **`npx dev-workflow init`** e predecessor obrigatorio. Ordem: `init` → `/dw-new-project` → `/dw-create-prd`.
-- **`/dw-create-prd`** e o proximo passo sugerido apos bootstrap bem-sucedido.
+- **`npx dev-workflow init`** e predecessor obrigatorio. Ordem: `init` → `/dw-new-project` → `/dw-plan prd`.
+- **`/dw-plan prd`** e o proximo passo sugerido apos bootstrap bem-sucedido.
 - **`/dw-analyze-project`** deve rodar apos primeiro commit substancial para enriquecer `.dw/rules/` — o bootstrap deixa um seed minimo.
-- **`/dw-deps-audit --scan-only`** pode rodar logo apos o bootstrap para confirmar que nenhum dep vulneravel veio dos templates `create-*`.
-- **`/dw-security-check`** roda como parte do pipeline de PRD apos a primeira feature aterrissar.
+- **`/dw-secure-audit --plan --scan-only`** pode rodar logo apos o bootstrap para confirmar que nenhum dep vulneravel veio dos templates `create-*`.
+- **`/dw-secure-audit`** roda como parte do pipeline de PRD apos a primeira feature aterrissar.
 - **`/dw-dockerize`** e o comando irmao para retrofit de Docker em projeto existente que nao comecou com este aqui.
 
 ## Inspirado em
 
-`dw-new-project` e dev-workflow-native. O padrao de entrevista herda do `/dw-create-prd` (clarificacao socratica, branching condicional por artefato anterior). A disciplina de execucao (verification por fase, gate atomico antes de mutar) herda do `/dw-deps-audit` e `/dw-security-check`. A logica de composicao do compose esta delegada para a skill bundled `docker-compose-recipes`. A filosofia de "wrap a tool oficial" foi confirmada via `/dw-find-skills` contra o ecossistema `npx skills` em 2026-04-28 — nada la matchava "entrevista + scaffold multi-stack + compose dev" em qualidade suficiente.
+`dw-new-project` e dev-workflow-native. O padrao de entrevista herda do `/dw-plan prd` (clarificacao socratica, branching condicional por artefato anterior). A disciplina de execucao (verification por fase, gate atomico antes de mutar) herda do `/dw-secure-audit --plan` e `/dw-secure-audit`. A logica de composicao do compose esta delegada para a skill bundled `docker-compose-recipes`. A filosofia de "wrap a tool oficial" foi confirmada via `/dw-find-skills` contra o ecossistema `npx skills` em 2026-04-28 — nada la matchava "entrevista + scaffold multi-stack + compose dev" em qualidade suficiente.
 
 </system_instructions>

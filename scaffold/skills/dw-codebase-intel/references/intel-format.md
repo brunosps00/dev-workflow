@@ -194,7 +194,7 @@ The project follows a layered architecture: HTTP routes → application services
 }
 ```
 
-Hashes are SHA-256 of file contents at the moment of refresh. Used by `/dw-map-codebase` to detect drift on the next run and decide whether a partial update is enough.
+Hashes are SHA-256 of file contents at the moment of refresh. Used by `/dw-intel --build` to detect drift on the next run and decide whether a partial update is enough.
 
 ## Validation rules
 

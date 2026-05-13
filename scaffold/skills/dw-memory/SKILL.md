@@ -153,8 +153,8 @@ When flagged for compaction, apply inline:
 
 ## Integration With Other dev-workflow Commands
 
-- `/dw-run-task` — reads memory before coding; updates `<N>_memory.md` during; runs promotion test + updates `MEMORY.md` at the end.
-- `/dw-run-plan` — runs promotion + compaction between tasks, so each task starts with clean shared state.
+- `/dw-run` — reads memory before coding; updates `<N>_memory.md` during; runs promotion test + updates `MEMORY.md` at the end.
+- `/dw-run` — runs promotion + compaction between tasks, so each task starts with clean shared state.
 - `/dw-autopilot` — threads memory through every phase (brainstorm → PRD → techspec → tasks → execution); on re-invocation reads `MEMORY.md` first to reconstitute cross-session context.
 
 Callers should mention this skill in their "Skills Complementares" section.

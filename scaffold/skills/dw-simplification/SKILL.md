@@ -1,6 +1,6 @@
 ---
 name: dw-simplification
-description: Disciplined code simplification — understand WHY code exists before changing it (Chesterton's Fence), preserve behavior exactly, prefer clarity over cleverness, scope to recent changes. Used by /dw-code-review and /dw-refactoring-analysis. Adapted from addyosmani/agent-skills (MIT).
+description: Disciplined code simplification — understand WHY code exists before changing it (Chesterton's Fence), preserve behavior exactly, prefer clarity over cleverness, scope to recent changes. Used by /dw-review --code-only and /dw-brainstorm --refactor. Adapted from addyosmani/agent-skills (MIT).
 allowed-tools:
   - Read
   - Edit
@@ -17,10 +17,10 @@ Behavioral discipline for simplifying code without breaking it. The trap of refa
 
 Read this skill when:
 
-- `/dw-code-review` flagged a complexity issue (deep nesting, long function, duplication).
-- `/dw-refactoring-analysis` proposed a simplification target.
+- `/dw-review --code-only` flagged a complexity issue (deep nesting, long function, duplication).
+- `/dw-brainstorm --refactor` proposed a simplification target.
 - The user explicitly asks to "clean this up" / "simplify X".
-- During `/dw-run-task` if the implementation accidentally produced complex code that wants pre-commit cleanup.
+- During `/dw-run` if the implementation accidentally produced complex code that wants pre-commit cleanup.
 
 Do NOT use when:
 

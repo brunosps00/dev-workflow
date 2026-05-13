@@ -2,7 +2,7 @@
 
 LLMs have characteristic failure modes when authoring tests. Six guardrails are forcing functions for the most common ones.
 
-Every test produced by an agent (via `/dw-run-task`, `/dw-bugfix`, `/dw-autopilot`, or any code-generating flow) must clear all six BEFORE the diff goes to review.
+Every test produced by an agent (via `/dw-run`, `/dw-bugfix`, `/dw-autopilot`, or any code-generating flow) must clear all six BEFORE the diff goes to review.
 
 ## Guardrail 1 — State the invariant, layer, and host suite first
 
@@ -25,7 +25,7 @@ If the agent can't fill any line, it stops and asks the user — it does NOT inv
 - "Owning layer" forces Rule 2 (lowest detectable layer).
 - "Existing suite" forces extending coverage rather than spawning orphan files.
 
-**Verification:** `/dw-code-review` looks for this 3-line preamble in the PR description or commit body. Missing = REJECTED.
+**Verification:** `/dw-review --code-only` looks for this 3-line preamble in the PR description or commit body. Missing = REJECTED.
 
 ## Guardrail 2 — Real execution somewhere
 
@@ -161,7 +161,7 @@ Tests violating guardrails without explicit SKIP-GUARDRAIL-N comments
 will be REJECTED at review.
 ```
 
-`/dw-run-task` and `/dw-bugfix` inject this prompt block before generating test code.
+`/dw-run` and `/dw-bugfix` inject this prompt block before generating test code.
 
 ## Why six and not more
 

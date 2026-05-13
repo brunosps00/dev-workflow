@@ -12,9 +12,9 @@ This skill blocks that autopilot at four grounding questions before any visual d
 ## When to use
 
 - Inside `/dw-redesign-ui` — both proposal and validation steps.
-- Inside `/dw-create-techspec` when the spec has UI sections.
+- Inside `/dw-plan techspec` when the spec has UI sections.
 - Inside `/dw-functional-doc` when documenting screen-level patterns.
-- Inside `/dw-code-review` when the diff touches UI files (CSS, JSX, templates).
+- Inside `/dw-review --code-only` when the diff touches UI files (CSS, JSX, templates).
 - Inside `/dw-brainstorm` when the conversation drifts into visual direction.
 
 If you're tempted to skip this "because it's just a small tweak" — that's the trigger. Run the grounding.
@@ -126,7 +126,7 @@ Before any interactive widget ships:
 - [ ] Heading hierarchy is semantic (no skipped levels).
 - [ ] `prefers-reduced-motion` honored.
 
-Full verification recipes in `references/accessibility-floor.md`. `/dw-code-review` rejects the verdict if any interactive widget ships without these.
+Full verification recipes in `references/accessibility-floor.md`. `/dw-review --code-only` rejects the verdict if any interactive widget ships without these.
 
 ## When the grounding bends
 
@@ -139,8 +139,8 @@ In all bend cases, document the bend in the PR (one line). "I skipped the state 
 ## Integration with dev-workflow commands
 
 - `/dw-redesign-ui` runs the grounding end-to-end. Steps 4 (propose) and 7 (validate) consult this skill explicitly.
-- `/dw-create-techspec` UI sections must answer the 4 grounding questions and reference the state matrix.
-- `/dw-code-review` checks UI diffs against the 14 visual-slop patterns and the accessibility floor.
+- `/dw-plan techspec` UI sections must answer the 4 grounding questions and reference the state matrix.
+- `/dw-review --code-only` checks UI diffs against the 14 visual-slop patterns and the accessibility floor.
 - `/dw-functional-doc` records the surface-job and scene sentences in the overview for each screen.
 
 ## Why this approach

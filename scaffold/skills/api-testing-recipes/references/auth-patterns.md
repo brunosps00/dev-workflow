@@ -135,4 +135,4 @@ Add one env var per role; the recipe reads them as needed. Tests that don't need
 
 ## What `dw-run-qa` does
 
-In API mode, `/dw-run-qa` reads `QA/test-credentials.md` (or `.env`) for the env var names, picks the recipe, and substitutes variables at test-generation time. The script files reference `@variable` references only — never raw tokens.
+In API mode, `/dw-qa` reads `QA/test-credentials.md` (or `.env`) for the env var names, picks the recipe, and substitutes variables at test-generation time. The script files reference `@variable` references only — never raw tokens.

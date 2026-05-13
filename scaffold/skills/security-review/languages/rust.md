@@ -1,6 +1,6 @@
 # Rust Security Patterns
 
-Covers **Actix Web, Axum, Rocket, Warp, Tonic (gRPC), Tower, Tokio, sqlx, Diesel, SeaORM, serde, reqwest, hyper, std::process, std::fs, unsafe blocks, FFI, and cargo supply chain**. Used by `/dw-security-check` as the primary reference when Rust is detected in scope.
+Covers **Actix Web, Axum, Rocket, Warp, Tonic (gRPC), Tower, Tokio, sqlx, Diesel, SeaORM, serde, reqwest, hyper, std::process, std::fs, unsafe blocks, FFI, and cargo supply chain**. Used by `/dw-secure-audit` as the primary reference when Rust is detected in scope.
 
 > Rust's ownership and borrow checker eliminate **memory-safety** classes of bugs (use-after-free, data races, buffer overflows) — but **logic bugs, misuse of `unsafe`, DoS via panic, injection into string-APIs, and supply-chain compromise are still present**. Do not assume "Rust = secure".
 

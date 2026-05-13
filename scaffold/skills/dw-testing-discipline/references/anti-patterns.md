@@ -1,6 +1,6 @@
 # Anti-patterns — 25 smells across 4 families
 
-Each anti-pattern names the smell, shows the violation in pseudo-code, gives the fix, and notes how `/dw-code-review` detects it. Agent-specific failure modes are covered separately in `agent-guardrails.md`.
+Each anti-pattern names the smell, shows the violation in pseudo-code, gives the fix, and notes how `/dw-review --code-only` detects it. Agent-specific failure modes are covered separately in `agent-guardrails.md`.
 
 ---
 
@@ -324,7 +324,7 @@ You wrote `hello` in the mock. You asserted `hello`. You proved nothing.
 
 ---
 
-## How `/dw-code-review` uses this catalog
+## How `/dw-review --code-only` uses this catalog
 
 For each diff hunk under a test path:
 1. Run regex scans for the patterns flagged "Detection" above.

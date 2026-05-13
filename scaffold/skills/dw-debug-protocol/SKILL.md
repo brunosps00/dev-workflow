@@ -93,8 +93,8 @@ If any are missing, the bug is "fixed pending verification," not "fixed."
 ## Integration with dev-workflow commands
 
 - `/dw-bugfix` runs this skill end-to-end. The bug report is decomposed into steps 1-6 and progressed atomically.
-- `/dw-fix-qa` uses this skill when QA findings are bug-shaped (failing scenario rather than missing feature). Each finding becomes a six-step run.
-- `/dw-code-review` flags fixes that skipped step 5 (no regression test) as REJECTED.
+- `/dw-qa --fix` uses this skill when QA findings are bug-shaped (failing scenario rather than missing feature). Each finding becomes a six-step run.
+- `/dw-review --code-only` flags fixes that skipped step 5 (no regression test) as REJECTED.
 
 ## When to escalate / pair
 

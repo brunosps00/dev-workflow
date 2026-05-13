@@ -9,15 +9,15 @@ A full scan of a 50K-line repo takes minutes and burns context. Incremental upda
 - After 30+ days since last refresh (file structure has likely drifted)
 - When `/dw-intel` queries return obviously stale results
 
-Trigger via `/dw-map-codebase` (no flag) or `/dw-map-codebase --full`.
+Trigger via `/dw-intel --build` (no flag) or `/dw-intel --build --full`.
 
 ## When to run a partial update
 
 - A single PR / feature branch touched 1-20 files
-- After `/dw-run-task` completes (touched files are known via git)
+- After `/dw-run` completes (touched files are known via git)
 - After `dw-deps-audit --execute` updates dependencies (only `deps.json` needs refresh)
 
-Trigger via `/dw-map-codebase --files src/foo.ts src/bar.ts` (explicit list) or `/dw-map-codebase --since HEAD~5` (from git diff).
+Trigger via `/dw-intel --build --files src/foo.ts src/bar.ts` (explicit list) or `/dw-intel --build --since HEAD~5` (from git diff).
 
 ## Partial update protocol
 
@@ -33,7 +33,7 @@ The `intel-updater` agent receives `focus: partial --files <paths>` and:
 4. **Bump** `_meta.version` by 1, set `_meta.updated_at` to now.
 5. **Update** `.last-refresh.json` with the new hashes for `files.json`, `apis.json`, `deps.json` (the three that were touched).
 
-If you run a partial update on a project where `.dw/intel/` doesn't exist, abort with: `"No .dw/intel/ found. Run /dw-map-codebase first for a full scan."`
+If you run a partial update on a project where `.dw/intel/` doesn't exist, abort with: `"No .dw/intel/ found. Run /dw-intel --build first for a full scan."`
 
 ## How `intel-updater` knows what's "key" in a partial
 
@@ -72,7 +72,7 @@ If a full update is triggered while a partial update is in flight (rare but poss
 ## What incremental updates do NOT cover
 
 - New `package.json` (e.g., user added `express` to deps but no source file imports it yet) — `deps.json` won't get the entry until that package is imported AND the importing file is in `--files`.
-  - Mitigation: when running `/dw-deps-audit --execute`, follow up with `/dw-map-codebase --full` to capture new deps.
+  - Mitigation: when running `/dw-secure-audit --plan --execute`, follow up with `/dw-intel --build --full` to capture new deps.
 - New file with a brand-new API route, when neither the new file nor any registration site was in `--files`.
   - Mitigation: include `src/routes/index.ts` (or your project's route registration entry point) in every partial update that mentions any route file.
 - Architectural changes (the kind that would update `arch.md`) — partial updates leave `arch.md` stale.

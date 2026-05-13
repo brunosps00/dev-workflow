@@ -4,10 +4,10 @@
     ## Quando Usar
     - Use para criar um Pull Request de uma branch de feature ou bugfix para main/develop
     - NÃO use quando as alterações ainda não foram commitadas (use `/dw-commit` primeiro)
-    - NÃO use quando o code review ainda não foi feito (use `/dw-code-review` primeiro)
+    - NÃO use quando o code review ainda não foi feito (use `/dw-review --code-only` primeiro)
 
     ## Posição no Pipeline
-    **Antecessor:** `/dw-code-review` ou `/dw-commit` | **Sucessor:** (merge)
+    **Antecessor:** `/dw-review --code-only` ou `/dw-commit` | **Sucessor:** (merge)
 
     ## Skills Complementares
 
@@ -15,11 +15,11 @@
     |-------|---------|
     | `dw-verify` | **SEMPRE** — invocada antes do `git push`. Sem VERIFICATION REPORT PASS na sessão após a última edição de código, o PR **NÃO** pode ser criado. |
     | `dw-git-discipline` | **SEMPRE** — valida naming de branch (`<tipo>/<escopo>` kebab-case), histórico atomic-commit (cada commit single-intent, mensagem conventional), tempo de vida da branch (flag se >7 dias) e escopo da PR (sugere split se diff > ~400 linhas). Descrição da PR segue summary + test plan, não dump de `git log`. |
-    | `/dw-security-check` | **SEMPRE para projetos TS/Python/C#/Rust** — `security-check.md` com status ≠ REJECTED é obrigatório para projetos em linguagem suportada. |
+    | `/dw-secure-audit` | **SEMPRE para projetos TS/Python/C#/Rust** — `security-check.md` com status ≠ REJECTED é obrigatório para projetos em linguagem suportada. |
 
     <critical>Hard gate 1 (verify): se a sessão atual não tem um VERIFICATION REPORT PASS de `dw-verify` produzido APÓS a última edição/commit, PARAR e invocar `dw-verify` antes de prosseguir. PR é um artefato permanente — exige o maior rigor de verificação.</critical>
 
-    <critical>Hard gate 2 (security): para projetos TS/Python/C#/Rust, se `{{PRD_PATH}}/security-check.md` não existir OU tiver status REJECTED, PARAR e invocar `/dw-security-check` antes de prosseguir. Vulnerabilidades HIGH/CRITICAL NÃO podem chegar ao PR. Para outras linguagens (Go, Java, etc.), este gate é pulado com nota.</critical>
+    <critical>Hard gate 2 (security): para projetos TS/Python/C#/Rust, se `{{PRD_PATH}}/security-check.md` não existir OU tiver status REJECTED, PARAR e invocar `/dw-secure-audit` antes de prosseguir. Vulnerabilidades HIGH/CRITICAL NÃO podem chegar ao PR. Para outras linguagens (Go, Java, etc.), este gate é pulado com nota.</critical>
 
     ## Uso
 

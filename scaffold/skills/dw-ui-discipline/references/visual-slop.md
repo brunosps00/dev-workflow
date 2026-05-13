@@ -4,7 +4,7 @@ Two parts:
 1. **Fourteen patterns** an ungrounded UI agent produces.
 2. **Seventeen specific values** that signal "no thought went into this."
 
-Used by `/dw-code-review` against UI diffs and by `/dw-redesign-ui` as a self-check during proposal.
+Used by `/dw-review --code-only` against UI diffs and by `/dw-redesign-ui` as a self-check during proposal.
 
 ## The 14 patterns
 
@@ -140,7 +140,7 @@ Specific values that signal "no thought went into this." Avoid unless you can ar
 
 In `/dw-redesign-ui` step 4 (propose) — before presenting design directions, self-check against this list. If you're using a pattern, say why explicitly ("gradient crutch — intentional for marketing hero"). Sometimes the pattern IS the right call; the discipline is awareness, not absolutism.
 
-In `/dw-code-review` UI section — grep the diff for the anti-default values and the patterns. Each hit becomes a finding under `dw-review-rigor`:
+In `/dw-review --code-only` UI section — grep the diff for the anti-default values and the patterns. Each hit becomes a finding under `dw-review-rigor`:
 - Pattern on a NEW surface → `medium` severity.
 - Pattern propagating EXISTING slop further → `low` severity (consistency wins).
 - Pattern on a redesign that was supposed to fix slop → `high` severity (regression).

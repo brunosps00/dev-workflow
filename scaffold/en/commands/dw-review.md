@@ -145,7 +145,7 @@ If MISSING > 0, the verdict suggests revisiting `/dw-plan tasks` to scope or `/d
 
 ### Output
 
-Saved to `.dw/spec/<prd>/QA/dw-code-review.md`. The verdict line is one of:
+Saved to `.dw/spec/<prd>/QA/dw-review --code-only.md`. The verdict line is one of:
 - **APPROVED** — all gates green; ready for commit + PR.
 - **APPROVED WITH CAVEATS** — green but findings worth fixing in follow-up (filed with severities).
 - **REJECTED** — at least one hard gate failed. Specify which.

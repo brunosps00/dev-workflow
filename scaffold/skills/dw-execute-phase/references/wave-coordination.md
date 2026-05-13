@@ -81,7 +81,7 @@ This means: subagents return their changes (files written, but NOT committed). T
 
 ## When to NOT use waves
 
-Single-task changes (`/dw-quick`, `/dw-run-task`) bypass waves entirely. Waves are for `/dw-run-plan` and `/dw-execute-phase` — phase-scale execution.
+Single-task changes (`/dw-quick`, `/dw-run`) bypass waves entirely. Waves are for `/dw-run` and `/dw-execute-phase` — phase-scale execution.
 
 ## Verification of wave structure (pre-execution)
 

@@ -1,6 +1,6 @@
 # OpenAPI-driven mode — generating tests from a spec
 
-When the project exposes an OpenAPI spec (static `openapi.yaml`/`openapi.json`, or dynamic `/openapi.json` for FastAPI), `/dw-run-qa` can derive a baseline test suite directly from it. This catches contract drift between code and spec for free.
+When the project exposes an OpenAPI spec (static `openapi.yaml`/`openapi.json`, or dynamic `/openapi.json` for FastAPI), `/dw-qa` can derive a baseline test suite directly from it. This catches contract drift between code and spec for free.
 
 ## When to use this mode
 
@@ -20,13 +20,13 @@ The generated tests live alongside hand-written ones in `{{PRD_PATH}}/QA/scripts
 
 ## How to run it
 
-`/dw-run-qa --from-openapi <spec-path-or-url>` — explicit. The `<spec-path-or-url>` can be:
+`/dw-qa --from-openapi <spec-path-or-url>` — explicit. The `<spec-path-or-url>` can be:
 
 - `./openapi.yaml`
 - `http://localhost:3000/openapi.json` (FastAPI default)
 - `http://localhost:3000/swagger/v1/swagger.json` (ASP.NET Core default)
 
-Without the flag, `/dw-run-qa` auto-detects:
+Without the flag, `/dw-qa` auto-detects:
 
 - File at repo root: `openapi.yaml`, `openapi.json`, `swagger.yaml`, `swagger.json`.
 - Project running locally: `GET /openapi.json`, `GET /swagger/v1/swagger.json`, `GET /api-docs`.

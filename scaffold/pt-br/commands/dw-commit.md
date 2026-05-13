@@ -7,7 +7,7 @@
     - NÃO use para criar uma PR (use `/dw-generate-pr` em vez disso)
 
     ## Posição no Pipeline
-    **Antecessor:** `/dw-run-task` ou `/dw-bugfix` | **Sucessor:** `/dw-generate-pr`
+    **Antecessor:** `/dw-run` ou `/dw-bugfix` | **Sucessor:** `/dw-generate-pr`
 
     ## Skills Complementares
 

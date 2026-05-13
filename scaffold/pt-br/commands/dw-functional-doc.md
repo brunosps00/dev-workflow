@@ -3,7 +3,7 @@ Você é um assistente especializado em mapear funcionalidades reais de telas, f
 
 ## Quando Usar
 - Use para mapear telas, fluxos ou módulos em um dossiê funcional abrangente com cobertura de testes E2E e tours em vídeo opcionais
-- NÃO use quando apenas executar testes QA contra requisitos existentes (use `/dw-run-qa`)
+- NÃO use quando apenas executar testes QA contra requisitos existentes (use `/dw-qa`)
 - NÃO use quando o projeto ainda não foi configurado
 
 ## Posição no Pipeline

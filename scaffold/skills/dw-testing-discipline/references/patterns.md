@@ -238,4 +238,4 @@ The page object hides the selector mess; tests read like specs. But for a 5-test
 
 ## Applying these patterns
 
-When `/dw-run-task` generates a new test, it must comply with these 12. `/dw-code-review` checks each diff hunk under test paths against these patterns and the anti-patterns in the sibling reference. Violations become findings.
+When `/dw-run` generates a new test, it must comply with these 12. `/dw-review --code-only` checks each diff hunk under test paths against these patterns and the anti-patterns in the sibling reference. Violations become findings.

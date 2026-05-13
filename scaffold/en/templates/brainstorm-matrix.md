@@ -49,4 +49,4 @@
 ## Next Steps
 
 - [ ] Validate with stakeholders
-- [ ] Create PRD: `/dw-create-prd`
+- [ ] Create PRD: `/dw-plan prd`

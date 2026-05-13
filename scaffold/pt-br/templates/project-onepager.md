@@ -94,12 +94,12 @@ services: []
 
 ## Escopo MVP
 
-[A primeira feature menor que voce vai entregar. Pensada como user stories — vai dirigir a primeira rodada de /dw-create-prd.]
+[A primeira feature menor que voce vai entregar. Pensada como user stories — vai dirigir a primeira rodada de /dw-plan prd.]
 
 - Como [persona], eu posso [acao] para que [beneficio]
 - Como [persona], eu posso [acao] para que [beneficio]
 
-Se voce ainda nao tem a primeira feature em mente, tudo bem — deixa placeholder e roda o /dw-create-prd quando tiver.
+Se voce ainda nao tem a primeira feature em mente, tudo bem — deixa placeholder e roda o /dw-plan prd quando tiver.
 
 ## Nao Estou Fazendo (explicito)
 
@@ -115,7 +115,7 @@ Se voce ainda nao tem a primeira feature em mente, tudo bem — deixa placeholde
 
 ## Perguntas em Aberto
 
-[O que este one-pager nao consegue responder sozinho. Resolva antes do /dw-create-prd ou escale para um stakeholder.]
+[O que este one-pager nao consegue responder sozinho. Resolva antes do /dw-plan prd ou escale para um stakeholder.]
 
 - [pergunta 1]
 - [pergunta 2]
@@ -124,6 +124,6 @@ Se voce ainda nao tem a primeira feature em mente, tudo bem — deixa placeholde
 
 Escolha UM:
 
-- **`/dw-create-prd`** — quando voce tem a primeira feature em mente e quer rascunhar o PRD em cima deste stack
+- **`/dw-plan prd`** — quando voce tem a primeira feature em mente e quer rascunhar o PRD em cima deste stack
 - **`/dw-analyze-project`** — apos primeiro commit substancial, para enriquecer `.dw/rules/` com convencoes por modulo
-- **`/dw-deps-audit --scan-only`** — para confirmar que nenhuma dep vulneravel veio dos templates `create-*`
+- **`/dw-secure-audit --plan --scan-only`** — para confirmar que nenhuma dep vulneravel veio dos templates `create-*`

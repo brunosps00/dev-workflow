@@ -1,6 +1,6 @@
 # Catálogo de Refatoração — Exemplos Antes/Depois
 
-Referência para `/dw-refactoring-analysis`. Baseado no catálogo de Fowler.
+Referência para `/dw-brainstorm --refactor`. Baseado no catálogo de Fowler.
 
 ## 1. Função Longa → Extract Function
 

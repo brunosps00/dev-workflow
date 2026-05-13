@@ -145,7 +145,7 @@ Se FALTANDO > 0, o veredicto sugere revisitar `/dw-plan tasks` pra escopar ou `/
 
 ### Output
 
-Salvo em `.dw/spec/<prd>/QA/dw-code-review.md`. Linha de verdict é uma de:
+Salvo em `.dw/spec/<prd>/QA/dw-review --code-only.md`. Linha de verdict é uma de:
 - **APROVADO** — todos os gates verdes; pronto pra commit + PR.
 - **APROVADO COM RESSALVAS** — verde mas findings valem corrigir em follow-up (filed com severities).
 - **REPROVADO** — ao menos um hard gate falhou. Especifique qual.

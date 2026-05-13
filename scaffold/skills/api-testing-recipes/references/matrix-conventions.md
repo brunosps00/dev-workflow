@@ -65,4 +65,4 @@ That's 9 test cases for one RF — the floor for a real API surface, not the cei
 
 ## How `dw-run-qa` uses this
 
-When in API mode, `/dw-run-qa` walks each `RF-XX` in the PRD, runs through this matrix, and emits PASS/FAIL per RF — not per test case. A single FAIL in any tier marks the RF as FAIL and lands a `BUG-NN` entry pointing to the failing log line.
+When in API mode, `/dw-qa` walks each `RF-XX` in the PRD, runs through this matrix, and emits PASS/FAIL per RF — not per test case. A single FAIL in any tier marks the RF as FAIL and lands a `BUG-NN` entry pointing to the failing log line.

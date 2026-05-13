@@ -11,28 +11,28 @@ Este projeto usa [`@brunosps00/dev-workflow`](https://www.npmjs.com/package/@bru
 |------------------------------------------------|--------------|
 | "Implementa X" / "Cria Y" / "Adiciona feature Z" / "Preciso de..." | `/dw-autopilot "X"` |
 | Erro colado / "X está quebrado" / "Bug em Y" / screenshot de teste falhando | `/dw-bugfix "X"` |
-| "Roda essa task" (com ID da task) | `/dw-run-task <ID>` |
-| "Roda todas as tasks pendentes" / "Executa o plano" | `/dw-run-plan` |
-| "Revisa meu PR" / "Checa qualidade do código" / "Tá pronto pra subir?" | `/dw-code-review` |
+| "Roda essa task" (com ID da task) | `/dw-run <ID>` |
+| "Roda todas as tasks pendentes" / "Executa o plano" | `/dw-run` |
+| "Revisa meu PR" / "Checa qualidade do código" / "Tá pronto pra subir?" | `/dw-review --code-only` |
 | "Hora de commitar" / mudanças validadas e prontas | `/dw-commit` |
 | "Abre um PR" / "Sobe isso" | `/dw-generate-pr` |
-| "Escreve PRD pra X" / "Especifica Y" | `/dw-create-prd` |
-| "Desenha a arquitetura" / "Faz o techspec" | `/dw-create-techspec` |
-| "Quebra em tasks" | `/dw-create-tasks` |
+| "Escreve PRD pra X" / "Especifica Y" | `/dw-plan prd` |
+| "Desenha a arquitetura" / "Faz o techspec" | `/dw-plan techspec` |
+| "Quebra em tasks" | `/dw-plan tasks` |
 | "Onde está X?" / "O que usa Y?" / "Como Z é estruturado?" | `/dw-intel "<pergunta>"` |
-| "Audita nossas dependências" / "Estamos atrasados em pacotes?" | `/dw-deps-audit` |
-| "Scan de vulnerabilidades" / "Check de segurança" | `/dw-security-check` |
-| "QA dessa feature" / "Roda o test plan" | `/dw-run-qa` |
-| "Corrige os bugs do QA" | `/dw-fix-qa` |
+| "Audita nossas dependências" / "Estamos atrasados em pacotes?" | `/dw-secure-audit --plan` |
+| "Scan de vulnerabilidades" / "Check de segurança" | `/dw-secure-audit` |
+| "QA dessa feature" / "Roda o test plan" | `/dw-qa` |
+| "Corrige os bugs do QA" | `/dw-qa --fix` |
 
 **Prioridade:** na dúvida entre dois comandos, `/dw-autopilot` é o default mais seguro pra qualquer pedido de feature não-trivial — ele compõe os demais.
 
 ## Hard Gates (os comandos enforçam — não burle)
 
 - **`.dw/constitution.md`**: princípios com `severity: high` ou `critical` bloqueiam PRs / techspecs sem um ADR justificando o desvio. Constitution ausente? Os comandos auto-instalam defaults em `severity: info` (não-bloqueante) e seguem — ausência nunca bloqueia.
-- **`.dw/spec/<prd>/tasks-validation.md`**: auto-gerado no fim do `/dw-create-tasks`. Qualquer dimensão FAIL bloqueia approval do usuário até resolver ou override explícito.
+- **`.dw/spec/<prd>/tasks-validation.md`**: auto-gerado no fim do `/dw-plan tasks`. Qualquer dimensão FAIL bloqueia approval do usuário até resolver ou override explícito.
 - **Verification**: `/dw-generate-pr` exige `dw-verify` PASS fresco (testes + lint + build) depois do último edit.
-- **Segurança**: projetos TS / Python / C# / Rust precisam passar `/dw-security-check` (Trivy + OWASP + lockfile audit) antes do PR abrir.
+- **Segurança**: projetos TS / Python / C# / Rust precisam passar `/dw-secure-audit` (Trivy + OWASP + lockfile audit) antes do PR abrir.
 
 ## Escape Hatches — NÃO auto-trigger
 
@@ -52,10 +52,10 @@ Quando qualquer destes se aplica, responda direto e **não** invoque comando `dw
 
   --- OU passo a passo ---
 
-/dw-brainstorm ─► /dw-create-prd ─► /dw-create-techspec ─► /dw-create-tasks
+/dw-brainstorm ─► /dw-plan prd ─► /dw-plan techspec ─► /dw-plan tasks
                                                               │
                                                               ▼
-/dw-commit + /dw-generate-pr ◄──── /dw-code-review ◄──── /dw-run-plan
+/dw-commit + /dw-generate-pr ◄──── /dw-review --code-only ◄──── /dw-run
 ```
 
 Lista completa e ajuda contextual: `/dw-help`.

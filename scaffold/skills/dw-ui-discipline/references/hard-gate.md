@@ -159,4 +159,4 @@ This is the minimum disclosure. Anything less and the grounding didn't pass.
 
 The downstream references (`visual-slop.md`, `state-matrix.md`, `accessibility-floor.md`) assume the grounding passed. They won't re-verify; if you skipped a question, the output will reflect it.
 
-`/dw-code-review` fails verdict on UI PRs where this disclosure is missing.
+`/dw-review --code-only` fails verdict on UI PRs where this disclosure is missing.

@@ -49,9 +49,9 @@ You are the codebase intelligence assistant. Two modes: query the existing index
 
 Before answering, read `.dw/intel/.last-refresh.json` if present:
 
-- If `updated_at` is more than 7 days old → prefix the answer with: `⚠ Index last refreshed YYYY-MM-DD (X days ago). Consider running /dw-map-codebase to refresh.`
+- If `updated_at` is more than 7 days old → prefix the answer with: `⚠ Index last refreshed YYYY-MM-DD (X days ago). Consider running /dw-intel --build to refresh.`
 - If `.dw/intel/` exists but `.last-refresh.json` is absent → prefix with: `⚠ No refresh metadata; index may be stale.`
-- If `.dw/intel/` does not exist at all → tell the user: `No .dw/intel/ found. Falling back to .dw/rules/ + grep. For richer answers, run /dw-map-codebase.`
+- If `.dw/intel/` does not exist at all → tell the user: `No .dw/intel/ found. Falling back to .dw/rules/ + grep. For richer answers, run /dw-intel --build.`
 
 Don't refuse to answer — return the best info available.
 
@@ -120,7 +120,7 @@ Don't dump JSON. Write a 3-8 line answer that:
 
 - **Prefer `.dw/intel/` over grep.** It's curated and faster. Grep only when intel is absent or stale.
 - **Cite paths, not contents.** The user can `Read` paths if they need the source.
-- **Don't fabricate.** If `.dw/intel/` doesn't have the answer and grep returns nothing, say so. Suggest `/dw-map-codebase` if `.dw/intel/` is missing.
+- **Don't fabricate.** If `.dw/intel/` doesn't have the answer and grep returns nothing, say so. Suggest `/dw-intel --build` if `.dw/intel/` is missing.
 - **Combine intel + rules.** A query about "how do we name service files?" should pull from `arch.md` (intel) AND `.dw/rules/<module>.md` (project conventions). The two complement.
 
 ## Critical Rules
@@ -132,7 +132,7 @@ Don't dump JSON. Write a 3-8 line answer that:
 
 ## Build mode (`--build`)
 
-When invoked with `--build`, the command produces or refreshes the queryable intel index. This was previously `/dw-map-codebase`, now folded in.
+When invoked with `--build`, the command produces or refreshes the queryable intel index. This was previously `/dw-intel --build`, now folded in.
 
 ### Behavior
 
@@ -179,7 +179,7 @@ Use full `--build` quarterly or after structural changes; incremental for routin
 
 ### Why this skill exists
 
-Previously two commands: `/dw-intel` (query) and `/dw-map-codebase` (build). The split was historical — one wrote, one read, but both shared the schema and the same `.dw/intel/` directory. Consolidating reduces:
+Previously two commands: `/dw-intel` (query) and `/dw-intel --build` (build). The split was historical — one wrote, one read, but both shared the schema and the same `.dw/intel/` directory. Consolidating reduces:
 - Confusion ("which one do I run?").
 - Maintenance burden of two separate command files.
 - Path-walking docs duplicated across two files.
@@ -188,6 +188,6 @@ Same operations, single mental entry point.
 
 ## Inspired by
 
-The query-patterns mapping (where-is / what-uses / architecture-of / etc.) and the JSON intel schema are adapted from the [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) project (MIT license). Path conventions changed from `.planning/intel/` to `.dw/intel/`. Build-mode behavior previously lived in `/dw-map-codebase` (same upstream).
+The query-patterns mapping (where-is / what-uses / architecture-of / etc.) and the JSON intel schema are adapted from the [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) project (MIT license). Path conventions changed from `.planning/intel/` to `.dw/intel/`. Build-mode behavior previously lived in `/dw-intel --build` (same upstream).
 
 </system_instructions>

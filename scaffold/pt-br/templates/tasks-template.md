@@ -34,7 +34,7 @@ feat/prd-[nome-funcionalidade]
 ## Workflow
 
 Cada task segue o fluxo:
-1. `/dw-run-task [N]_task.md` - Implementa a task
+1. `/dw-run [N]_task.md` - Implementa a task
 2. Testes unitários incluídos na implementação
 3. Commit ao final da task (sem push)
 4. Próxima task ou `/dw-generate-pr [branch-alvo]` quando todas concluídas

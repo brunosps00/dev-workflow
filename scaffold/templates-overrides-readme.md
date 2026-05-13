@@ -23,7 +23,7 @@ git add .dw/templates/overrides/prd-template.md
 git commit -m "chore(templates): customize PRD template for our team"
 ```
 
-The override takes effect immediately. Commands that consume the template (`/dw-create-prd`, etc.) will read from `.dw/templates/<name>.md`, which is preserved as your edited copy.
+The override takes effect immediately. Commands that consume the template (`/dw-plan prd`, etc.) will read from `.dw/templates/<name>.md`, which is preserved as your edited copy.
 
 ## How to revert an override
 
@@ -46,9 +46,9 @@ npx @brunosps00/dev-workflow update
 
 - Removing critical-path sections like FR numbering or test plans — downstream commands rely on these.
 - Adding fields that conflict with the YAML frontmatter schema.
-- Anything that breaks `/dw-create-techspec` or `/dw-create-tasks` cross-references.
+- Anything that breaks `/dw-plan techspec` or `/dw-plan tasks` cross-references.
 
-If in doubt, run the workflow end-to-end after editing — the consistency check at the end of `/dw-create-tasks` will surface most structural breakages.
+If in doubt, run the workflow end-to-end after editing — the consistency check at the end of `/dw-plan tasks` will surface most structural breakages.
 
 ## Versioning your overrides
 

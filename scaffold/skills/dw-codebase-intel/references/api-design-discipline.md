@@ -135,4 +135,4 @@ If `.dw/intel/apis.json` shows a strong existing pattern (e.g., all endpoints us
 
 ## Integration with dev-workflow
 
-Use this discipline when authoring techspecs (`/dw-create-techspec`) or refactoring API surfaces. Cite `apis.json` evidence in the techspec — "existing endpoints use cursor pagination (apis.json:42); this endpoint follows the same pattern."
+Use this discipline when authoring techspecs (`/dw-plan techspec`) or refactoring API surfaces. Cite `apis.json` evidence in the techspec — "existing endpoints use cursor pagination (apis.json:42); this endpoint follows the same pattern."

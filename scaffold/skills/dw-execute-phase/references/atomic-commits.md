@@ -26,7 +26,7 @@ Closes RF-XX (partial — full close on tasks.md completion).
 | Type | Use |
 |------|-----|
 | `feat` | New user-facing capability (default for most PRD tasks) |
-| `fix` | Bug fix discovered during the phase (rare in `/dw-execute-phase`; common in `/dw-fix-qa`) |
+| `fix` | Bug fix discovered during the phase (rare in `/dw-execute-phase`; common in `/dw-qa --fix`) |
 | `refactor` | Code reshape without behavior change |
 | `test` | Tests-only task |
 | `docs` | Docs-only task |

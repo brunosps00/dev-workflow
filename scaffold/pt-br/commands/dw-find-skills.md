@@ -15,7 +15,7 @@ Voce e um assistente de descoberta de skills neste workspace. Sua funcao e ajuda
 
 ## Posicao no Pipeline
 
-**Predecessor:** qualquer pergunta exploratoria | **Sucessor:** nenhum (fluxo independente). Se nao achar skill, caia para `/dw-brainstorm` (explorar ideias) ou `/dw-run-task` (mudanca pequena one-off) quando aplicavel.
+**Predecessor:** qualquer pergunta exploratoria | **Sucessor:** nenhum (fluxo independente). Se nao achar skill, caia para `/dw-brainstorm` (explorar ideias) ou `/dw-run` (mudanca pequena one-off) quando aplicavel.
 
 ## Skills Complementares
 
@@ -81,7 +81,7 @@ Catalogo: https://skills.sh/
    - Reconheca que nao houve match, sem inventar
    - Ofereca ajudar direto com capacidades gerais
    - Sugira `/dw-brainstorm` se o usuario quer explorar antes de construir
-   - Sugira `/dw-run-task` se cabe em uma mudanca pequena (<= 3 arquivos, sem PRD)
+   - Sugira `/dw-run` se cabe em uma mudanca pequena (<= 3 arquivos, sem PRD)
    - Mencione `npx skills init <nome>` como caminho para criar a skill que falta
 
 ## Categorias Comuns
@@ -128,7 +128,7 @@ Pesquisei skills sobre "<query>" e nao achei match forte
 
 Posso ajudar direto. Ou:
   /dw-brainstorm "<sua ideia>"     — explorar abordagens antes
-  /dw-run-task "<mudanca pequena>" — se cabe em uma task curta (escreva PRD curto antes)
+  /dw-run "<mudanca pequena>" — se cabe em uma task curta (escreva PRD curto antes)
   npx skills init <nome>           — criar voce mesmo se vale a pena reutilizar
 ```
 
@@ -150,7 +150,7 @@ Posso ajudar direto. Ou:
 `dw-find-skills` porta a skill `find-skills` (do bundle superpowers do Claude, `~/.agents/skills/find-skills/SKILL.md`) para um comando do workflow `dw-*` — assim toda plataforma suportada (Claude Code, Codex, Copilot, OpenCode) ganha a mesma porta de descoberta. Adaptacoes para o dev-workflow:
 
 - Integracao com o pipeline: `/dw-help <keyword>` roteia para ca quando bate em `skill`/`find skill`/`install skill`/`extend agent`.
-- Fallback para `/dw-brainstorm` ou `/dw-run-task` quando nao acha skill — mantem o usuario dentro do workflow ao inves de despeja-lo de maos vazias.
+- Fallback para `/dw-brainstorm` ou `/dw-run` quando nao acha skill — mantem o usuario dentro do workflow ao inves de despeja-lo de maos vazias.
 - Pergunta explicita de escopo (`-g` vs local) antes de instalar, em vez de assumir global.
 
 Credito: skill `find-skills` do ecossistema superpowers do Claude e o projeto `npx skills` / [skills.sh](https://skills.sh/).

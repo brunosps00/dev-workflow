@@ -5,8 +5,8 @@
 
     ## When to Use
     - Use when fixing a reported bug with automatic triage to distinguish bug vs feature vs excessive scope
-    - Do NOT use when implementing a new feature (use `/dw-create-prd` instead)
-    - Do NOT use when fixing bugs found during QA testing (use `/dw-fix-qa` instead)
+    - Do NOT use when implementing a new feature (use `/dw-plan prd` instead)
+    - Do NOT use when fixing bugs found during QA testing (use `/dw-qa --fix` instead)
 
     ## Pipeline Position
     **Predecessor:** (bug report) | **Successor:** `/dw-commit` then `/dw-generate-pr`
@@ -48,7 +48,7 @@
     In this mode:
     1. Follow the normal question and analysis flow
     2. Instead of executing, generate a document at `.dw/spec/dw-bugfix-[name]/prd.md`
-    3. The file is named `prd.md` to maintain compatibility with the create-techspec/dw-create-tasks pipeline
+    3. The file is named `prd.md` to maintain compatibility with the create-techspec/dw-plan tasks pipeline
     4. Then the user can run `create-techspec .dw/spec/dw-bugfix-[name]`
     5. And then `create-tasks .dw/spec/dw-bugfix-[name]`
 
@@ -109,7 +109,7 @@
     ---
 
     **Do you want me to start the PRD creation flow?**
-    - `yes` - I will follow `.dw/commands/dw-create-prd.md` for this feature
+    - `yes` - I will follow `.dw/commands/dw-plan prd.md` for this feature
     - `no, it's a bug` - Explain further why you consider it a bug
     - `no, cancel` - End
 
@@ -361,7 +361,7 @@
         q2 [label="Does it require\nnew functionality?", shape=diamond];
         q3 [label="Scope <= 5 files\nand no migration?", shape=diamond];
         bug [label="BUG\n(continue bugfix flow)"];
-        feature [label="FEATURE\n(redirect to /dw-create-prd)"];
+        feature [label="FEATURE\n(redirect to /dw-plan prd)"];
         excessive [label="EXCESSIVE SCOPE\n(redirect to PRD or\nuse --analysis mode)"];
 
         start -> q1;

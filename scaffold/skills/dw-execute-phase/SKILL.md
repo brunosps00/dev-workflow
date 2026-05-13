@@ -1,6 +1,6 @@
 ---
 name: dw-execute-phase
-description: Phase execution and plan verification for dev-workflow. Two agents (executor for wave-based parallel task dispatch with deviation handling, plan-checker for goal-backward plan verification before execution). Used by /dw-execute-phase, /dw-plan-checker, /dw-run-plan, /dw-autopilot. Adapted from get-shit-done-cc (MIT).
+description: Phase execution and plan verification for dev-workflow. Two agents (executor for wave-based parallel task dispatch with deviation handling, plan-checker for goal-backward plan verification before execution). Used by /dw-execute-phase, /dw-plan-checker, /dw-run, /dw-autopilot. Adapted from get-shit-done-cc (MIT).
 allowed-tools:
   - Read
   - Write
@@ -16,8 +16,8 @@ Bundled skill providing **phase-level execution discipline** for dev-workflow: p
 
 ## Why a skill (not inline)
 
-- The execution discipline (wave coordination, deviation rules, checkpoint protocol) is a separate concern from the commands that invoke it. Bundling it as a skill lets multiple commands (`/dw-run-plan`, `/dw-autopilot`, `/dw-execute-phase` itself) reuse the same discipline.
-- The plan-checker is a verification GATE — it must run before `/dw-run-plan`/`/dw-execute-phase` mutate code, and bundling it makes that contract visible.
+- The execution discipline (wave coordination, deviation rules, checkpoint protocol) is a separate concern from the commands that invoke it. Bundling it as a skill lets multiple commands (`/dw-run`, `/dw-autopilot`, `/dw-execute-phase` itself) reuse the same discipline.
+- The plan-checker is a verification GATE — it must run before `/dw-run`/`/dw-execute-phase` mutate code, and bundling it makes that contract visible.
 - The agents own the protocol; the orchestrating commands just wire them up.
 
 ## When to Use
@@ -26,30 +26,30 @@ Read this skill when:
 
 - `/dw-execute-phase` is invoked to run a batch of tasks in parallel waves.
 - `/dw-plan-checker` is invoked to verify a `tasks.md` file will achieve its PRD goal before execution.
-- `/dw-run-plan` is invoked (it spawns the executor agent for each wave).
+- `/dw-run` is invoked (it spawns the executor agent for each wave).
 - `/dw-autopilot` enters the execution stage (it gates on plan-checker before invoking the executor).
 
 Do NOT use when:
 
-- A single one-off change is being made (use `/dw-run-task` directly — no waves needed).
+- A single one-off change is being made (use `/dw-run` directly — no waves needed).
 - The user is exploring/brainstorming, not executing (use `/dw-brainstorm`).
-- The plan hasn't been created yet (use `/dw-create-tasks` first).
+- The plan hasn't been created yet (use `/dw-plan tasks` first).
 
 ## Agents
 
 | Agent | Responsibility | Spawn from |
 |-------|----------------|------------|
-| `agents/executor.md` | Runs tasks in waves, atomic commit per task, handles deviations (3 deviation rules), respects checkpoint markers, writes `SUMMARY.md` per phase | `/dw-execute-phase`, `/dw-run-plan` |
-| `agents/plan-checker.md` | Goal-backward verification of `tasks.md` before execution. Checks: requirement coverage, task completeness, dependency soundness, artifact wiring, context budget. Returns PASS / REVISE / BLOCK. | `/dw-plan-checker`, `/dw-create-tasks` (auto-gate before declaring tasks ready) |
+| `agents/executor.md` | Runs tasks in waves, atomic commit per task, handles deviations (3 deviation rules), respects checkpoint markers, writes `SUMMARY.md` per phase | `/dw-execute-phase`, `/dw-run` |
+| `agents/plan-checker.md` | Goal-backward verification of `tasks.md` before execution. Checks: requirement coverage, task completeness, dependency soundness, artifact wiring, context budget. Returns PASS / REVISE / BLOCK. | `/dw-plan-checker`, `/dw-plan tasks` (auto-gate before declaring tasks ready) |
 
 ## How the Two Agents Compose
 
 The expected flow:
 
-1. `/dw-create-tasks` produces `.dw/spec/prd-<slug>/tasks.md` from PRD + TechSpec.
+1. `/dw-plan tasks` produces `.dw/spec/prd-<slug>/tasks.md` from PRD + TechSpec.
 2. **Plan-checker GATE** — `/dw-plan-checker .dw/spec/prd-<slug>/` spawns the plan-checker agent. The agent reads PRD/TechSpec/tasks.md and verifies tasks WILL achieve the goal. Returns one of: `PASS` (proceed), `REVISE` (issues found, planner re-runs), `BLOCK` (fundamental gap, abort).
 3. `/dw-execute-phase` spawns the executor agent ONLY if plan-checker returned `PASS`. The executor runs tasks in waves, commits atomically, handles deviations.
-4. `/dw-run-qa` runs after all waves complete to validate the implementation against PRD.
+4. `/dw-qa` runs after all waves complete to validate the implementation against PRD.
 
 `/dw-autopilot` orchestrates this entire flow with hard gates between stages.
 
@@ -106,10 +106,10 @@ If the executor exhausts its context budget mid-phase OR the user signals stop:
 
 | File | Read by | Written by |
 |------|---------|------------|
-| `prd.md` | plan-checker, executor | `/dw-create-prd` |
-| `techspec.md` | plan-checker, executor | `/dw-create-techspec` |
-| `tasks.md` | plan-checker (verifies), executor (executes) | `/dw-create-tasks` |
-| `<NN>_task.md` | executor (per-task detail) | `/dw-create-tasks` |
+| `prd.md` | plan-checker, executor | `/dw-plan prd` |
+| `techspec.md` | plan-checker, executor | `/dw-plan techspec` |
+| `tasks.md` | plan-checker (verifies), executor (executes) | `/dw-plan tasks` |
+| `<NN>_task.md` | executor (per-task detail) | `/dw-plan tasks` |
 | `deviations.md` | plan-checker (next iteration), executor | executor (rule 1/2 deviations) |
 | `active-session.md` | `/dw-resume`, executor (continuation) | executor (checkpoint) |
 | `SUMMARY.md` | `/dw-generate-pr` | executor (after final wave) |
@@ -122,7 +122,7 @@ If the executor exhausts its context budget mid-phase OR the user signals stop:
 
 ## Rules
 
-- **No execution without plan-checker PASS.** `/dw-execute-phase` and `/dw-run-plan` must call plan-checker first; if it returns REVISE or BLOCK, abort.
+- **No execution without plan-checker PASS.** `/dw-execute-phase` and `/dw-run` must call plan-checker first; if it returns REVISE or BLOCK, abort.
 - **One commit per task, no exceptions.** Even trivial tasks commit. This drives traceability and revert safety.
 - **Deviations are recorded, not silenced.** Every adjustment beyond the plan goes in `deviations.md` with reason.
 - **Checkpoint > timeout.** When context budget is low, checkpoint cleanly rather than running tasks half-way.
@@ -130,4 +130,4 @@ If the executor exhausts its context budget mid-phase OR the user signals stop:
 
 ## Inspired by
 
-Adapted from [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) (`gsd-executor`, `gsd-plan-checker`) by gsd-build (MIT license). Core protocols (goal-backward verification, atomic commits, deviation handling, checkpoint resume) preserved. Path conventions changed from `.planning/<phase>/` to `.dw/spec/prd-<slug>/`. SDK CLI calls (`gsd-sdk query init.execute-phase`) replaced by inline operations. The companion `gsd-debugger` agent (1452 lines) was NOT ported — its scope overlaps with the existing `/dw-bugfix` and `/dw-fix-qa` commands.
+Adapted from [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) (`gsd-executor`, `gsd-plan-checker`) by gsd-build (MIT license). Core protocols (goal-backward verification, atomic commits, deviation handling, checkpoint resume) preserved. Path conventions changed from `.planning/<phase>/` to `.dw/spec/prd-<slug>/`. SDK CLI calls (`gsd-sdk query init.execute-phase`) replaced by inline operations. The companion `gsd-debugger` agent (1452 lines) was NOT ported — its scope overlaps with the existing `/dw-bugfix` and `/dw-qa --fix` commands.

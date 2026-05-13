@@ -9,7 +9,7 @@ You are a brainstorming facilitator for the current workspace. This command exis
 - Do NOT use when you already have clear requirements ready for a PRD, or when you need to implement code
 
 ## Pipeline Position
-**Predecessor:** (user idea) | **Successor:** `/dw-create-prd`
+**Predecessor:** (user idea) | **Successor:** `/dw-plan prd`
 
 ## Flags
 
@@ -29,7 +29,7 @@ digraph brainstorm_decision {
   Q1 [label="Are requirements\nclear and specific?"];
   Q2 [label="Are there multiple\nviable approaches?"];
   node [shape=box];
-  PRD [label="Go directly to\n/dw-create-prd"];
+  PRD [label="Go directly to\n/dw-plan prd"];
   BS [label="Start with\n/dw-brainstorm"];
   Q1 -> PRD [label="Yes"];
   Q1 -> Q2 [label="No"];
@@ -110,10 +110,10 @@ Use this command when the user wants to:
 ### 7. Next Steps
 - Short and actionable list
 - If appropriate, suggest which command to use next:
-  - `/dw-create-prd` (main successor; accepts the one-pager as input, reducing clarification questions)
-  - `/dw-run-task` (if it's a small IMPROVES that fits in a single task with a quick PRD)
-  - `/dw-create-techspec`
-  - `/dw-create-tasks`
+  - `/dw-plan prd` (main successor; accepts the one-pager as input, reducing clarification questions)
+  - `/dw-run` (if it's a small IMPROVES that fits in a single task with a quick PRD)
+  - `/dw-plan techspec`
+  - `/dw-plan tasks`
   - `/dw-bugfix`
 
 ## Heuristics
@@ -299,7 +299,7 @@ The codebase-grounded idea refinement pattern is inspired by [`addyosmani/agent-
 - **Product level, not code level**: while `idea-refine` uses Glob/Grep/Read over `src/*`, here we read **PRDs + rules + intel** to map the **feature inventory** of the product. The brainstorm stays product-focused.
 - **Explicit classification** (IMPROVES / CONSOLIDATES / NEW) as dev-workflow-native discipline — forces the team to decide whether the idea is new, consolidates existing features, or improves one, before opening a PRD.
 - Output at `.dw/spec/ideas/<slug>.md` (sibling of `prd-<slug>/`) instead of `docs/ideas/` — preserves dev-workflow path conventions.
-- Integration with the existing pipeline: `/dw-create-prd` accepts the one-pager as input, reducing clarification questions.
+- Integration with the existing pipeline: `/dw-plan prd` accepts the one-pager as input, reducing clarification questions.
 
 Credit: Addy Osmani and the `idea-refine` pattern.
 

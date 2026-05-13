@@ -15,18 +15,18 @@ Uma etapa que invoca um comando `/dw-xxx` SO e considerada completa quando os ar
 | Pensamento | Realidade |
 |------------|-----------|
 | "Ja rodei os testes manualmente" | O comando produz artefatos estruturados. Rode o comando. |
-| "Validei via Playwright ad-hoc" | `/dw-run-qa` exige matriz por RF, bugs.md, screenshots, scripts, logs, checklist. Rode o comando. |
-| "A implementacao esta obviamente correta" | `/dw-review-implementation` exige matriz de compliance por RF/endpoint/task. Rode o comando. |
+| "Validei via Playwright ad-hoc" | `/dw-qa` exige matriz por RF, bugs.md, screenshots, scripts, logs, checklist. Rode o comando. |
+| "A implementacao esta obviamente correta" | `/dw-review --coverage-only` exige matriz de compliance por RF/endpoint/task. Rode o comando. |
 | "Validacao manual forte ja basta" | NAO. Equivalencia tecnica NAO substitui a execucao formal. |
 | "Ja conferi build e lint, e suficiente" | Build/lint NAO substituem review nem QA. Rode os comandos. |
-| "Gerei um qa-report.md resumido a mao" | Um arquivo solto NAO e execucao de `/dw-run-qa`. A arvore `QA/` completa e obrigatoria. |
+| "Gerei um qa-report.md resumido a mao" | Um arquivo solto NAO e execucao de `/dw-qa`. A arvore `QA/` completa e obrigatoria. |
 | "O autopilot ja avancou, nao preciso voltar" | Se o artefato nao existe, a etapa nao rodou. Volte e execute. |
-| "Corrigi bugs no caminho, entao o QA ja esta ok" | Corrigir bugs nao substitui rodar o QA formal. Rode `/dw-run-qa`. |</critical>
+| "Corrigi bugs no caminho, entao o QA ja esta ok" | Corrigir bugs nao substitui rodar o QA formal. Rode `/dw-qa`. |</critical>
 
 ## Quando Usar
 - Use quando quiser ir de uma ideia ate um PR com minima intervencao manual
 - Use para features completas que passam por todo o pipeline (pesquisa, planejamento, execucao, qualidade)
-- NAO use para tasks pequenas e bem-escopadas — use `/dw-run-task` direto com um PRD curto
+- NAO use para tasks pequenas e bem-escopadas — use `/dw-run` direto com um PRD curto
 - NAO use para corrigir bugs (use `/dw-bugfix`)
 - NAO use quando quiser controle manual entre cada fase (use os comandos individuais)
 
@@ -72,12 +72,12 @@ Se este comando for re-invocado no mesmo PRD apos interrupcao:
 
 - Consulte `.dw/intel/` via `/dw-intel` para entender o contexto do projeto
 - Identifique: stack tecnologica, padroes existentes, features relacionadas
-- Se `.dw/intel/` esta ausente, sugira rodar `/dw-map-codebase` primeiro para contexto downstream mais rico
+- Se `.dw/intel/` esta ausente, sugira rodar `/dw-intel --build` primeiro para contexto downstream mais rico
 
 ### Etapa 2: Pesquisa (Condicional)
 
 Avalie se o topico necessita de pesquisa profunda:
-- **SIM** (execute `/dw-deep-research`): tecnologia nova para o projeto, dominio desconhecido, integracoes com APIs externas, decisoes arquiteturais criticas
+- **SIM** (execute `/dw-brainstorm --research`): tecnologia nova para o projeto, dominio desconhecido, integracoes com APIs externas, decisoes arquiteturais criticas
 - **NAO** (pule para etapa 3): feature simples no dominio ja mapeado, refatoracao de algo existente, CRUD basico
   - Se pular, DOCUMENTE o motivo no bloco de progresso. Ex: "Pesquisa pulada — dominio ja mapeado em .dw/rules/[arquivo].md". O usuario deve ver a justificativa.
 
@@ -94,7 +94,7 @@ Execute `/dw-brainstorm` com o contexto acumulado (intel + pesquisa).
 
 <critical>O PRD DEVE incluir entrevista interativa com o usuario. Faca NO MINIMO 7 perguntas de esclarecimento ANTES de redigir o PRD. NAO responda as perguntas automaticamente com base no contexto — o usuario DEVE responder.</critical>
 
-Execute `/dw-create-prd` usando os findings do brainstorm.
+Execute `/dw-plan prd` usando os findings do brainstorm.
 - Siga TODAS as instrucoes do comando, especialmente a secao de perguntas de esclarecimento
 - Faca pelo menos 7 perguntas ao usuario sobre: problema, usuarios-alvo, funcionalidades criticas, escopo, restricoes, design, integracao
 - Em cada pergunta, apresente uma recomendacao embasada nos findings do brainstorm e do deep-research (se executado). Ex: "Com base na pesquisa, recomendo X porque [evidencia]. Concorda ou prefere outra direcao?"
@@ -115,7 +115,7 @@ Apresente ao usuario:
 
 <critical>O TechSpec DEVE incluir entrevista interativa com o usuario. Faca NO MINIMO 7 perguntas de esclarecimento tecnico ANTES de redigir o TechSpec. NAO responda as perguntas automaticamente — o usuario DEVE responder.</critical>
 
-Execute `/dw-create-techspec` a partir do PRD aprovado.
+Execute `/dw-plan techspec` a partir do PRD aprovado.
 - Siga TODAS as instrucoes do comando, especialmente a secao de perguntas de esclarecimento
 - Faca pelo menos 7 perguntas ao usuario sobre: arquitetura preferida, libs existentes vs novas, estrategia de testes, integracao com sistemas existentes, restricoes de infraestrutura, performance, seguranca
 - Em cada pergunta, apresente uma recomendacao tecnica embasada nos findings do brainstorm, deep-research e PRD aprovado. Ex: "A pesquisa indicou que a lib X tem melhor performance para este caso [fonte]. Quer usar X ou tem outra preferencia?"
@@ -125,7 +125,7 @@ Execute `/dw-create-techspec` a partir do PRD aprovado.
 
 ### Etapa 6: Tasks
 
-Execute `/dw-create-tasks` a partir do PRD + TechSpec.
+Execute `/dw-plan tasks` a partir do PRD + TechSpec.
 - Siga todas as instrucoes do comando
 - Gere tasks individuais em `.dw/spec/prd-[nome]/`
 
@@ -148,9 +148,9 @@ Avalie se as tasks envolvem frontend:
 
 ### Etapa 8: Execucao
 
-Execute `/dw-run-plan` com o path do PRD.
+Execute `/dw-run` com o path do PRD.
 - Siga TODAS as instrucoes do comando, incluindo o gate nativo do plan-checker (PASS obrigatorio) e execucao paralela em waves via os agentes da skill bundled `dw-execute-phase`
-- Cada task segue `/dw-run-task` com validacao Level 1
+- Cada task segue `/dw-run` com validacao Level 1
 
 ### Etapa 9: Review de Implementacao (Loop)
 
@@ -164,7 +164,7 @@ Execute build e lint do projeto:
 5. Repita ate que build E lint passem sem erros
 6. So entao prossiga para o review
 
-Execute `/dw-review-implementation` para verificar PRD compliance (Level 2).
+Execute `/dw-review --coverage-only` para verificar PRD compliance (Level 2).
 - Se encontrar gaps: corrija automaticamente e re-execute o review
 - Maximo 3 ciclos de correcao
 - NAO avance para QA ate que o review passe
@@ -177,7 +177,7 @@ Um review textual curto, um "parece ok" ou conclusao "implementacao correta" SEM
 
 ### Etapa 10: QA Visual
 
-Execute `/dw-run-qa` com Playwright MCP.
+Execute `/dw-qa` com Playwright MCP.
 - Teste happy paths, edge cases, fluxos negativos, acessibilidade
 - Documente bugs com screenshots
 
@@ -188,12 +188,12 @@ Execute `/dw-run-qa` com Playwright MCP.
 - `{{PRD_PATH}}/QA/screenshots/` — diretorio existe e contem pelo menos 1 PNG por RF testado (formato `RF-XX-[slug]-PASS.png` ou `-FAIL.png`)
 - `{{PRD_PATH}}/QA/scripts/` — diretorio existe e contem scripts Playwright `.spec.ts`/`.spec.js` por RF
 - `{{PRD_PATH}}/QA/logs/` — diretorio existe com logs de console/rede capturados
-Rodar Playwright ad-hoc, tirar algumas screenshots soltas ou escrever um qa-report.md curto a mao NAO substitui esta estrutura. Se qualquer artefato estiver ausente ou incompleto, o comando NAO rodou — invoque `/dw-run-qa` formalmente e siga o fluxo dele ate o fim.</critical>
+Rodar Playwright ad-hoc, tirar algumas screenshots soltas ou escrever um qa-report.md curto a mao NAO substitui esta estrutura. Se qualquer artefato estiver ausente ou incompleto, o comando NAO rodou — invoque `/dw-qa` formalmente e siga o fluxo dele ate o fim.</critical>
 
 ### Etapa 11: Fix QA (Condicional)
 
 Se o QA encontrou bugs:
-- Execute `/dw-fix-qa` para corrigir e retestar
+- Execute `/dw-qa --fix` para corrigir e retestar
 - Loop ate estabilizar (maximo 5 ciclos). Apos 5 ciclos, PARE e pergunte ao usuario como deseja prosseguir.
 
 ### Etapa 12: Review de Implementacao (Pos-QA)
@@ -205,7 +205,7 @@ Execute build e lint do projeto (mesma sequencia da Etapa 9):
 2. Build
 3. Se falhar: corrija e re-execute ate passar
 
-Execute `/dw-review-implementation` novamente para confirmar que as correcoes do QA nao quebraram PRD compliance.
+Execute `/dw-review --coverage-only` novamente para confirmar que as correcoes do QA nao quebraram PRD compliance.
 - Se encontrar gaps: corrija e re-execute
 - Maximo 3 ciclos
 
@@ -213,7 +213,7 @@ Execute `/dw-review-implementation` novamente para confirmar que as correcoes do
 
 ### Etapa 13: Code Review
 
-Execute `/dw-code-review` (Level 3) para review formal.
+Execute `/dw-review --code-only` (Level 3) para review formal.
 - Gere relatorio persistido
 
 ### Etapa 14: Commit
@@ -227,7 +227,7 @@ Rode `ls` em cada caminho abaixo e confirme existencia. Se QUALQUER um faltar, N
 - `{{PRD_PATH}}/QA/screenshots/` (nao vazio)
 - `{{PRD_PATH}}/QA/scripts/` (nao vazio com arquivos `.spec.*`)
 - `{{PRD_PATH}}/QA/logs/`
-- Evidencia do ultimo `/dw-review-implementation` com matriz RF-by-RF (output da sessao ou referencia em `autopilot-state.json`)
+- Evidencia do ultimo `/dw-review --coverage-only` com matriz RF-by-RF (output da sessao ou referencia em `autopilot-state.json`)
 
 Verifique tambem `autopilot-state.json`:
 - Toda etapa de 1 a 13 que NAO esta em `skipped_steps` deve estar em `completed_steps`
@@ -250,7 +250,7 @@ Pergunte ao usuario: **"Commits realizados. Deseja gerar o Pull Request?"**
 
 ## Engine Nativo
 
-O autopilot depende de infraestrutura dev-workflow-native para inteligencia de codebase (`/dw-map-codebase` + `/dw-intel`) e dos agentes bundled de execucao de fase (plan-checker + executor em `.agents/skills/dw-execute-phase/agents/`). Tudo bundled, sem dependencias externas. Veja as skills bundled `dw-codebase-intel` e `dw-execute-phase` em `.agents/skills/` para detalhes.
+O autopilot depende de infraestrutura dev-workflow-native para inteligencia de codebase (`/dw-intel --build` + `/dw-intel`) e dos agentes bundled de execucao de fase (plan-checker + executor em `.agents/skills/dw-execute-phase/agents/`). Tudo bundled, sem dependencias externas. Veja as skills bundled `dw-codebase-intel` e `dw-execute-phase` em `.agents/skills/` para detalhes.
 
 ## Persistencia de Estado
 

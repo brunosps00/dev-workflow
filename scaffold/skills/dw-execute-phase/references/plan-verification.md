@@ -143,9 +143,9 @@ After running all 6 dimensions:
 
 The plan-checker is part of a bounded quality loop:
 
-1. `/dw-create-tasks` produces v1 of `tasks.md`
+1. `/dw-plan tasks` produces v1 of `tasks.md`
 2. `/dw-plan-checker` runs → REVISE
-3. `/dw-create-tasks --revise` produces v2 (consumes plan-checker's issues as input)
+3. `/dw-plan tasks --revise` produces v2 (consumes plan-checker's issues as input)
 4. `/dw-plan-checker` runs → PASS or REVISE again
 5. After 3 revisions without reaching PASS → escalate to user (something fundamental is wrong)
 

@@ -1,6 +1,6 @@
 # C# / .NET Security Patterns
 
-Covers **ASP.NET Core, ASP.NET (Framework), Blazor, Razor Pages, Minimal APIs, Entity Framework Core, ADO.NET, Dapper, Identity, NuGet**. Used by `/dw-security-check` as the primary reference when C# is detected in scope.
+Covers **ASP.NET Core, ASP.NET (Framework), Blazor, Razor Pages, Minimal APIs, Entity Framework Core, ADO.NET, Dapper, Identity, NuGet**. Used by `/dw-secure-audit` as the primary reference when C# is detected in scope.
 
 ---
 

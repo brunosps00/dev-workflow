@@ -1,6 +1,6 @@
 ---
 name: api-testing-recipes
-description: Validated API-testing snippets (.http, pytest+httpx, supertest, WebApplicationFactory, reqwest) used by /dw-run-qa and /dw-fix-qa when the project has no UI. Default format is .http (REST Client) for IDE portability.
+description: Validated API-testing snippets (.http, pytest+httpx, supertest, WebApplicationFactory, reqwest) used by /dw-qa and /dw-qa --fix when the project has no UI. Default format is .http (REST Client) for IDE portability.
 allowed-tools:
   - Read
   - Write
@@ -10,7 +10,7 @@ allowed-tools:
 
 # api-testing-recipes
 
-Curated library of **API-testing snippets** that `/dw-run-qa` and `/dw-fix-qa` use when a project is API-only (no Playwright). Each recipe is a ready-to-customize block per stack; the default is `.http` (REST Client) for maximum portability across IDEs.
+Curated library of **API-testing snippets** that `/dw-qa` and `/dw-qa --fix` use when a project is API-only (no Playwright). Each recipe is a ready-to-customize block per stack; the default is `.http` (REST Client) for maximum portability across IDEs.
 
 ## Why a skill (not inline)
 
@@ -22,14 +22,14 @@ Curated library of **API-testing snippets** that `/dw-run-qa` and `/dw-fix-qa` u
 
 Read this skill when:
 
-- `/dw-run-qa` detected API mode (no UI deps in the manifest) or was invoked with `--api`.
-- `/dw-fix-qa` is retesting a bug whose `evidence_type` is `api-log`.
+- `/dw-qa` detected API mode (no UI deps in the manifest) or was invoked with `--api`.
+- `/dw-qa --fix` is retesting a bug whose `evidence_type` is `api-log`.
 - Generating a baseline test suite from an OpenAPI spec.
 - Authoring contract checks against a backend.
 
 Do NOT use when:
 
-- The project has a UI and `/dw-run-qa` is in UI mode → use Playwright MCP instead.
+- The project has a UI and `/dw-qa` is in UI mode → use Playwright MCP instead.
 - The user wants browser-level acceptance (forms, navigation, accessibility) — that's Playwright territory.
 
 ## Available Recipes
@@ -49,7 +49,7 @@ Picking order:
 
 ## How to Compose
 
-The composing command (`/dw-run-qa` API mode) follows this loop:
+The composing command (`/dw-qa` API mode) follows this loop:
 
 1. **Pick the recipe** based on the rules above.
 2. **Read the recipe file** (`recipes/<name>.md`) for the variable conventions, test-matrix shape, and an example block.

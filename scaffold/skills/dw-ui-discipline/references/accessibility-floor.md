@@ -1,6 +1,6 @@
 # Accessibility floor — WCAG 2.2 AA is the minimum, not the goal
 
-This reference is read in full before any interactive widget ships. Skipping any item below is a hard-block in `/dw-code-review`.
+This reference is read in full before any interactive widget ships. Skipping any item below is a hard-block in `/dw-review --code-only`.
 
 ## The non-negotiables
 
@@ -222,4 +222,4 @@ LLM-produced UI commonly fails on:
 - Modals that trap focus only on success path, not on error.
 - Auto-playing carousels with no pause control.
 
-`/dw-code-review` runs axe-style checks on the diff for these.
+`/dw-review --code-only` runs axe-style checks on the diff for these.

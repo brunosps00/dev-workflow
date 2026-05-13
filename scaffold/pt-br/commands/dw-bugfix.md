@@ -5,8 +5,8 @@
 
     ## Quando Usar
     - Use para corrigir um bug reportado com triagem automática para distinguir bug vs feature vs escopo excessivo
-    - NÃO use para implementar uma nova funcionalidade (use `/dw-create-prd` em vez disso)
-    - NÃO use para corrigir bugs encontrados durante testes de QA (use `/dw-fix-qa` em vez disso)
+    - NÃO use para implementar uma nova funcionalidade (use `/dw-plan prd` em vez disso)
+    - NÃO use para corrigir bugs encontrados durante testes de QA (use `/dw-qa --fix` em vez disso)
 
     ## Posição no Pipeline
     **Antecessor:** (bug report) | **Sucessor:** `/dw-commit` e depois `/dw-generate-pr`
@@ -48,9 +48,9 @@
     Neste modo:
     1. Segue o fluxo normal de perguntas e análise
     2. Em vez de executar, gera documento em `.dw/spec/dw-bugfix-[nome]/prd.md`
-    3. O arquivo é nomeado `prd.md` para manter compatibilidade com o pipeline dw-create-techspec/dw-create-tasks
-    4. Depois o usuário pode rodar `/dw-create-techspec .dw/spec/dw-bugfix-[nome]`
-    5. E então `/dw-create-tasks .dw/spec/dw-bugfix-[nome]`
+    3. O arquivo é nomeado `prd.md` para manter compatibilidade com o pipeline dw-create-techspec/dw-plan tasks
+    4. Depois o usuário pode rodar `/dw-plan techspec .dw/spec/dw-bugfix-[nome]`
+    5. E então `/dw-plan tasks .dw/spec/dw-bugfix-[nome]`
 
     ## Fluxo de Trabalho
 
@@ -109,7 +109,7 @@
     ---
 
     **Deseja que eu inicie o fluxo de criação de PRD?**
-    - `sim` - Vou seguir `.dw/commands/dw-create-prd.md` para esta feature
+    - `sim` - Vou seguir `.dw/commands/dw-plan prd.md` para esta feature
     - `não, é bug` - Me explique melhor por que considera um bug
     - `não, cancelar` - Encerrar
     ```
@@ -244,7 +244,7 @@
     3. Salvar como: `.dw/spec/dw-bugfix-[nome-do-bug]/prd.md` (usa nome `prd.md` para compatibilidade com pipeline)
 
     **IMPORTANTE:** O arquivo deve ser nomeado `prd.md` para que os comandos
-    `/dw-create-techspec` e `/dw-create-tasks` funcionem sem modificação.
+    `/dw-plan techspec` e `/dw-plan tasks` funcionem sem modificação.
 
     ## Tipos de Tarefa (permitidos em bugfix)
 
@@ -280,7 +280,7 @@
         q2 [label="Does it require\nnew functionality?", shape=diamond];
         q3 [label="Scope <= 5 files\nand no migration?", shape=diamond];
         bug [label="BUG\n(continue bugfix flow)"];
-        feature [label="FEATURE\n(redirect to /dw-create-prd)"];
+        feature [label="FEATURE\n(redirect to /dw-plan prd)"];
         excessive [label="EXCESSIVE SCOPE\n(redirect to PRD or\nuse --analysis mode)"];
 
         start -> q1;

@@ -1,6 +1,6 @@
 # Padrões de Teste Playwright
 
-Referência para `/dw-run-qa` e `/dw-functional-doc`. Padrões E2E comuns.
+Referência para `/dw-qa` e `/dw-functional-doc`. Padrões E2E comuns.
 
 ## 1. Navegação Autenticada
 

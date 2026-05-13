@@ -49,9 +49,9 @@ Voce e o assistente de inteligencia do codebase. Dois modos: consultar o indice 
 
 Antes de responder, leia `.dw/intel/.last-refresh.json` se existir:
 
-- Se `updated_at` e mais de 7 dias atras → prefixe a resposta com: `⚠ Indice atualizado em YYYY-MM-DD (X dias atras). Considere rodar /dw-map-codebase para refresh.`
+- Se `updated_at` e mais de 7 dias atras → prefixe a resposta com: `⚠ Indice atualizado em YYYY-MM-DD (X dias atras). Considere rodar /dw-intel --build para refresh.`
 - Se `.dw/intel/` existe mas `.last-refresh.json` falta → prefixe com: `⚠ Sem metadado de refresh; o indice pode estar defasado.`
-- Se `.dw/intel/` nao existe → diga ao usuario: `Sem .dw/intel/. Caindo para .dw/rules/ + grep. Para respostas mais ricas, rode /dw-map-codebase.`
+- Se `.dw/intel/` nao existe → diga ao usuario: `Sem .dw/intel/. Caindo para .dw/rules/ + grep. Para respostas mais ricas, rode /dw-intel --build.`
 
 Nao recuse responder — devolva a melhor info disponivel.
 
@@ -120,7 +120,7 @@ Nao despeje JSON. Escreva resposta de 3-8 linhas que:
 
 - **Prefira `.dw/intel/` ao grep.** E curado e mais rapido. Grep so quando intel esta ausente ou defasado.
 - **Cite caminhos, nao conteudos.** O usuario pode `Read` se precisar do source.
-- **Nao invente.** Se `.dw/intel/` nao tem a resposta e grep retorna nada, diga. Sugira `/dw-map-codebase` se `.dw/intel/` esta faltando.
+- **Nao invente.** Se `.dw/intel/` nao tem a resposta e grep retorna nada, diga. Sugira `/dw-intel --build` se `.dw/intel/` esta faltando.
 - **Combine intel + rules.** Uma query sobre "como nomeamos arquivos de service?" deve puxar de `arch.md` (intel) E `.dw/rules/<modulo>.md` (convencoes do projeto). Os dois se complementam.
 
 ## Regras Criticas
@@ -132,7 +132,7 @@ Nao despeje JSON. Escreva resposta de 3-8 linhas que:
 
 ## Modo build (`--build`)
 
-Quando invocado com `--build`, o comando produz ou atualiza o indice queryable de intel. Anteriormente era `/dw-map-codebase`, agora consolidado.
+Quando invocado com `--build`, o comando produz ou atualiza o indice queryable de intel. Anteriormente era `/dw-intel --build`, agora consolidado.
 
 ### Comportamento
 
@@ -179,7 +179,7 @@ Use full `--build` trimestralmente ou apos mudancas estruturais; incremental pra
 
 ### Por que este skill existe
 
-Anteriormente dois comandos: `/dw-intel` (query) e `/dw-map-codebase` (build). O split era historico — um escrevia, outro lia, mas ambos compartilham schema e mesmo `.dw/intel/`. Consolidar reduz:
+Anteriormente dois comandos: `/dw-intel` (query) e `/dw-intel --build` (build). O split era historico — um escrevia, outro lia, mas ambos compartilham schema e mesmo `.dw/intel/`. Consolidar reduz:
 - Confusao ("qual rodar?").
 - Burden de manutencao de dois arquivos de command.
 - Docs duplicados.
@@ -188,6 +188,6 @@ Mesmas operacoes, um unico mental entry point.
 
 ## Inspirado em
 
-O mapeamento de query-patterns (where-is / what-uses / architecture-of / etc.) e o schema JSON do intel sao adaptados do projeto [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) (licenca MIT). Convencoes de path mudaram de `.planning/intel/` para `.dw/intel/`. Comportamento de modo build anteriormente vivia em `/dw-map-codebase` (mesmo upstream).
+O mapeamento de query-patterns (where-is / what-uses / architecture-of / etc.) e o schema JSON do intel sao adaptados do projeto [`get-shit-done-cc`](https://github.com/gsd-build/get-shit-done) (licenca MIT). Convencoes de path mudaram de `.planning/intel/` para `.dw/intel/`. Comportamento de modo build anteriormente vivia em `/dw-intel --build` (mesmo upstream).
 
 </system_instructions>

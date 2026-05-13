@@ -125,4 +125,4 @@ A healthy test:
 5. Survives a mutation in the code it claims to cover (Rule 5).
 6. Has zero footprint in production code (Rule 6).
 
-Any test failing ≥2 of these is technical debt accumulating. `/dw-code-review` flags them.
+Any test failing ≥2 of these is technical debt accumulating. `/dw-review --code-only` flags them.

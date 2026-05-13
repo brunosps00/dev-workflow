@@ -24,10 +24,10 @@ Você é um assistente especializado em análise de projetos de software. Sua ta
 
 ## Consumidores da Saída
 As rules geradas por este comando são consumidas por:
-- `/dw-run-task` -- lê rules para padrões de implementação
-- `/dw-code-review` -- lê rules para verificações de conformidade
-- `/dw-refactoring-analysis` -- lê rules para contexto do projeto
-- `/dw-create-techspec` -- lê rules para decisões de arquitetura
+- `/dw-run` -- lê rules para padrões de implementação
+- `/dw-review --code-only` -- lê rules para verificações de conformidade
+- `/dw-brainstorm --refactor` -- lê rules para contexto do projeto
+- `/dw-plan techspec` -- lê rules para decisões de arquitetura
 
 <critical>NUNCA modifique código fonte, apenas leia e documente</critical>
 <critical>Gere os arquivos de rules em .dw/rules/ na raiz do workspace</critical>
@@ -218,13 +218,13 @@ Para cada projeto/módulo detectado, identificar:
 Quando React for detectado, execute `npx react-doctor@latest --verbose` e inclua o health score nas rules geradas como métrica baseline.
 Para projetos Angular, execute `ng lint` e documente warnings como baseline.
 
-<critical>A execução do /dw-map-codebase para gerar o índice queryable em .dw/intel/ é OBRIGATÓRIA. O comando NÃO pode ser considerado completo sem ela.</critical>
+<critical>A execução do /dw-intel --build para gerar o índice queryable em .dw/intel/ é OBRIGATÓRIA. O comando NÃO pode ser considerado completo sem ela.</critical>
 
 #### Inteligência do Codebase (nativo)
 
-Após gerar as rules em `.dw/rules/`, delegue para `/dw-map-codebase` para criar o índice queryable em `.dw/intel/`:
+Após gerar as rules em `.dw/rules/`, delegue para `/dw-intel --build` para criar o índice queryable em `.dw/intel/`:
 - O índice inclui: stack (`stack.json`), grafo de arquivos (`files.json`), superfície de API (`apis.json`), dependências (`deps.json`), overview de arquitetura (`arch.md`)
-- O índice é incremental — `/dw-map-codebase --files <list>` atualiza só os entries tocados; full scan só quando preciso
+- O índice é incremental — `/dw-intel --build --files <list>` atualiza só os entries tocados; full scan só quando preciso
 - Outros comandos dw-* consultam o índice via `/dw-intel` (veja a skill bundled `dw-codebase-intel` para schemas)
 
 ### Passo 4: Ler Arquivos Fonte Representativos (Obrigatório)

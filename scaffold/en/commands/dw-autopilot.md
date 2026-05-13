@@ -15,18 +15,18 @@ A step that invokes a `/dw-xxx` command is ONLY considered complete when the art
 | Thought | Reality |
 |---------|---------|
 | "I already ran the tests manually" | The command produces structured artifacts. Run the command. |
-| "I validated via ad-hoc Playwright" | `/dw-run-qa` requires RF matrix, bugs.md, screenshots, scripts, logs, checklist. Run the command. |
-| "The implementation is obviously correct" | `/dw-review-implementation` requires a compliance matrix per RF/endpoint/task. Run the command. |
+| "I validated via ad-hoc Playwright" | `/dw-qa` requires RF matrix, bugs.md, screenshots, scripts, logs, checklist. Run the command. |
+| "The implementation is obviously correct" | `/dw-review --coverage-only` requires a compliance matrix per RF/endpoint/task. Run the command. |
 | "A strong manual validation is enough" | NO. Technical equivalence DOES NOT replace formal execution. |
 | "I already checked build and lint, that's enough" | Build/lint DO NOT replace review nor QA. Run the commands. |
-| "I wrote a summarized qa-report.md by hand" | A loose file IS NOT execution of `/dw-run-qa`. The full `QA/` tree is mandatory. |
+| "I wrote a summarized qa-report.md by hand" | A loose file IS NOT execution of `/dw-qa`. The full `QA/` tree is mandatory. |
 | "The autopilot already advanced, I don't need to go back" | If the artifact doesn't exist, the step didn't run. Go back and execute. |
-| "I fixed bugs along the way, so QA is already ok" | Fixing bugs does not replace running formal QA. Run `/dw-run-qa`. |</critical>
+| "I fixed bugs along the way, so QA is already ok" | Fixing bugs does not replace running formal QA. Run `/dw-qa`. |</critical>
 
 ## When to Use
 - Use when you want to go from an idea to a PR with minimal manual intervention
 - Use for complete features that go through the entire pipeline (research, planning, execution, quality)
-- Do NOT use for small, well-scoped one-off tasks — use `/dw-run-task` directly with a quick PRD instead
+- Do NOT use for small, well-scoped one-off tasks — use `/dw-run` directly with a quick PRD instead
 - Do NOT use to fix bugs (use `/dw-bugfix`)
 - Do NOT use when you want manual control between each phase (use individual commands)
 
@@ -72,12 +72,12 @@ If this command is re-invoked on the same PRD after interruption:
 
 - Query `.dw/intel/` via `/dw-intel` to understand project context
 - Identify: tech stack, existing patterns, related features
-- If `.dw/intel/` is absent, suggest running `/dw-map-codebase` first for richer downstream context
+- If `.dw/intel/` is absent, suggest running `/dw-intel --build` first for richer downstream context
 
 ### Step 2: Research (Conditional)
 
 Evaluate whether the topic requires deep research:
-- **YES** (run `/dw-deep-research`): new technology for the project, unknown domain, external API integrations, critical architectural decisions
+- **YES** (run `/dw-brainstorm --research`): new technology for the project, unknown domain, external API integrations, critical architectural decisions
 - **NO** (skip to step 3): simple feature in an already mapped domain, refactoring existing code, basic CRUD
   - If skipping, DOCUMENT the reason in the progress block. E.g.: "Research skipped — domain already mapped in .dw/rules/[file].md". The user must see the justification.
 
@@ -94,7 +94,7 @@ Run `/dw-brainstorm` with accumulated context (intel + research).
 
 <critical>The PRD MUST include an interactive interview with the user. Ask AT LEAST 7 clarification questions BEFORE writing the PRD. Do NOT answer questions automatically based on context — the user MUST respond.</critical>
 
-Run `/dw-create-prd` using brainstorm findings.
+Run `/dw-plan prd` using brainstorm findings.
 - Follow ALL command instructions, especially the clarification questions section
 - Ask at least 7 questions about: problem, target users, critical features, scope, constraints, design, integration
 - In each question, present a recommendation grounded in brainstorm and deep-research findings (if executed). E.g.: "Based on the research, I recommend X because [evidence]. Do you agree or prefer a different direction?"
@@ -115,7 +115,7 @@ Present to the user:
 
 <critical>The TechSpec MUST include an interactive interview with the user. Ask AT LEAST 7 technical clarification questions BEFORE writing the TechSpec. Do NOT answer questions automatically — the user MUST respond.</critical>
 
-Run `/dw-create-techspec` from the approved PRD.
+Run `/dw-plan techspec` from the approved PRD.
 - Follow ALL command instructions, especially the clarification questions section
 - Ask at least 7 questions about: preferred architecture, existing vs new libs, testing strategy, integration with existing systems, infrastructure constraints, performance, security
 - In each question, present a technical recommendation grounded in brainstorm, deep-research, and approved PRD findings. E.g.: "Research indicated lib X has better performance for this case [source]. Want to use X or have another preference?"
@@ -125,7 +125,7 @@ Run `/dw-create-techspec` from the approved PRD.
 
 ### Step 6: Tasks
 
-Run `/dw-create-tasks` from PRD + TechSpec.
+Run `/dw-plan tasks` from PRD + TechSpec.
 - Follow all command instructions
 - Generate individual tasks in `.dw/spec/prd-[name]/`
 
@@ -148,9 +148,9 @@ Evaluate whether tasks involve frontend:
 
 ### Step 8: Execution
 
-Run `/dw-run-plan` with the PRD path.
+Run `/dw-run` with the PRD path.
 - Follow ALL command instructions, including the native plan-checker gate (PASS required) and wave-based parallel execution via the bundled `dw-execute-phase` skill agents
-- Each task follows `/dw-run-task` with Level 1 validation
+- Each task follows `/dw-run` with Level 1 validation
 
 ### Step 9: Implementation Review (Loop)
 
@@ -164,7 +164,7 @@ Run the project's build and lint:
 5. Repeat until both build AND lint pass without errors
 6. Only then proceed to the review
 
-Run `/dw-review-implementation` to verify PRD compliance (Level 2).
+Run `/dw-review --coverage-only` to verify PRD compliance (Level 2).
 - If gaps found: fix automatically and re-run the review
 - Maximum 3 correction cycles
 - Do NOT advance to QA until the review passes
@@ -177,7 +177,7 @@ A short text review, a "looks good", or a conclusion "implementation is correct"
 
 ### Step 10: Visual QA
 
-Run `/dw-run-qa` with Playwright MCP.
+Run `/dw-qa` with Playwright MCP.
 - Test happy paths, edge cases, negative flows, accessibility
 - Document bugs with screenshots
 
@@ -188,12 +188,12 @@ Run `/dw-run-qa` with Playwright MCP.
 - `{{PRD_PATH}}/QA/screenshots/` — directory exists and contains at least 1 PNG per RF tested (format `RF-XX-[slug]-PASS.png` or `-FAIL.png`)
 - `{{PRD_PATH}}/QA/scripts/` — directory exists and contains Playwright `.spec.ts`/`.spec.js` scripts per RF
 - `{{PRD_PATH}}/QA/logs/` — directory exists with captured console/network logs
-Running Playwright ad-hoc, taking a few loose screenshots, or writing a short qa-report.md by hand DOES NOT replace this structure. If any artifact is missing or incomplete, the command did NOT run — invoke `/dw-run-qa` formally and follow its flow to completion.</critical>
+Running Playwright ad-hoc, taking a few loose screenshots, or writing a short qa-report.md by hand DOES NOT replace this structure. If any artifact is missing or incomplete, the command did NOT run — invoke `/dw-qa` formally and follow its flow to completion.</critical>
 
 ### Step 11: Fix QA (Conditional)
 
 If QA found bugs:
-- Run `/dw-fix-qa` to fix and retest
+- Run `/dw-qa --fix` to fix and retest
 - Loop until stable (maximum 5 cycles). After 5 cycles, STOP and ask the user how to proceed.
 
 ### Step 12: Implementation Review (Post-QA)
@@ -205,7 +205,7 @@ Run the project's build and lint (same sequence as Step 9):
 2. Build
 3. If any fail: fix and re-run until they pass
 
-Run `/dw-review-implementation` again to confirm QA fixes did not break PRD compliance.
+Run `/dw-review --coverage-only` again to confirm QA fixes did not break PRD compliance.
 - If gaps found: fix and re-run
 - Maximum 3 cycles
 
@@ -213,7 +213,7 @@ Run `/dw-review-implementation` again to confirm QA fixes did not break PRD comp
 
 ### Step 13: Code Review
 
-Run `/dw-code-review` (Level 3) for formal review.
+Run `/dw-review --code-only` (Level 3) for formal review.
 - Generate persisted report
 
 ### Step 14: Commit
@@ -227,7 +227,7 @@ Run `ls` on each path below and confirm existence. If ANY is missing, DO NOT com
 - `{{PRD_PATH}}/QA/screenshots/` (non-empty)
 - `{{PRD_PATH}}/QA/scripts/` (non-empty with `.spec.*` files)
 - `{{PRD_PATH}}/QA/logs/`
-- Evidence of the last `/dw-review-implementation` run with RF-by-RF matrix (session output or reference in `autopilot-state.json`)
+- Evidence of the last `/dw-review --coverage-only` run with RF-by-RF matrix (session output or reference in `autopilot-state.json`)
 
 Also verify `autopilot-state.json`:
 - Every step 1 through 13 that is NOT in `skipped_steps` must be in `completed_steps`
@@ -250,7 +250,7 @@ Ask the user: **"Commits completed. Do you want to generate the Pull Request?"**
 
 ## Native Engine
 
-The autopilot relies on dev-workflow-native infrastructure for codebase intelligence (`/dw-map-codebase` + `/dw-intel`) and bundled phase execution agents (plan-checker + executor in `.agents/skills/dw-execute-phase/agents/`). All bundled and require no external dependencies. See the `dw-codebase-intel` and `dw-execute-phase` bundled skills under `.agents/skills/` for details.
+The autopilot relies on dev-workflow-native infrastructure for codebase intelligence (`/dw-intel --build` + `/dw-intel`) and bundled phase execution agents (plan-checker + executor in `.agents/skills/dw-execute-phase/agents/`). All bundled and require no external dependencies. See the `dw-codebase-intel` and `dw-execute-phase` bundled skills under `.agents/skills/` for details.
 
 ## State Persistence
 

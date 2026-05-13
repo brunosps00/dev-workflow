@@ -10,9 +10,9 @@ description: Use when authoring or reviewing AI/LLM features (chat, RAG, summari
 ## When this skill applies
 
 - Any feature that uses an LLM in production: chat, summarization, classification, RAG (retrieval-augmented generation), agents, tool-use, structured extraction, code generation.
-- `/dw-create-tasks` when the PRD mentions an AI feature — eval planning becomes a mandatory subtask.
-- `/dw-code-review` when the diff touches AI feature code paths.
-- `/dw-run-qa --ai` when validating an AI feature against its reference dataset.
+- `/dw-plan tasks` when the PRD mentions an AI feature — eval planning becomes a mandatory subtask.
+- `/dw-review --code-only` when the diff touches AI feature code paths.
+- `/dw-qa --ai` when validating an AI feature against its reference dataset.
 
 If the feature is fully deterministic (no LLM in the loop), use `dw-testing-discipline` instead — Iron rules and 25 anti-patterns. This skill is specifically for entropy-tolerant systems.
 
@@ -110,7 +110,7 @@ See `references/agent-eval.md` for examples and the decision tree.
 | RAG-specific feature | `references/rag-metrics.md` |
 | Agent / tool-use feature | `references/agent-eval.md` |
 
-## Anti-patterns (will block in `/dw-code-review`)
+## Anti-patterns (will block in `/dw-review --code-only`)
 
 - **LLM-as-judge without calibration evidence.** PR adds LLM-as-judge but the calibration Spearman score is missing or < 0.80. REJECTED.
 - **Same-model judge.** Judge model is the same as the system under test. REJECTED unless explicitly documented (and even then, results are suspect).
@@ -121,9 +121,9 @@ See `references/agent-eval.md` for examples and the decision tree.
 
 ## Integration with dev-workflow commands
 
-- `/dw-create-tasks`: when the PRD has an AI feature requirement, an eval-plan subtask is mandatory. The task references this skill's oracle ladder.
-- `/dw-code-review`: AI feature PRs require a reference dataset + ≥2 oracle rungs (lower rungs FIRST). The constitution gate also applies — if the project has principles about AI feature reliability, they're enforced here.
-- `/dw-run-qa --ai`: new mode (when this skill is bundled) — runs the reference dataset against the current implementation, logs to `QA/logs/ai/<feature>-<date>.jsonl`, computes precision@k / faithfulness / outcome accuracy per the feature type.
+- `/dw-plan tasks`: when the PRD has an AI feature requirement, an eval-plan subtask is mandatory. The task references this skill's oracle ladder.
+- `/dw-review --code-only`: AI feature PRs require a reference dataset + ≥2 oracle rungs (lower rungs FIRST). The constitution gate also applies — if the project has principles about AI feature reliability, they're enforced here.
+- `/dw-qa --ai`: new mode (when this skill is bundled) — runs the reference dataset against the current implementation, logs to `QA/logs/ai/<feature>-<date>.jsonl`, computes precision@k / faithfulness / outcome accuracy per the feature type.
 - `/dw-bugfix` when the bug is an AI failure mode (hallucination, tool misuse, classification error): adds the failing case to the reference dataset BEFORE fixing — the case is now a regression test forever.
 
 ## When the discipline bends

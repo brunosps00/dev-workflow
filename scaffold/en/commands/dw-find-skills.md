@@ -15,7 +15,7 @@ You are an agent skills discovery helper for this workspace. Your job is to help
 
 ## Pipeline Position
 
-**Predecessor:** any exploratory question | **Successor:** none (independent flow). If no skill is found, fall back to `/dw-brainstorm` (idea exploration) or `/dw-run-task` (small one-off task) when applicable.
+**Predecessor:** any exploratory question | **Successor:** none (independent flow). If no skill is found, fall back to `/dw-brainstorm` (idea exploration) or `/dw-run` (small one-off task) when applicable.
 
 ## Complementary Skills
 
@@ -81,7 +81,7 @@ Browse skills at: https://skills.sh/
    - Acknowledge no match was found, no fabrication
    - Offer to help directly with general capabilities
    - Suggest `/dw-brainstorm` if the user wants to explore options before building it themselves
-   - Suggest `/dw-run-task` if the request fits a small one-off change (≤ 3 files, no PRD)
+   - Suggest `/dw-run` if the request fits a small one-off change (≤ 3 files, no PRD)
    - Mention `npx skills init <name>` as a path to author the missing skill
 
 ## Common Skill Categories
@@ -128,7 +128,7 @@ I searched for skills related to "<query>" and didn't find a strong match
 
 I can still help directly with general capabilities. Or:
   /dw-brainstorm "<your idea>"   — if you want to explore approaches first
-  /dw-run-task "<small change>"  — if it's a tiny change that fits one task (write quick PRD first)
+  /dw-run "<small change>"  — if it's a tiny change that fits one task (write quick PRD first)
   npx skills init <name>         — if this would be valuable as a reusable skill
 ```
 
@@ -150,7 +150,7 @@ I can still help directly with general capabilities. Or:
 `dw-find-skills` ports the `find-skills` skill (from the Claude superpowers bundle, `~/.agents/skills/find-skills/SKILL.md`) into a `dw-*` workflow command so every supported platform (Claude Code, Codex, Copilot, OpenCode) gets the same discovery on-ramp. Adaptations for dev-workflow:
 
 - Pipeline integration: `/dw-help <keyword>` routes here when the keyword matches `skill`/`find skill`/`install skill`/`extend agent`.
-- Fallback to `/dw-brainstorm` or `/dw-run-task` when no skill matches — keeps the user inside the workflow instead of dumping them empty-handed.
+- Fallback to `/dw-brainstorm` or `/dw-run` when no skill matches — keeps the user inside the workflow instead of dumping them empty-handed.
 - Explicit scope question (`-g` vs local) before installing, instead of always installing globally.
 
 Credit: the `find-skills` skill from the Claude superpowers ecosystem and the `npx skills` / [skills.sh](https://skills.sh/) project.

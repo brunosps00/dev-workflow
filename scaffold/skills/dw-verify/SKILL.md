@@ -171,11 +171,11 @@ If no verification command exists for the project, state that explicitly in the 
 
 This skill is invoked transparently from:
 
-- `/dw-run-task` — before committing the task's changes
-- `/dw-run-plan` — before Level 2 review and before declaring the plan complete
-- `/dw-fix-qa` — before marking a bug as resolved in `QA/bugs.md`
+- `/dw-run` — before committing the task's changes
+- `/dw-run` — before Level 2 review and before declaring the plan complete
+- `/dw-qa --fix` — before marking a bug as resolved in `QA/bugs.md`
 - `/dw-bugfix` — before claiming the bug is fixed (original symptom no longer reproduces)
-- `/dw-code-review` — before emitting an APPROVED verdict
+- `/dw-review --code-only` — before emitting an APPROVED verdict
 - `/dw-generate-pr` — blocks PR creation if the session has no passing VERIFICATION REPORT post-last-edit
 
 Callers should mention this skill in their "Skills Complementares" section so the user sees the dependency.

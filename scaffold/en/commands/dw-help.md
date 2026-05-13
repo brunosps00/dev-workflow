@@ -19,19 +19,19 @@ You are a workspace help assistant. When invoked, present the user with a comple
 | Keyword(s) | Suggested command | Why |
 |------------|-------------------|-----|
 | bug, error, failure, issue | `/dw-bugfix` | Auto-triage bug vs feature + fix |
-| review, quality | `/dw-code-review` | Formal Level-3 review with report |
-| qa, visual test, playwright | `/dw-run-qa` | E2E QA with browser automation |
-| refactor, smell, fowler | `/dw-refactoring-analysis` | Prioritized code-smell audit |
+| review, quality | `/dw-review --code-only` | Formal Level-3 review with report |
+| qa, visual test, playwright | `/dw-qa` | E2E QA with browser automation |
+| refactor, smell, fowler | `/dw-brainstorm --refactor` | Prioritized code-smell audit |
 | design, ui, redesign | `/dw-redesign-ui` | Audit + propose + implement visual |
-| debate, council, stress-test, opinions | `/dw-brainstorm --council` or `/dw-create-techspec --council` | Invokes `dw-council` for a multi-advisor debate |
-| security, vulnerability, owasp, trivy, cve | `/dw-security-check` | Rigid multi-layer check (OWASP static + Trivy SCA/IaC + native audit) for TS/Python/C#/Rust |
-| supply chain, outdated, compromised, malicious package, deps update, package upgrade, npm audit, pip-audit | `/dw-deps-audit` | Detect + classify + per-package update plan with scoped QA. Goes beyond `/dw-security-check` by adding remediation. |
+| debate, council, stress-test, opinions | `/dw-brainstorm --council` or `/dw-plan techspec --council` | Invokes `dw-council` for a multi-advisor debate |
+| security, vulnerability, owasp, trivy, cve | `/dw-secure-audit` | Rigid multi-layer check (OWASP static + Trivy SCA/IaC + native audit) for TS/Python/C#/Rust |
+| supply chain, outdated, compromised, malicious package, deps update, package upgrade, npm audit, pip-audit | `/dw-secure-audit --plan` | Detect + classify + per-package update plan with scoped QA. Goes beyond `/dw-secure-audit` by adding remediation. |
 | skill, find skill, install skill, ecosystem, capability, extend agent | `/dw-find-skills` | Discover skills from skills.sh / `npx skills` and install them globally or locally |
 | new project, scaffold, bootstrap, start, kickoff, init project, fullstack, monorepo | `/dw-new-project` | Stack interview + create-* tools + docker-compose for dev. Runs after `npx dev-workflow init`. |
 | dockerize, docker, dockerfile, compose, container, prod image, multi-stage | `/dw-dockerize` | Reads existing project, brainstorms base image, generates Dockerfile + docker-compose for dev/prod/both, or audits existing artifacts. |
 | refine, refinement, idea, one-pager | `/dw-brainstorm --onepager` | Idea refinement with Product Inventory + classification (IMPROVES/CONSOLIDATES/NEW) + durable one-pager |
-| revert, rollback task | `/dw-revert-task` | Safe revert with dependency checks |
-| research | `/dw-deep-research` | Multi-source research with citations |
+| revert, rollback task | `git revert <sha>` | Safe revert with dependency checks |
+| research | `/dw-brainstorm --research` | Multi-source research with citations |
 | idea, brainstorm | `/dw-brainstorm` | Structured ideation with trade-offs |
 | update dev-workflow | `/dw-update` | Update to latest npm version |
 
@@ -47,14 +47,14 @@ This workspace uses an AI command system that automates the full development cyc
 
 ```
 ┌──────────────┐     ┌─────────────────┐     ┌───────────────┐
-│ /dw-create-prd  │────>│/dw-create-techspec │────>│ /dw-create-tasks │
+│ /dw-plan prd  │────>│/dw-plan techspec │────>│ /dw-plan tasks │
 │ (WHAT)       │     │ (HOW)           │     │ (WHEN)        │
 └──────────────┘     └─────────────────┘     └───────┬───────┘
                                                      │
                                        ┌─────────────┴─────────────┐
                                        ▼                           ▼
                               ┌────────────────┐         ┌─────────────────┐
-                              │  /dw-run-task     │         │  /dw-run-plan      │
+                              │  /dw-run     │         │  /dw-run      │
                               │ (one at a time)│         │  (all auto)     │
                               └───────┬────────┘         └────────┬────────┘
                                       │                           │
@@ -78,7 +78,7 @@ This workspace uses an AI command system that automates the full development cyc
                                 ┌──────────────┼──────────────┐
                                 ▼              ▼              ▼
                       ┌──────────────┐ ┌──────────────┐ ┌─────────────────────┐
-                      │  /dw-run-qa     │ │/review-impl. │ │  /dw-code-review       │
+                      │  /dw-qa     │ │/review-impl. │ │  /dw-review --code-only       │
                       │ (visual QA)  │ │(PRD compliance│ │ (formal code review)│
                       └──────────────┘ │  Level 2)    │ │ (Level 3)           │
                                        └──────────────┘ └─────────────────────┘
@@ -111,18 +111,18 @@ This workspace uses an AI command system that automates the full development cyc
 | Command | What it does | Input | Output |
 |---------|-------------|-------|--------|
 | `/dw-brainstorm` | Facilitates structured ideation before PRD or implementation | Problem, idea, or context | Options + trade-offs + recommendation |
-| `/dw-create-prd` | Creates PRD with min. 7 clarification questions | Feature description | `.dw/spec/prd-[name]/prd.md` |
-| `/dw-create-techspec` | Creates technical specification from the PRD | PRD path | `.dw/spec/prd-[name]/techspec.md` |
-| `/dw-create-tasks` | Breaks PRD+TechSpec into tasks (max 2 FRs/task) | PRD path | `.dw/spec/prd-[name]/tasks.md` + `*_task.md` |
+| `/dw-plan prd` | Creates PRD with min. 7 clarification questions | Feature description | `.dw/spec/prd-[name]/prd.md` |
+| `/dw-plan techspec` | Creates technical specification from the PRD | PRD path | `.dw/spec/prd-[name]/techspec.md` |
+| `/dw-plan tasks` | Breaks PRD+TechSpec into tasks (max 2 FRs/task) | PRD path | `.dw/spec/prd-[name]/tasks.md` + `*_task.md` |
 
 ### Execution
 
 | Command | What it does | Input | Output |
 |---------|-------------|-------|--------|
-| `/dw-run-task` | Implements ONE task + Level 1 validation + commit | PRD path | Code + commit |
-| `/dw-run-plan` | Executes ALL tasks + final Level 2 review | PRD path | Code + commits + report |
+| `/dw-run` | Implements ONE task + Level 1 validation + commit | PRD path | Code + commit |
+| `/dw-run` | Executes ALL tasks + final Level 2 review | PRD path | Code + commits + report |
 | `/dw-bugfix` | Analyzes and fixes bugs (bug vs feature triage) | Target + description | Fix + commit OR PRD (if feature) |
-| `/dw-fix-qa` | Fixes documented QA bugs and retests with evidence | PRD path | Code + `QA/bugs.md` + `QA/qa-report.md` updated |
+| `/dw-qa --fix` | Fixes documented QA bugs and retests with evidence | PRD path | Code + `QA/bugs.md` + `QA/qa-report.md` updated |
 | `/dw-redesign-ui` | Audits, proposes, and implements visual redesign of pages/components | Target page/component | Redesign brief + code |
 | `/dw-autopilot` | Full pipeline orchestrator: from a wish to a PR with minimal intervention | Wish description | PRD + code + commits + PR |
 
@@ -131,24 +131,24 @@ This workspace uses an AI command system that automates the full development cyc
 | Command | What it does | Input | Output |
 |---------|-------------|-------|--------|
 | `/dw-analyze-project` | Analyzes project structure and generates documentation | Project path | Architecture overview |
-| `/dw-deep-research` | Multi-source research with citation tracking and verification | Topic or question | Research report with bibliography |
+| `/dw-brainstorm --research` | Multi-source research with citation tracking and verification | Topic or question | Research report with bibliography |
 | `/dw-functional-doc` | Maps screens, flows, and modules into a functional dossier with E2E coverage | Target URL/route + project | `.dw/flows/<project>/<slug>/` with docs, scripts, evidence |
 
 ### Quality (3 Levels)
 
 | Level | Command | When | Generates Report? |
 |-------|---------|------|-------------------|
-| **1** | *(embedded in /dw-run-task)* | After each task | No (terminal output) |
-| **2** | `/dw-review-implementation` | After all tasks / manual | Yes (formatted output) |
-| **3** | `/dw-code-review` | Before PR / manual | Yes (`code-review.md`) |
+| **1** | *(embedded in /dw-run)* | After each task | No (terminal output) |
+| **2** | `/dw-review --coverage-only` | After all tasks / manual | Yes (formatted output) |
+| **3** | `/dw-review --code-only` | Before PR / manual | Yes (`code-review.md`) |
 
 | Command | What it does | Input | Output |
 |---------|-------------|-------|--------|
-| `/dw-run-qa` | Visual QA with Playwright MCP + accessibility | PRD path | `QA/qa-report.md` + `QA/screenshots/` + `QA/logs/` |
-| `/dw-review-implementation` | Compares PRD vs code (FRs, endpoints, tasks) | PRD path | Gap report |
-| `/dw-code-review` | Formal code review (quality, rules, tests) | PRD path | `code-review.md` |
-| `/dw-refactoring-analysis` | Audit code smells and refactoring opportunities (Fowler's catalog) | PRD path | `refactoring-analysis.md` |
-| `/dw-security-check` | Rigid security check (OWASP static + Trivy SCA/IaC + native audit) for TS/Python/C#/Rust | PRD path or code | `security-check.md` |
+| `/dw-qa` | Visual QA with Playwright MCP + accessibility | PRD path | `QA/qa-report.md` + `QA/screenshots/` + `QA/logs/` |
+| `/dw-review --coverage-only` | Compares PRD vs code (FRs, endpoints, tasks) | PRD path | Gap report |
+| `/dw-review --code-only` | Formal code review (quality, rules, tests) | PRD path | `code-review.md` |
+| `/dw-brainstorm --refactor` | Audit code smells and refactoring opportunities (Fowler's catalog) | PRD path | `refactoring-analysis.md` |
+| `/dw-secure-audit` | Rigid security check (OWASP static + Trivy SCA/IaC + native audit) for TS/Python/C#/Rust | PRD path or code | `security-check.md` |
 
 ### Versioning
 
@@ -157,15 +157,15 @@ This workspace uses an AI command system that automates the full development cyc
 | `/dw-commit` | Semantic commit (Conventional Commits) | - | Commit |
 | `/dw-commit-all` | Commit across all submodules (inside-out) | - | Commits |
 | `/dw-generate-pr` | Push + create PR + copy body + open URL | Target branch | PR on GitHub |
-| `/dw-revert-task` | Safely revert a specific task's commits (dependency checks + confirmation) | PRD path + task number | Reverted commits + updated `tasks.md` |
+| `git revert <sha>` | Safely revert a specific task's commits (dependency checks + confirmation) | PRD path + task number | Reverted commits + updated `tasks.md` |
 
 ### Internal commands (used by other dw-* commands; rarely invoked directly)
 
 | Command | What it does | Typically invoked by |
 |---------|-------------|----------------------|
-| `/dw-adr` | Record an Architecture Decision Record during PRD execution | `/dw-create-techspec`, `/dw-run-task` when a non-trivial decision arises |
-| `/dw-intel` | Query the codebase index built in `.dw/intel/` | `/dw-create-prd`, `/dw-create-techspec`, `/dw-code-review`, etc. |
-| `/dw-map-codebase` | Build/refresh the queryable codebase index in `.dw/intel/` | `/dw-analyze-project` (auto-runs after rules generation) |
+| `/dw-adr` | Record an Architecture Decision Record during PRD execution | `/dw-plan techspec`, `/dw-run` when a non-trivial decision arises |
+| `/dw-intel` | Query the codebase index built in `.dw/intel/` | `/dw-plan prd`, `/dw-plan techspec`, `/dw-review --code-only`, etc. |
+| `/dw-intel --build` | Build/refresh the queryable codebase index in `.dw/intel/` | `/dw-analyze-project` (auto-runs after rules generation) |
 
 These are exposed as slash commands for occasional manual use (e.g., quickly recording an ADR mid-session, ad-hoc codebase queries) but most users never invoke them directly — they're called by the higher-level commands above.
 
@@ -196,22 +196,22 @@ Inspired by skills from the [Compozy](https://github.com/compozy/compozy) projec
 
 ```
 LEVEL 1 - Post-Task Validation (automatic, lightweight)
-├── Embedded in /dw-run-task
+├── Embedded in /dw-run
 ├── Verifies task acceptance criteria
 ├── Runs tests (pnpm test / npm test)
 ├── Checks basic patterns (types, imports)
 ├── No report file
 └── If fails: PAUSES execution
 
-LEVEL 2 - PRD Compliance (/dw-review-implementation)
+LEVEL 2 - PRD Compliance (/dw-review --coverage-only)
 ├── Compares ALL FRs from PRD vs actual code
 ├── Verifies ALL endpoints from TechSpec
 ├── Checks real status of each task (ignores checkboxes)
 ├── Identifies gaps, partial implementations, extra code
-├── Called automatically at end of /dw-run-plan
+├── Called automatically at end of /dw-run
 └── Available manually
 
-LEVEL 3 - Formal Code Review (/dw-code-review)
+LEVEL 3 - Formal Code Review (/dw-review --code-only)
 ├── Everything from Level 2 +
 ├── Quality analysis (SOLID, DRY, complexity, security)
 ├── Conformance with project rules (.dw/rules/)
@@ -225,12 +225,12 @@ LEVEL 3 - Formal Code Review (/dw-code-review)
 ### New Feature (Full)
 ```bash
 /dw-brainstorm "initial idea"                      # 0. Explore options and trade-offs
-/dw-create-prd                                     # 1. Describe the feature
-/dw-create-techspec .dw/spec/prd-name              # 2. Generate tech spec
-/dw-create-tasks .dw/spec/prd-name                 # 3. Break into tasks
-/dw-run-plan .dw/spec/prd-name                     # 4. Execute all (includes Level 1+2)
-/dw-refactoring-analysis .dw/spec/prd-name         # 5. Audit code smells (optional)
-/dw-code-review .dw/spec/prd-name                  # 6. Formal code review (Level 3)
+/dw-plan prd                                     # 1. Describe the feature
+/dw-plan techspec .dw/spec/prd-name              # 2. Generate tech spec
+/dw-plan tasks .dw/spec/prd-name                 # 3. Break into tasks
+/dw-run .dw/spec/prd-name                     # 4. Execute all (includes Level 1+2)
+/dw-brainstorm --refactor .dw/spec/prd-name         # 5. Audit code smells (optional)
+/dw-review --code-only .dw/spec/prd-name                  # 6. Formal code review (Level 3)
 /dw-generate-pr main                               # 7. Create PR
 /dw-archive-prd .dw/spec/prd-name                  # 8. After merge
 ```
@@ -238,14 +238,14 @@ LEVEL 3 - Formal Code Review (/dw-code-review)
 ### New Feature (Incremental)
 ```bash
 /dw-brainstorm "initial idea"                      # 0. Explore options and trade-offs
-/dw-create-prd                                     # 1. PRD
-/dw-create-techspec .dw/spec/prd-name              # 2. TechSpec
-/dw-create-tasks .dw/spec/prd-name                 # 3. Tasks
-/dw-run-task .dw/spec/prd-name                     # 4. Task 1 (with Level 1)
-/dw-run-task .dw/spec/prd-name                     # 5. Task 2 (with Level 1)
+/dw-plan prd                                     # 1. PRD
+/dw-plan techspec .dw/spec/prd-name              # 2. TechSpec
+/dw-plan tasks .dw/spec/prd-name                 # 3. Tasks
+/dw-run .dw/spec/prd-name                     # 4. Task 1 (with Level 1)
+/dw-run .dw/spec/prd-name                     # 5. Task 2 (with Level 1)
 # ... repeat for each task
-/dw-review-implementation .dw/spec/prd-name        # 6. PRD review (Level 2)
-/dw-code-review .dw/spec/prd-name                  # 7. Code review (Level 3)
+/dw-review --coverage-only .dw/spec/prd-name        # 6. PRD review (Level 2)
+/dw-review --code-only .dw/spec/prd-name                  # 7. Code review (Level 3)
 /dw-generate-pr main                               # 8. PR
 ```
 
@@ -259,26 +259,26 @@ LEVEL 3 - Formal Code Review (/dw-code-review)
 ### Complex Bug
 ```bash
 /dw-bugfix "description" --analysis                # Generate analysis document
-/dw-create-techspec .dw/spec/dw-bugfix-name           # TechSpec for the fix
-/dw-create-tasks .dw/spec/dw-bugfix-name              # Tasks for the fix
-/dw-run-plan .dw/spec/dw-bugfix-name                  # Execute all
+/dw-plan techspec .dw/spec/dw-bugfix-name           # TechSpec for the fix
+/dw-plan tasks .dw/spec/dw-bugfix-name              # Tasks for the fix
+/dw-run .dw/spec/dw-bugfix-name                  # Execute all
 /dw-generate-pr main                               # PR
 ```
 
 ### Visual QA (Frontend)
 ```bash
-/dw-run-qa .dw/spec/prd-name                       # QA with Playwright MCP
+/dw-qa .dw/spec/prd-name                       # QA with Playwright MCP
 # If bugs found:
 /dw-bugfix "description"                           # Fix each bug
-/dw-fix-qa .dw/spec/prd-name                       # Fix + retest full cycle
+/dw-qa --fix .dw/spec/prd-name                       # Fix + retest full cycle
 ```
 
 ### Frontend Redesign
 ```bash
 /dw-analyze-project                                # 0. Understand project patterns
 /dw-redesign-ui "target page or component"         # 1. Audit + propose + implement
-/dw-run-qa .dw/spec/prd-name                       # 2. Visual QA (optional)
-/dw-code-review .dw/spec/prd-name                  # 3. Code review
+/dw-qa .dw/spec/prd-name                       # 2. Visual QA (optional)
+/dw-review --code-only .dw/spec/prd-name                  # 3. Code review
 /dw-commit                                         # 4. Commit
 /dw-generate-pr main                               # 5. PR
 ```
@@ -295,7 +295,7 @@ LEVEL 3 - Formal Code Review (/dw-code-review)
 
 ### Deep Research
 ```bash
-/dw-deep-research "topic or question"              # Multi-source research with citations
+/dw-brainstorm --research "topic or question"              # Multi-source research with citations
 ```
 
 ## File Structure
@@ -362,28 +362,28 @@ Commands work across multiple AI tools, all pointing to the same source `.dw/com
 
 ## FAQ
 
-**Q: What is the difference between `/dw-run-task` and `/dw-run-plan`?**
-- `/dw-run-task` executes ONE task with manual control between each one
-- `/dw-run-plan` executes ALL automatically with a final review
+**Q: What is the difference between `/dw-run` and `/dw-run`?**
+- `/dw-run` executes ONE task with manual control between each one
+- `/dw-run` executes ALL automatically with a final review
 
-**Q: Do I need to run `/dw-review-implementation` manually?**
-- Not if using `/dw-run-plan` (already included). Yes if using `/dw-run-task` incrementally.
+**Q: Do I need to run `/dw-review --coverage-only` manually?**
+- Not if using `/dw-run` (already included). Yes if using `/dw-run` incrementally.
 
-**Q: When to use `/dw-code-review` vs `/dw-review-implementation`?**
-- `/dw-review-implementation` (Level 2): Checks if PRD FRs were implemented
-- `/dw-code-review` (Level 3): Additionally analyzes code quality and generates a formal report
+**Q: When to use `/dw-review --code-only` vs `/dw-review --coverage-only`?**
+- `/dw-review --coverage-only` (Level 2): Checks if PRD FRs were implemented
+- `/dw-review --code-only` (Level 3): Additionally analyzes code quality and generates a formal report
 
 **Q: Does `/dw-bugfix` always fix directly?**
-- No. It performs triage. If it is a feature (not a bug), it redirects to `/dw-create-prd`. If it is a complex bug, it can generate an analysis document with `--analysis`.
+- No. It performs triage. If it is a feature (not a bug), it redirects to `/dw-plan prd`. If it is a complex bug, it can generate an analysis document with `--analysis`.
 
-**Q: When should I use `/dw-deep-research`?**
+**Q: When should I use `/dw-brainstorm --research`?**
 - For comprehensive multi-source analysis, technology comparisons, state-of-the-art reviews, or any topic requiring cited evidence. Not for simple lookups or debugging.
 
 **Q: Does `/dw-redesign-ui` work with Angular?**
 - Yes. The command is framework-agnostic. For React it uses react-doctor and `vercel-react-best-practices`; for Angular it uses `ng lint` and Angular DevTools. UI discipline (`dw-ui-discipline`) works with any framework — enforces the hard-gate, anti-slop catalog, and WCAG floor regardless of stack.
 
 **Q: How do I get codebase intelligence and parallel execution?**
-- Both are native to dev-workflow. Run `/dw-map-codebase` to build the queryable index in `.dw/intel/`, then `/dw-intel "<question>"` to query it. For parallel execution, `/dw-run-plan` invokes the bundled phase-execution agents (executor + plan-checker) directly to dispatch tasks in waves with atomic commits per task. No external dependency needed.
+- Both are native to dev-workflow. Run `/dw-intel --build` to build the queryable index in `.dw/intel/`, then `/dw-intel "<question>"` to query it. For parallel execution, `/dw-run` invokes the bundled phase-execution agents (executor + plan-checker) directly to dispatch tasks in waves with atomic commits per task. No external dependency needed.
 
 **Q: Does `/dw-autopilot` replace all other commands?**
 - No. It orchestrates existing commands in sequence. You can still use each command individually for manual control. Autopilot is for when you want to go from a wish to a PR with minimal intervention.

@@ -16,12 +16,12 @@ This command is **complementary** to `/dw-new-project`:
 - You want a `--prod` Dockerfile distinct from your `--dev` setup, with proper multi-stage builds and non-root users
 - Onboarding a teammate to a project where local-dev "just works" via `docker compose up`
 - NOT for scaffolding a new project — use `/dw-new-project`
-- NOT for vulnerability scanning Dockerfiles — `/dw-security-check` covers Trivy IaC scanning of Dockerfile/compose
+- NOT for vulnerability scanning Dockerfiles — `/dw-secure-audit` covers Trivy IaC scanning of Dockerfile/compose
 - NOT for orchestration (k8s manifests, helm charts) — out of scope; the report can include notes pointing to those tools
 
 ## Pipeline Position
 
-**Predecessor:** any project with a manifest (`package.json`, `pyproject.toml`, `*.csproj`, `Cargo.toml`) | **Successor:** `/dw-security-check` (run Trivy on the new Dockerfile + compose), `/dw-deps-audit` (audit deps before baking them into a production image)
+**Predecessor:** any project with a manifest (`package.json`, `pyproject.toml`, `*.csproj`, `Cargo.toml`) | **Successor:** `/dw-secure-audit` (run Trivy on the new Dockerfile + compose), `/dw-secure-audit --plan` (audit deps before baking them into a production image)
 
 ## Complementary Skills
 
@@ -58,7 +58,7 @@ Detect language(s), framework, package manager, runtime infra deps, and existing
 
 #### 0.1 Language matrix
 
-Same matrix as `/dw-security-check` and `/dw-deps-audit`:
+Same matrix as `/dw-secure-audit` and `/dw-secure-audit --plan`:
 
 | Language | Indicators |
 |----------|------------|
@@ -273,9 +273,9 @@ Sections:
 7. **Audit Findings** (only `--audit` mode) — table of issues with severity, file:line, recommendation.
 8. **Next Steps:**
    - For `--dev`: `cp .env.example .env` (if missing), `docker compose -f docker-compose.dev.yml up -d`, then smoke test the app.
-   - For `--prod`: build the image locally first (`docker build -t <name>:dev .`), run `/dw-security-check` on the Dockerfile and compose, then push to registry.
+   - For `--prod`: build the image locally first (`docker build -t <name>:dev .`), run `/dw-secure-audit` on the Dockerfile and compose, then push to registry.
    - For `--audit`: apply suggested fixes manually or run with `--mode=force-overwrite`.
-   - Always: run `/dw-deps-audit` against the project before promoting the image to production.
+   - Always: run `/dw-secure-audit --plan` against the project before promoting the image to production.
 
 ## Flags
 
@@ -309,13 +309,13 @@ Sections:
 
 ## Integration With Other dw-* Commands
 
-- **`/dw-security-check`** — run AFTER `--prod` generation to scan the new Dockerfile + compose with Trivy IaC.
-- **`/dw-deps-audit`** — run BEFORE `--prod` generation to ensure no vulnerable deps go into the image.
+- **`/dw-secure-audit`** — run AFTER `--prod` generation to scan the new Dockerfile + compose with Trivy IaC.
+- **`/dw-secure-audit --plan`** — run BEFORE `--prod` generation to ensure no vulnerable deps go into the image.
 - **`/dw-new-project`** — sister command. `/dw-new-project` bakes Docker in from day one; `/dw-dockerize` retrofits it. They share the `docker-compose-recipes` skill.
-- **`/dw-fix-qa`** — if a generated `Dockerfile.dev` causes hot-reload to break, `/dw-fix-qa` can iterate fixes with the user.
+- **`/dw-qa --fix`** — if a generated `Dockerfile.dev` causes hot-reload to break, `/dw-qa --fix` can iterate fixes with the user.
 
 ## Inspired by
 
-`dw-dockerize` is dev-workflow-native. The detection layer reuses the language matrix from `/dw-security-check` and `/dw-deps-audit`. The brainstorm layer borrows the three-option (Conservative/Balanced/Bold) discipline from `/dw-brainstorm` and applies it to base-image choice. The audit layer reuses `security-review/infrastructure/docker.md` for OWASP-aligned checks. The compose composition is delegated to the `docker-compose-recipes` bundled skill (shared with `/dw-new-project`).
+`dw-dockerize` is dev-workflow-native. The detection layer reuses the language matrix from `/dw-secure-audit` and `/dw-secure-audit --plan`. The brainstorm layer borrows the three-option (Conservative/Balanced/Bold) discipline from `/dw-brainstorm` and applies it to base-image choice. The audit layer reuses `security-review/infrastructure/docker.md` for OWASP-aligned checks. The compose composition is delegated to the `docker-compose-recipes` bundled skill (shared with `/dw-new-project`).
 
 </system_instructions>

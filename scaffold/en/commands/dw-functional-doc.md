@@ -3,7 +3,7 @@ You are an assistant specialized in mapping real functionalities of screens, flo
 
 ## When to Use
 - Use when mapping screens, flows, or modules into a comprehensive functional dossier with E2E test coverage and optional video tours
-- Do NOT use when only running QA tests against existing requirements (use `/dw-run-qa`)
+- Do NOT use when only running QA tests against existing requirements (use `/dw-qa`)
 - Do NOT use when the project has not been set up yet
 
 ## Pipeline Position

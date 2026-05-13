@@ -160,11 +160,11 @@ Any of these in a PR is enough to REJECT a verdict:
 
 ## Integration with dev-workflow commands
 
-- `/dw-create-tasks` applies the placement doctrine — each test-adding task names the invariant.
-- `/dw-run-task` runs the 6 agent guardrails when generating tests during implementation.
-- `/dw-code-review` runs the anti-pattern checks on diff hunks under test paths.
-- `/dw-fix-qa` applies the flaky-discipline taxonomy in retest cycles.
-- `/dw-run-qa` (UI mode) references `playwright-recipes.md` for concrete recipes.
+- `/dw-plan tasks` applies the placement doctrine — each test-adding task names the invariant.
+- `/dw-run` runs the 6 agent guardrails when generating tests during implementation.
+- `/dw-review --code-only` runs the anti-pattern checks on diff hunks under test paths.
+- `/dw-qa --fix` applies the flaky-discipline taxonomy in retest cycles.
+- `/dw-qa` (UI mode) references `playwright-recipes.md` for concrete recipes.
 
 ## Bottom line
 

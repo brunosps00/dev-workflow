@@ -87,7 +87,7 @@ When wired into `/dw-generate-pr`, every PR must:
 
 - `/dw-commit` runs this skill — verifies lint/tests/build green, drafts a Conventional Commits message, splits commits if multi-intent detected.
 - `/dw-generate-pr` uses this skill to validate branch naming, PR body structure, and scope.
-- `/dw-run-task` and `/dw-run-plan` follow the atomic-commit discipline when their executor commits work — one task = one commit (or one logical sub-task).
+- `/dw-run` and `/dw-run` follow the atomic-commit discipline when their executor commits work — one task = one commit (or one logical sub-task).
 
 ## Anti-patterns this skill prevents
 

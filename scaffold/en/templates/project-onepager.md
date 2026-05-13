@@ -94,12 +94,12 @@ services: []
 
 ## MVP Scope
 
-[The smallest first feature you'll ship. Thought as user stories — this should drive the first /dw-create-prd run.]
+[The smallest first feature you'll ship. Thought as user stories — this should drive the first /dw-plan prd run.]
 
 - As a [persona], I can [action] so that [benefit]
 - As a [persona], I can [action] so that [benefit]
 
-If you don't have a first feature in mind yet, that's OK — leave a placeholder and run /dw-create-prd when ready.
+If you don't have a first feature in mind yet, that's OK — leave a placeholder and run /dw-plan prd when ready.
 
 ## Not Doing (explicit)
 
@@ -115,7 +115,7 @@ If you don't have a first feature in mind yet, that's OK — leave a placeholder
 
 ## Open Questions
 
-[Things this one-pager cannot answer alone. Resolve before /dw-create-prd or escalate to a stakeholder.]
+[Things this one-pager cannot answer alone. Resolve before /dw-plan prd or escalate to a stakeholder.]
 
 - [question 1]
 - [question 2]
@@ -124,6 +124,6 @@ If you don't have a first feature in mind yet, that's OK — leave a placeholder
 
 Pick ONE:
 
-- **`/dw-create-prd`** — when you have a first feature in mind and want to draft the PRD on top of this stack
+- **`/dw-plan prd`** — when you have a first feature in mind and want to draft the PRD on top of this stack
 - **`/dw-analyze-project`** — after the first substantial commit, to enrich `.dw/rules/` with module-level conventions
-- **`/dw-deps-audit --scan-only`** — to confirm no vulnerable deps shipped from the `create-*` templates
+- **`/dw-secure-audit --plan --scan-only`** — to confirm no vulnerable deps shipped from the `create-*` templates

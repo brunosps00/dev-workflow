@@ -16,12 +16,12 @@ Este comando e **complementar** ao `/dw-new-project`:
 - Voce quer um `Dockerfile` `--prod` distinto do `--dev`, com multi-stage e usuario nao-root
 - Onboarding de teammate em projeto onde local-dev "so funciona" via `docker compose up`
 - NAO use para scaffold de projeto novo — `/dw-new-project`
-- NAO use para scan de vulnerabilidades em Dockerfile — `/dw-security-check` cobre Trivy IaC
+- NAO use para scan de vulnerabilidades em Dockerfile — `/dw-secure-audit` cobre Trivy IaC
 - NAO use para orquestracao (manifests k8s, helm) — fora do escopo; o relatorio pode citar essas tools
 
 ## Posicao no Pipeline
 
-**Predecessor:** qualquer projeto com manifest (`package.json`, `pyproject.toml`, `*.csproj`, `Cargo.toml`) | **Sucessor:** `/dw-security-check` (Trivy no Dockerfile + compose), `/dw-deps-audit` (auditar deps antes de bakar elas em imagem prod)
+**Predecessor:** qualquer projeto com manifest (`package.json`, `pyproject.toml`, `*.csproj`, `Cargo.toml`) | **Sucessor:** `/dw-secure-audit` (Trivy no Dockerfile + compose), `/dw-secure-audit --plan` (auditar deps antes de bakar elas em imagem prod)
 
 ## Skills Complementares
 
@@ -58,7 +58,7 @@ Detecte linguagem(s), framework, package manager, deps de infra de runtime e art
 
 #### 0.1 Matriz de linguagens
 
-Mesma matriz de `/dw-security-check` e `/dw-deps-audit`:
+Mesma matriz de `/dw-secure-audit` e `/dw-secure-audit --plan`:
 
 | Linguagem | Indicadores |
 |-----------|-------------|
@@ -273,9 +273,9 @@ Secoes:
 7. **Audit Findings** (so `--audit`) — tabela de issues com severidade, file:line, recomendacao.
 8. **Next Steps:**
    - Para `--dev`: `cp .env.example .env` (se faltar), `docker compose -f docker-compose.dev.yml up -d`, depois smoke test do app.
-   - Para `--prod`: build local primeiro (`docker build -t <name>:dev .`), rode `/dw-security-check` no Dockerfile e compose, depois push pro registry.
+   - Para `--prod`: build local primeiro (`docker build -t <name>:dev .`), rode `/dw-secure-audit` no Dockerfile e compose, depois push pro registry.
    - Para `--audit`: aplique fixes manualmente ou rode com `--mode=force-overwrite`.
-   - Sempre: rode `/dw-deps-audit` antes de promover a imagem para prod.
+   - Sempre: rode `/dw-secure-audit --plan` antes de promover a imagem para prod.
 
 ## Flags
 
@@ -309,13 +309,13 @@ Secoes:
 
 ## Integracao com Outros dw-* Commands
 
-- **`/dw-security-check`** — rode APOS geracao `--prod` para escanear o novo Dockerfile + compose com Trivy IaC.
-- **`/dw-deps-audit`** — rode ANTES da geracao `--prod` para garantir que nenhuma dep vulneravel vai pra imagem.
+- **`/dw-secure-audit`** — rode APOS geracao `--prod` para escanear o novo Dockerfile + compose com Trivy IaC.
+- **`/dw-secure-audit --plan`** — rode ANTES da geracao `--prod` para garantir que nenhuma dep vulneravel vai pra imagem.
 - **`/dw-new-project`** — comando irmao. `/dw-new-project` ja inclui Docker do dia 1; `/dw-dockerize` retrofita. Compartilham a skill `docker-compose-recipes`.
-- **`/dw-fix-qa`** — se um `Dockerfile.dev` gerado quebra o hot-reload, `/dw-fix-qa` itera fixes com o usuario.
+- **`/dw-qa --fix`** — se um `Dockerfile.dev` gerado quebra o hot-reload, `/dw-qa --fix` itera fixes com o usuario.
 
 ## Inspirado em
 
-`dw-dockerize` e dev-workflow-native. A camada de deteccao reusa a matriz de linguagens de `/dw-security-check` e `/dw-deps-audit`. A camada de brainstorm pega a disciplina das tres opcoes (Conservadora/Balanceada/Ousada) emprestada do `/dw-brainstorm` e aplica em escolha de base. A camada de audit reusa `security-review/infrastructure/docker.md` para checks alinhados com OWASP. A composicao de compose esta delegada para a skill bundled `docker-compose-recipes` (compartilhada com `/dw-new-project`).
+`dw-dockerize` e dev-workflow-native. A camada de deteccao reusa a matriz de linguagens de `/dw-secure-audit` e `/dw-secure-audit --plan`. A camada de brainstorm pega a disciplina das tres opcoes (Conservadora/Balanceada/Ousada) emprestada do `/dw-brainstorm` e aplica em escolha de base. A camada de audit reusa `security-review/infrastructure/docker.md` para checks alinhados com OWASP. A composicao de compose esta delegada para a skill bundled `docker-compose-recipes` (compartilhada com `/dw-new-project`).
 
 </system_instructions>

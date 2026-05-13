@@ -126,8 +126,8 @@ Orders (5) ...
 
 Before answering, check `.dw/intel/.last-refresh.json`:
 
-- If `updated_at` is more than 7 days old → prefix the answer with: `⚠ Index last refreshed YYYY-MM-DD (X days ago). Run /dw-map-codebase to refresh.`
-- If `.last-refresh.json` is absent → prefix with: `⚠ No refresh metadata. Index may be stale; run /dw-map-codebase.`
+- If `updated_at` is more than 7 days old → prefix the answer with: `⚠ Index last refreshed YYYY-MM-DD (X days ago). Run /dw-intel --build to refresh.`
+- If `.last-refresh.json` is absent → prefix with: `⚠ No refresh metadata. Index may be stale; run /dw-intel --build.`
 
 Don't refuse to answer — return the best info available, but flag the staleness so the user can decide whether to trust it.
 
@@ -138,7 +138,7 @@ If `.dw/intel/` doesn't exist at all:
 1. Check `.dw/rules/` (from `/dw-analyze-project` or `/dw-new-project` seeding)
 2. If `.dw/rules/index.md` exists, search there for the query keywords
 3. Otherwise, do a direct `grep -r` over the project source (excluding `node_modules`, `.git`, etc.)
-4. Suggest at the end: `Tip: run /dw-map-codebase to build a queryable index. Subsequent /dw-intel queries will be much faster.`
+4. Suggest at the end: `Tip: run /dw-intel --build to build a queryable index. Subsequent /dw-intel queries will be much faster.`
 
 ## Don't
 

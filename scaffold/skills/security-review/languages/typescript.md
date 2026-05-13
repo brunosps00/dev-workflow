@@ -2,7 +2,7 @@
 
 This file complements `javascript.md` (which already covers React/Vue/Express/Next/Angular/Node XSS, injection, DOM sinks, prototype pollution). Here we focus on **TypeScript-specific** vulnerability classes: type-system abuses, runtime vs compile-time gap, TS-native ORMs, TS-native validators, and framework-specific patterns unique to TS ecosystems.
 
-> Used by `/dw-security-check` as the primary reference when TS is detected in scope.
+> Used by `/dw-secure-audit` as the primary reference when TS is detected in scope.
 
 ---
 

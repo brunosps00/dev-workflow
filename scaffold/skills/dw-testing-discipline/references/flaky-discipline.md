@@ -158,6 +158,6 @@ When CI is wired this way, a flake at unit usually = race or order-dependency (f
 
 ## Integration with dev-workflow
 
-- `/dw-fix-qa` uses this taxonomy when retest cycles produce inconsistent results: classify the flake, apply the right fix, document.
-- `/dw-code-review` flags tests being modified that have a `FLAKY-*` marker — review must verify the flake is now actually fixed, not just made less likely.
-- `/dw-run-qa` weekly summary includes the `flaky_rate` metric.
+- `/dw-qa --fix` uses this taxonomy when retest cycles produce inconsistent results: classify the flake, apply the right fix, document.
+- `/dw-review --code-only` flags tests being modified that have a `FLAKY-*` marker — review must verify the flake is now actually fixed, not just made less likely.
+- `/dw-qa` weekly summary includes the `flaky_rate` metric.

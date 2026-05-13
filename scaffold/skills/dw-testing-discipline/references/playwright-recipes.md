@@ -1,6 +1,6 @@
 # Playwright recipes — concrete tactical patterns
 
-Practical Playwright code for the common scenarios. Use this when `/dw-run-qa` runs in UI mode or when `/dw-functional-doc` needs E2E coverage.
+Practical Playwright code for the common scenarios. Use this when `/dw-qa` runs in UI mode or when `/dw-functional-doc` needs E2E coverage.
 
 > These recipes ASSUME the doctrine in this skill (core rules, positive patterns) has already been applied. Recipes are the HOW once the WHY is settled.
 

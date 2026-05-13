@@ -19,7 +19,7 @@ Auto-invocado por `/dw-review` e `/dw-generate-pr` em projetos TS/Python/C#/Rust
 | `/dw-secure-audit` | **Padrão.** Audit completo: OWASP static + Trivy SCA/secret/IaC + native lockfile audit + supply-chain check + outdated check. |
 | `/dw-secure-audit --scan-only` | Modo CI — roda scanners, exit não-zero se CRITICAL ou HIGH. Sem planejamento de remediação. |
 | `/dw-secure-audit --plan` | Default scan, mais plano de remediação per-package (opções Conservative / Balanced / Bold). Sem file writes; só o plano. |
-| `/dw-secure-audit --execute` | Plan mais aplica updates: testes scoped por pacote, um retry com `/dw-qa --fix` em falha, commits atômicos, `/dw-run-qa` como gate final. Reverte e marca BLOQUEADO se recovery falhar. |
+| `/dw-secure-audit --execute` | Plan mais aplica updates: testes scoped por pacote, um retry com `/dw-qa --fix` em falha, commits atômicos, `/dw-qa` como gate final. Reverte e marca BLOQUEADO se recovery falhar. |
 
 ## Linguagens Suportadas
 
@@ -212,7 +212,7 @@ Todos os arquivos commitados. Histórico de audit é parte do repo.
 
 ## Por que esta skill existe
 
-Anteriormente dois comandos: `/dw-security-check` (single-shot gate) e `/dw-deps-audit` (planner + remediator). O split era histórico — ambos compartilham mesmos scanners e findings overlapping. Consolidar reduz:
+Anteriormente dois comandos: `/dw-secure-audit` (single-shot gate) e `/dw-secure-audit --plan` (planner + remediator). O split era histórico — ambos compartilham mesmos scanners e findings overlapping. Consolidar reduz:
 - Confusão ("qual rodar?").
 - Scans duplicados (rodar ambos fazia 2× o trabalho do Trivy).
 - Fragmentação de reports (dois dirs separados).

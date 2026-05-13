@@ -86,7 +86,7 @@ Before declaring the design "done":
 - [ ] `focus-visible` is distinct from `hover` (keyboard users need their own affordance).
 - [ ] Color is never the SOLE differentiator (a11y); pair with shape/text/position.
 
-## Integration with `/dw-code-review`
+## Integration with `/dw-review --code-only`
 
 Review fails verdict (REJECTED) on a UI PR when:
 - A new component handles async data but renders only the default state.
