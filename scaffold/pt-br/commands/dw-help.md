@@ -168,7 +168,7 @@ Skills em `.agents/skills/` que os commands acima invocam transparentemente. Voc
 
 | Skill | Invocada por | Papel |
 |-------|--------------|-------|
-| `dw-verify` | run-task, run-plan, fix-qa, bugfix, code-review, generate-pr, quick | Iron Law: nenhuma claim de sucesso sem VERIFICATION REPORT PASS |
+| `dw-verify` | run-task, run-plan, fix-qa, bugfix, code-review, generate-pr, quick | core rule: nenhuma claim de sucesso sem VERIFICATION REPORT PASS |
 | `dw-memory` | run-task, run-plan, autopilot, resume, revert-task | Memory de workflow em dois níveis (shared + task-local) com promotion test |
 | `dw-review-rigor` | code-review, review-implementation, refactoring-analysis | De-duplication, severity ordering, verify-intent-before-flag, signal-over-volume |
 | `dw-council` | brainstorm `--council`, create-techspec `--council` | Debate multi-advisor (3-5 archetypes) com steel-manning, concession tracking e synthesis que preserva dissent. Opt-in. |

@@ -31,7 +31,7 @@ This command is **distinct** from `/dw-security-check`:
 | `security-review` (`references/supply-chain.md`) | **ALWAYS** when classifying findings — gives OWASP A06 (Vulnerable & Outdated Components) framing for the brainstorm trade-offs |
 | `dw-source-grounding` | **ALWAYS** in the brainstorm phase — each per-package update option (Conservative/Balanced/Bold) cites the official changelog/release notes for the target version: `[source: <url>, version: X.Y, retrieved: YYYY-MM-DD]`. Catches "agent recommends v5 because it sounds modern, but v5 dropped Node 18 support" errors. |
 | `dw-council` | Auto opt-in when ≥3 packages land in tier COMPROMISED — multi-advisor stress-test on remediation order and scope |
-| `dw-testing-discipline` | Optional — when the scoped test phase needs Playwright recipes for frontend projects. Iron Laws + anti-patterns apply to any test added during the audit. |
+| `dw-testing-discipline` | Optional — when the scoped test phase needs Playwright recipes for frontend projects. core rules + anti-patterns apply to any test added during the audit. |
 
 ## Input Variables
 

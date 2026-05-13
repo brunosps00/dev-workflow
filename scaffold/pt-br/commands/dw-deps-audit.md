@@ -31,7 +31,7 @@ Este comando e **distinto** do `/dw-security-check`:
 | `security-review` (`references/supply-chain.md`) | **SEMPRE** ao classificar findings — da o framing OWASP A06 (Vulnerable & Outdated Components) para os trade-offs do brainstorm |
 | `dw-source-grounding` | **SEMPRE** na fase de brainstorm — cada opcao de update por pacote (Conservadora/Balanceada/Ousada) cita o changelog/release notes oficial da versao alvo: `[source: <url>, version: X.Y, retrieved: YYYY-MM-DD]`. Previne "agent recomenda v5 porque parece moderno, mas v5 dropou Node 18". |
 | `dw-council` | Opt-in automatico quando >=3 pacotes caem em tier COMPROMISED — stress-test multi-conselheiro sobre ordem e escopo de remediacao |
-| `dw-testing-discipline` | Opcional — quando a fase de testes escopados precisa de recipes Playwright pra projetos frontend. Iron Laws + anti-patterns valem pra qualquer teste adicionado durante o audit. |
+| `dw-testing-discipline` | Opcional — quando a fase de testes escopados precisa de recipes Playwright pra projetos frontend. core rules + anti-patterns valem pra qualquer teste adicionado durante o audit. |
 
 ## Variaveis de Entrada
 

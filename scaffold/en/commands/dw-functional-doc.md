@@ -55,7 +55,7 @@ Works best with project analyzed by `/dw-analyze-project`
 
 When available in the project under `./.agents/skills/`, use these skills as operational support without replacing this command as source of truth:
 
-- `dw-testing-discipline`: support for structuring E2E flows (`references/playwright-recipes.md`), evidence collection patterns, and applying Iron Laws + selector hierarchy to any test the doc references
+- `dw-testing-discipline`: support for structuring E2E flows (`references/playwright-recipes.md`), evidence collection patterns, and applying core rules + selector hierarchy to any test the doc references
 - `remotion-best-practices`: mandatory support when there is a final human video, captions, composition, transitions, FFmpeg, or Remotion
 - `humanizer`: mandatory support for reviewing and naturalizing all captions, `.srt` files, descriptive texts, and any human-facing writing before final delivery
 - `dw-ui-discipline`: use when documenting visual patterns — the state matrix and scene sentence become part of each screen's overview section

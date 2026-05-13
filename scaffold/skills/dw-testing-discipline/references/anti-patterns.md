@@ -1,10 +1,10 @@
-# Anti-patterns — 25 patterns across 5 families
+# Anti-patterns — 25 smells across 4 families
 
-Each anti-pattern names the smell, shows the violation in pseudo-code, gives the fix, and notes how `/dw-code-review` detects it.
+Each anti-pattern names the smell, shows the violation in pseudo-code, gives the fix, and notes how `/dw-code-review` detects it. Agent-specific failure modes are covered separately in `agent-guardrails.md`.
 
 ---
 
-## Family 1: Brittleness (tests bound to internals)
+## Family A: Fragile to refactor (tests bound to internals, not behavior)
 
 ### A1. Implementation-detail selectors
 
@@ -81,7 +81,7 @@ test('clicking save works', async () => {
 
 ---
 
-## Family 2: Flakiness (tests randomizing verdicts)
+## Family B: Non-deterministic outcomes (tests that flip verdict on the same code)
 
 ### A7. Static sleeps / fixed-timeout waits
 
@@ -117,7 +117,7 @@ test('today is Monday', () => {
 
 ---
 
-## Family 3: Mock misuse (tests testing the test setup)
+## Family C: Mock-driven false confidence (tests asserting on their own setup)
 
 ### A10. Asserting the mock exists
 
@@ -181,7 +181,7 @@ You've tested the SCAFFOLD, not the logic.
 
 ---
 
-## Family 4: Process (team and suite pathologies)
+## Family D: Suite hygiene problems (team and suite-level pathologies)
 
 ### A15. Coverage as vanity metric
 

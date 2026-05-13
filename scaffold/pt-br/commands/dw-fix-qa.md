@@ -20,7 +20,7 @@ Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como sup
 
 - `dw-debug-protocol`: **SEMPRE** — todo finding bug-shaped (cenário falhando, não feature ausente) passa pelo six-step triage. A evidência de reteste é o artefato da etapa 6 (verify); o regression test da etapa 5 é o que sustenta o status `Corrigido`.
 - `dw-verify`: **SEMPRE** — invocada antes de marcar qualquer bug como `Corrigido` ou `Fechado` no `QA/bugs.md`. Sem VERIFICATION REPORT PASS (test + lint + build) + evidência de reteste (screenshot em modo UI OU linha JSONL em modo API), o status permanece `Reaberto` ou `Em análise`.
-- `dw-testing-discipline`: (modo UI) consulte `references/playwright-recipes.md` para estruturas de reteste, capturas, scripts. Aplique Iron Laws + flaky discipline ao retestar fixes — quarantine e SLOs da doutrina valem aqui.
+- `dw-testing-discipline`: (modo UI) consulte `references/playwright-recipes.md` para estruturas de reteste, capturas, scripts. Aplique core rules + flaky discipline ao retestar fixes — quarantine e SLOs da doutrina valem aqui.
 - `vercel-react-best-practices`: (modo UI) use apenas se a correção afetar frontend React/Next.js e houver risco de regressão de renderização, hidratação, fetching ou performance
 - `api-testing-recipes`: **(modo API — SEMPRE)** fonte da recipe usada no QA. Re-execute o arquivo `.http`/pytest/supertest/etc. original do RF do bug; anexe o resultado do reteste a um log JSONL fresco em `QA/logs/api/BUG-NN-retest.log`
 

@@ -21,7 +21,7 @@ Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como sup
 | `dw-verify` | **SEMPRE** — invocada antes do commit para produzir Verification Report com evidence fresca |
 | `dw-memory` | **SEMPRE** — lê memory da workflow no início e atualiza ao final da task (promotion test) |
 | `vercel-react-best-practices` | Task envolve renderização React, hidratação, data fetching, bundle, cache ou performance |
-| `dw-testing-discipline` | Task precisa de testes (qualquer layer) — aplica Iron Laws, 7 AI Gates, catálogo de anti-patterns. Use `references/playwright-recipes.md` quando a task tem frontend interativo precisando de validação E2E. |
+| `dw-testing-discipline` | Task precisa de testes (qualquer layer) — aplica core rules, 6 agent guardrails, catálogo de anti-patterns. Use `references/playwright-recipes.md` quando a task tem frontend interativo precisando de validação E2E. |
 
 ## Inteligência do Codebase
 

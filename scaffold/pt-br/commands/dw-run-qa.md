@@ -20,7 +20,7 @@ Você é um assistente IA especializado em Quality Assurance. Sua tarefa é vali
 
 Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como apoio operacional sem substituir este comando:
 
-- `dw-testing-discipline`: (modo UI) **SEMPRE** — Iron Laws e 25 anti-patterns valem pra todo teste de QA autorado. `references/playwright-recipes.md` pra patterns táticos. `references/three-workflow-patterns.md` pra escolher o modo certo (UI / network / perf). `references/security-boundary.md` pra qualquer fluxo que cruza boundary de auth.
+- `dw-testing-discipline`: (modo UI) **SEMPRE** — core rules e 25 anti-patterns valem pra todo teste de QA autorado. `references/playwright-recipes.md` pra patterns táticos. `references/three-workflow-patterns.md` pra escolher o modo certo (UI / network / perf). `references/security-boundary.md` pra qualquer fluxo que cruza boundary de auth.
 - `vercel-react-best-practices`: (modo UI) use apenas se o frontend sob teste for React/Next.js e houver indicação de regressão relacionada a renderização, fetching, hidratação ou performance percebida
 - `dw-ui-discipline`: (modo UI) use ao validar consistência de design — o catálogo anti-slop e o floor de acessibilidade WCAG são checados como parte da evidência de QA
 - `api-testing-recipes`: **(modo API — SEMPRE)** snippets validados para `.http`, pytest+httpx, supertest, WebApplicationFactory, reqwest. Compõe um arquivo de teste por RF em `QA/scripts/api/` e logs JSONL em `QA/logs/api/` segundo seus references

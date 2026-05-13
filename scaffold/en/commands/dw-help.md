@@ -185,7 +185,7 @@ Skills in `.agents/skills/` that commands above invoke transparently. You don't 
 
 | Skill | Invoked by | Role |
 |-------|------------|------|
-| `dw-verify` | run-task, run-plan, fix-qa, bugfix, code-review, generate-pr, quick | Iron Law: no success claim without a PASS VERIFICATION REPORT |
+| `dw-verify` | run-task, run-plan, fix-qa, bugfix, code-review, generate-pr, quick | core rule: no success claim without a PASS VERIFICATION REPORT |
 | `dw-memory` | run-task, run-plan, autopilot, resume, revert-task | Two-tier workflow memory (shared + task-local) with promotion test |
 | `dw-review-rigor` | code-review, review-implementation, refactoring-analysis | De-duplication, severity ordering, verify-intent-before-flag, signal-over-volume |
 | `dw-council` | brainstorm `--council`, create-techspec `--council` | Multi-advisor debate (3-5 archetypes) with steel-manning, concession tracking, and dissent-preserving synthesis. Opt-in. |

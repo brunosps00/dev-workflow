@@ -42,7 +42,7 @@ When available in the project under `./.agents/skills/`, use these to guide the 
 
 - `dw-ui-discipline`: **REQUIRED** — runs the 4-checkpoint hard-gate (brand authorities OR curated defaults; surface job sentence; complete state matrix; scene sentence) BEFORE any design proposal. The 14 anti-slop patterns are checked against each proposed direction. The WCAG 2.2 AA floor is non-negotiable at the validate step.
 - `vercel-react-best-practices`: use when the project is React/Next.js for performance and implementation patterns
-- `dw-testing-discipline`: consult `references/playwright-recipes.md` for before/after screenshot capture and visual validation. Iron Laws + selector hierarchy apply to any tests generated alongside the redesign.
+- `dw-testing-discipline`: consult `references/playwright-recipes.md` for before/after screenshot capture and visual validation. core rules + selector hierarchy apply to any tests generated alongside the redesign.
 - `security-review`: use if the redesign touches authentication flows or sensitive forms
 
 ## Analysis Tools

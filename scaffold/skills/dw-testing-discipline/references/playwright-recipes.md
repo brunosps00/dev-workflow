@@ -2,7 +2,7 @@
 
 Practical Playwright code for the common scenarios. Use this when `/dw-run-qa` runs in UI mode or when `/dw-functional-doc` needs E2E coverage.
 
-> These recipes ASSUME the doctrine in this skill (Iron Laws, positive patterns) has already been applied. Recipes are the HOW once the WHY is settled.
+> These recipes ASSUME the doctrine in this skill (core rules, positive patterns) has already been applied. Recipes are the HOW once the WHY is settled.
 
 ## Basic Navigation
 
@@ -275,7 +275,7 @@ Tests now start authenticated. No login loop in every test.
 ## Cross-skill integration
 
 When running these recipes, the doctrine in this skill applies:
-- Apply Iron Laws (especially Law 2: lowest layer first — many E2E tests should be integration tests instead).
+- Apply core rules (especially Rule 2: lowest layer first — many E2E tests should be integration tests instead).
 - Run the 7 AI Agent Gates if a coding agent is producing this test.
 - Check for Anti-Patterns 1, 5, 7, 20 in the diff.
 - For browser security scenarios (auth bypass, XSS, CSRF), see `security-boundary.md`.
