@@ -27,6 +27,7 @@ Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como apo
 - `dw-simplification`: use quando o diff toca código denso ou tortuoso — aplica Chesterton's Fence (entender POR QUÊ antes de propor remoção), protocolo de refactor preservando comportamento (test gate antes/depois) e métricas de complexidade (ciclomática, cognitiva, depth, fan-out) para que findings de "simplifique isso" sejam concretos, não opinativos.
 - `security-review`: use quando auth, autorização, input externo, upload, SQL, integração externa, secrets, SSRF, XSS ou superfícies sensíveis estiverem presentes
 - `vercel-react-best-practices`: use quando o diff tocar React/Next.js para revisar padrões de renderização, fetching, bundle, hidratação e performance
+- `dw-llm-eval`: **OBRIGATÓRIO quando o diff toca código de feature AI/LLM** (handlers de chat, RAG, classifiers, agentes, templates de prompt). O PR deve incluir: (1) caminho do reference dataset em `.dw/eval/datasets/<feature>/`, (2) no mínimo 2 oracle rungs cobrindo a feature, rungs mais baixos PRIMEIRO (rung 1-3 antes de rung 4), (3) evidência de calibração do juiz se rung 4 for usado (Spearman ≥0.80 vs humanos), (4) resultados de eval run no path tocado. Faltando algum → **REPROVADO**.
 
 ## Inteligência do Codebase
 

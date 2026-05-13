@@ -8,6 +8,12 @@
     ## Posição no Pipeline
     **Antecessor:** `/dw-create-techspec` | **Sucessor:** `/dw-run-task` ou `/dw-run-plan`
 
+    ## Skills Complementares
+
+    Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como apoio de planejamento:
+
+    - `dw-llm-eval`: **OBRIGATÓRIO quando o PRD descreve uma feature AI / LLM** (chat, RAG, summarização, classifier, agente, tool-use, extração estruturada). Adicione uma subtask "Plano de Avaliação" obrigatória em uma das tasks geradas — a subtask define (a) caminho do reference dataset, (b) quais oracle rungs (1-5) se aplicam, (c) evidência de calibração do juiz se rung 4 for usado, (d) métricas-alvo por rung. Não adicionar subtask de eval-plan pra feature AI é pego pelo final consistency check.
+
     ## Pré-requisitos
 
     A funcionalidade em que você trabalhará é identificada por este slug:

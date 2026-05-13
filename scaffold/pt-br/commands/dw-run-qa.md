@@ -24,6 +24,7 @@ Quando disponíveis no projeto em `./.agents/skills/`, use estas skills como apo
 - `vercel-react-best-practices`: (modo UI) use apenas se o frontend sob teste for React/Next.js e houver indicação de regressão relacionada a renderização, fetching, hidratação ou performance percebida
 - `dw-ui-discipline`: (modo UI) use ao validar consistência de design — o catálogo anti-slop e o floor de acessibilidade WCAG são checados como parte da evidência de QA
 - `api-testing-recipes`: **(modo API — SEMPRE)** snippets validados para `.http`, pytest+httpx, supertest, WebApplicationFactory, reqwest. Compõe um arquivo de teste por RF em `QA/scripts/api/` e logs JSONL em `QA/logs/api/` segundo seus references
+- `dw-llm-eval`: **(modo AI — quando invocado com `--ai`)** roda o reference dataset em `.dw/eval/datasets/<feature>/` contra a implementação atual. Computa precision@k / faithfulness / outcome accuracy conforme tipo da feature. Loga resultados como JSONL em `QA/logs/ai/<feature>-<date>.jsonl`. Compara contra a run anterior pra detectar regressão; alerta quando qualquer métrica cai >10% do baseline.
 
 ## Ferramentas de Análise
 
