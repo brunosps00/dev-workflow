@@ -11,19 +11,33 @@ Este projeto usa [`@brunosps00/dev-workflow`](https://www.npmjs.com/package/@bru
 |------------------------------------------------|--------------|
 | "Implementa X" / "Cria Y" / "Adiciona feature Z" / "Preciso de..." | `/dw-autopilot "X"` |
 | Erro colado / "X está quebrado" / "Bug em Y" / screenshot de teste falhando | `/dw-bugfix "X"` |
-| "Roda essa task" (com ID da task) | `/dw-run <ID>` |
-| "Roda todas as tasks pendentes" / "Executa o plano" | `/dw-run` |
-| "Revisa meu PR" / "Checa qualidade do código" / "Tá pronto pra subir?" | `/dw-review --code-only` |
-| "Hora de commitar" / mudanças validadas e prontas | `/dw-commit` |
-| "Abre um PR" / "Sobe isso" | `/dw-generate-pr` |
-| "Escreve PRD pra X" / "Especifica Y" | `/dw-plan prd` |
+| "Planeja essa feature" / "Escreve PRD + techspec + tasks" | `/dw-plan "X"` |
+| "Escreve PRD pra X" / "Especifica Y" | `/dw-plan prd "X"` |
 | "Desenha a arquitetura" / "Faz o techspec" | `/dw-plan techspec` |
 | "Quebra em tasks" | `/dw-plan tasks` |
-| "Onde está X?" / "O que usa Y?" / "Como Z é estruturado?" | `/dw-intel "<pergunta>"` |
-| "Audita nossas dependências" / "Estamos atrasados em pacotes?" | `/dw-secure-audit --plan` |
-| "Scan de vulnerabilidades" / "Check de segurança" | `/dw-secure-audit` |
+| "Roda essa task" (com ID da task) | `/dw-run <ID>` |
+| "Roda todas as tasks pendentes" / "Executa o plano" | `/dw-run` |
+| "Continue de onde parei" | `/dw-run --resume` |
 | "QA dessa feature" / "Roda o test plan" | `/dw-qa` |
 | "Corrige os bugs do QA" | `/dw-qa --fix` |
+| "Avalia a feature AI" / "Testa o RAG / classifier" | `/dw-qa --ai` |
+| "Revisa meu PR" / "Checa qualidade" / "Tá pronto pra subir?" | `/dw-review` |
+| "Só checagem de cobertura PRD" | `/dw-review --coverage-only` |
+| "Só code review qualidade" | `/dw-review --code-only` |
+| "Hora de commitar" / mudanças validadas e prontas | `/dw-commit` |
+| "Abre um PR" / "Sobe isso" | `/dw-generate-pr` |
+| "Brainstorm X" / "Explora ideias" | `/dw-brainstorm "X"` |
+| "Research X" / "Compara A vs B com citações" | `/dw-brainstorm --research "X"` |
+| "Auditoria de saúde do código" / "Tech debt" / "Oportunidades de refactor" | `/dw-brainstorm --refactor` |
+| "Onde está X?" / "O que usa Y?" / "Como Z é estruturado?" | `/dw-intel "<pergunta>"` |
+| "Reconstrói o índice" / "Refresh do intel" | `/dw-intel --build` |
+| "Redesign dessa UI" / "Audita e entrega novo design" | `/dw-redesign-ui "<target>"` |
+| "Audita dependências" / "Estamos atrasados em pacotes?" | `/dw-secure-audit --plan` |
+| "Scan de vulnerabilidades" / "Check de segurança" | `/dw-secure-audit` |
+| "Analisa esse projeto" / "Gera rules" | `/dw-analyze-project` |
+| "Abre um novo projeto" / "Bootstrap de stack" | `/dw-new-project` |
+| "Dockeriza isso" / "Adiciona docker-compose" | `/dw-dockerize` |
+| "Functional doc" / "Mapeia screens e flows" | `/dw-functional-doc` |
 
 **Prioridade:** na dúvida entre dois comandos, `/dw-autopilot` é o default mais seguro pra qualquer pedido de feature não-trivial — ele compõe os demais.
 
@@ -52,10 +66,7 @@ Quando qualquer destes se aplica, responda direto e **não** invoque comando `dw
 
   --- OU passo a passo ---
 
-/dw-brainstorm ─► /dw-plan prd ─► /dw-plan techspec ─► /dw-plan tasks
-                                                              │
-                                                              ▼
-/dw-commit + /dw-generate-pr ◄──── /dw-review --code-only ◄──── /dw-run
+/dw-brainstorm ─► /dw-plan ─► /dw-run ─► /dw-qa ─► /dw-review ─► /dw-commit ─► /dw-generate-pr
 ```
 
 Lista completa e ajuda contextual: `/dw-help`.

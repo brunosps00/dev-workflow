@@ -10,7 +10,7 @@ npx @brunosps00/dev-workflow init
 
 This will:
 1. Ask you to select a language (English or Portuguese)
-2. Create `.dw/commands/` with 31 workflow commands
+2. Create `.dw/commands/` with 20 workflow commands
 3. Create `.dw/templates/` with document templates (PRD, TechSpec, Tasks, ADR, etc.)
 4. Create `.dw/rules/` (populated by `/dw-analyze-project`)
 5. Install bundled skills (`dw-verify`, `dw-memory`, `dw-review-rigor`, `dw-ui-discipline`, `dw-testing-discipline`, `security-review`, etc.) to `.agents/skills/`
@@ -26,132 +26,68 @@ npx @brunosps00/dev-workflow install-deps
 
 ## Commands
 
-### Planning
+dev-workflow v1.0.0 ships **20 commands** organized into four tiers. Most users only invoke Tier 1 + Tier 2.
 
-#### `/dw-brainstorm`
-Facilitates structured ideation before opening a PRD or implementation. Explores multiple directions — conservative, balanced, and bold — with trade-offs for each, then converges on concrete next steps. **Product-aware**: when PRDs or rules exist, automatically reads them to produce a Feature Inventory and tags each option as `[IMPROVES: <feature>]`, `[CONSOLIDATES: <A>+<B>]`, or `[NEW]`. With optional `--onepager` flag, generates a durable one-pager at `.dw/spec/ideas/<slug>.md` that `/dw-create-prd` can consume to reduce clarification questions. Inspired by [`addyosmani/agent-skills@idea-refine`](https://skills.sh/addyosmani/agent-skills/idea-refine), adapted to product-level (features) rather than code-level grounding. No code is written or project files modified by the brainstorm itself.
+### Tier 1 — Gateway (3)
 
-#### `/dw-autopilot`
-Full pipeline orchestrator that takes a wish and automatically runs the entire development flow: codebase intelligence (`/dw-map-codebase` + `/dw-intel`), research (conditional), brainstorm, PRD, techspec, tasks, execution (gated by goal-backward plan verification, then wave-based parallel dispatch from the `dw-execute-phase` bundled skill), QA, review, and commit. Stops at 3 gates: PRD approval, tasks approval, and PR confirmation.
+| Command | When |
+|---------|------|
+| **`/dw-autopilot "wish"`** | Default entry point. Full pipeline (PRD → TechSpec → Tasks → Run → QA → Review → Commit → PR) with 3 approval gates. |
+| **`/dw-bugfix "description"`** | A bug report or pasted error. Triages bug-vs-feature-vs-scope, surgical fix or routes to a PRD. |
+| **`/dw-help [keyword]`** | Discover commands. Pass a keyword for shortcuts; `--advanced` reveals internal commands. |
 
-#### `/dw-create-prd`
-Creates a Product Requirements Document by first asking at least 7 clarification questions to fully understand the feature. Generates a structured PRD with numbered functional requirements focused on what and why, saved to `.dw/spec/prd-[feature-name]/prd.md`.
+### Tier 2 — Pipeline granular (7)
 
-#### `/dw-create-techspec`
-Generates a Technical Specification from an existing PRD after performing web searches and asking at least 7 clarification questions. Evaluates existing libraries vs custom development, defines testing strategy, branch naming, and integration architecture. Output is saved to `.dw/spec/prd-[feature-name]/techspec.md`.
+Use these when you want step-by-step control instead of `/dw-autopilot`.
 
-#### `/dw-create-tasks`
-Breaks down the PRD and TechSpec into implementable tasks with a target of ~6 tasks per feature (max 2 functional requirements each). Creates individual task files with subtasks and success criteria, ensuring end-to-end coverage across backend, frontend, and functional UI. Requires approval before finalizing.
+| Command | What |
+|---------|------|
+| **`/dw-brainstorm "idea"`** | Refine an idea before PRD. Flags: `--onepager` (durable artifact), `--council` (multi-advisor debate), `--research` (multi-source cited research), `--refactor` (Fowler code-smell catalog). |
+| **`/dw-plan "feature"`** | PRD → TechSpec → Tasks sequentially with checkpoints. Stages: `prd`, `techspec`, `tasks`. Mandatory clarification questions, source-grounding, constitution gate, final consistency check. |
+| **`/dw-run [task-id]`** | Execute tasks. Default: all pending in dependency order with wave-based parallel dispatch. Single-task: pass an ID. `--resume` continues an interrupted plan. |
+| **`/dw-review`** | Level 2 (PRD coverage mapping) + Level 3 (code quality). Hard gates on dw-verify PASS, secure-audit, constitution violations. Flags: `--coverage-only`, `--code-only`. |
+| **`/dw-qa`** | Mode-aware QA. Auto-detects UI vs API. Flags: `--fix` (iterative QA + fix-retest loop), `--api`, `--ai` (run AI eval against reference dataset). |
+| **`/dw-commit`** | Atomic Conventional Commits for pending changes. Applies `dw-git-discipline` (one intent per commit, lint+tests+build green before). |
+| **`/dw-generate-pr [target]`** | Push the branch, draft a PR body with summary + test plan, open the browser. Hard gates: dw-verify PASS + secure-audit. |
 
-### Execution
+### Tier 3 — Specialty (5)
 
-#### `/dw-run-task`
-Executes a single task from the task list, implementing code that follows project patterns and includes mandatory unit tests. Performs Level 1 validation (acceptance criteria + tests + standards check) and creates a commit upon completion.
+| Command | What |
+|---------|------|
+| **`/dw-analyze-project`** | Scans the repo, writes `.dw/rules/` (per-module conventions, anti-patterns, naming). Step 8 offers to generate `.dw/constitution.md` (declarative principles the team commits to). Run once per project; refresh after major refactors. |
+| **`/dw-redesign-ui "target"`** | Audits a frontend page, runs the `dw-ui-discipline` 4-question grounding, proposes 2-3 design directions, ships the redesign. WCAG 2.2 AA accessibility floor is non-negotiable. |
+| **`/dw-functional-doc`** | Maps screens + user flows into a functional doc, validated end-to-end with Playwright. |
+| **`/dw-new-project`** | Bootstrap a new project from empty directory. Stack interview, wraps official `create-*` tools, composes docker-compose for dev, seeds `.env`, scripts, CI, `.dw/rules/`. |
+| **`/dw-dockerize`** | Reads existing project, detects stack + runtime deps, proposes Dockerfile + docker-compose for dev/prod with explicit trade-offs (Conservative/Balanced/Bold). |
 
-#### `/dw-run-plan`
-Executes all pending tasks via the `dw-execute-phase` bundled skill — gated by 6-dimension goal-backward verification (`plan-checker` agent) before any code is touched. Wave-based parallel dispatch (`executor` agent) for independent tasks; atomic commit per task; deviation handling. After all tasks complete, performs a final Level 2 review (PRD compliance) with an interactive corrections cycle until no gaps remain or the user accepts pending items.
+### Tier 4 — Hidden/Internal (5)
 
-#### `/dw-bugfix`
-Analyzes and fixes bugs with automatic triage that distinguishes between bugs, feature requests, and excessive scope. Asks exactly 3 clarification questions before proposing a solution. Supports Direct mode (executes fix immediately) and Analysis mode (`--analysis`) that generates a document for the techspec/tasks pipeline.
+These are auto-invoked by Tier 1-3 commands. Available standalone via `/dw-help --advanced`.
 
-#### `/dw-redesign-ui`
-Audits existing frontend pages or components, then runs the `dw-ui-discipline` hard-gate (brand authorities or curated defaults, surface job sentence, complete state matrix, scene sentence) before proposing 2-3 design directions. Each direction self-checks against the 14 anti-slop patterns. WCAG 2.2 AA floor is non-negotiable at validation. Framework-agnostic (React, Angular, Vue). Generates a design contract persisted for consistency across tasks.
-
-### Quality
-
-#### `/dw-run-qa`
-Validates the implementation against PRD, TechSpec, and Tasks. **Mode-aware**: in UI mode, drives Playwright MCP for E2E browser tests with happy paths, edge cases, negative flows, regressions, WCAG 2.2 accessibility, and screenshot evidence. In API mode (auto-detected when no UI deps are in the manifest, or forced via `--api`), composes per-RF `.http` / pytest+httpx / supertest / WebApplicationFactory / reqwest scripts from the bundled `api-testing-recipes` skill, executes them, and writes JSONL request/response logs to `QA/logs/api/` as evidence. The matrix expands to {200 happy / 4xx validation/auth/authz/not-found/conflict / 5xx / contract drift / cross-tenant denial}. Optional `--from-openapi` adds a baseline derived from the project's OpenAPI spec. Generates a QA report, documents bugs with mode-aware evidence, and detects stub/placeholder pages (UI) or unmapped spec endpoints (API).
-
-#### `/dw-fix-qa`
-Fixes bugs found during QA testing with evidence-driven retesting. **Mode-aware**: in UI mode replays the failing flow via Playwright MCP and saves a retest screenshot; in API mode replays the failing `.http`/recipe and appends a `verdict: PASS|FAIL` JSONL line to `QA/logs/api/BUG-NN-retest.log`. Runs iterative cycles of identify, fix, retest, updating `QA/bugs.md` and `QA/qa-report.md` with status and mode-correct evidence.
-
-#### `/dw-review-implementation`
-Compares documented requirements (PRD + TechSpec + Tasks) against actual code as a Level 2 review. Maps each requirement to endpoints and tasks with evidence, identifies gaps, partial implementations, and extra undocumented code. After the coverage map is complete, automatically chains `/dw-code-review` (Level 3 quality layer) so a single invocation produces a consolidated coverage + quality report — pass `--no-code-review` if you want only Level 2.
-
-#### `/dw-code-review`
-Performs a formal Level 3 code review before PR creation, verifying PRD compliance, code quality (SOLID, DRY, complexity, security), and conformance with project rules in `.dw/rules/`. Runs tests, verifies coverage targets, and generates a persistent report with APPROVED, APPROVED WITH CAVEATS, or REJECTED status.
-
-#### `/dw-refactoring-analysis`
-Audits the codebase for code smells and refactoring opportunities using Martin Fowler's catalog. Detects bloaters, change preventers, dispensables, couplers, conditional complexity, and DRY violations, then maps each to a concrete refactoring technique with before/after code sketches. Includes coupling/cohesion metrics, SOLID analysis, and a prioritized action plan (P0-P3).
-
-#### `/dw-security-check`
-Rigid multi-layer security check for **TypeScript, Python, C#, and Rust** projects. Combines OWASP static review (language-aware, via the bundled `security-review` skill), Trivy SCA/secret/IaC scanning (`trivy fs` + `trivy config`), and native lockfile audit (`npm audit` / `pip-audit` / `dotnet list package --vulnerable` / `cargo audit`). Consults Context7 MCP for framework-version-specific best practices (Next.js, Django, ASP.NET Core, Actix/Axum/Rocket, etc.). Hard gates: any CRITICAL or HIGH finding produces REJECTED status, blocking `/dw-code-review`, `/dw-review-implementation`, and `/dw-generate-pr`. No bypass flag. Requires Trivy (install via `install-deps`).
-
-#### `/dw-deps-audit`
-Supply-chain remediation orchestrator for **TypeScript, Python, C#, and Rust** projects. Runs three detection signals — `npm/pnpm/pip-audit/dotnet/cargo audit` for known CVEs, the `outdated` companions for stale versions, and an OSV.dev + GitHub Advisories cross-check (with a hardcoded fallback list of historical malicious-package incidents like `event-stream`, `ua-parser-js`, `node-ipc`) for supply-chain attacks. Classifies findings into COMPROMISED / CRITICAL / HIGH / OUTDATED-MAJOR / OUTDATED-MINOR tiers, maps each affected package to the files that import it and the tests that cover those files, then drafts a per-package update plan with three options (Conservative / Balanced / Bold) and trade-offs. Modes: `--scan-only` (CI), `--plan` (default — no file writes), `--execute` (applies updates with scoped tests, one `/dw-fix-qa` retry, atomic commits, and `/dw-run-qa` as final gate; reverts and marks BLOCKED if recovery fails). Complementary to `/dw-security-check`: that one is the single-shot gate, this one is the planner-and-remediator.
-
-### Git & PR
-
-#### `/dw-commit`
-Analyzes pending changes, groups them by feature or logical context, and creates atomic semantic commits following the Conventional Commits format. Uses allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`.
-
-#### `/dw-generate-pr`
-Pushes the branch to remote and creates a Pull Request on GitHub with a structured description. Collects information from the PRD and modified files, runs tests, then generates a PR body with summary, changes grouped by module, test plan, and deploy notes. **Hard gate**: requires a fresh `dw-verify` PASS in the current session before the push.
-
-#### `/dw-revert-task`
-Safely reverts the commits of a specific task created by `/dw-run-task`, with dependency-aware checks (blocks if subsequent tasks already executed depend on it) and explicit user confirmation. Updates `tasks.md` to re-mark the task as pending.
-
-### Project Bootstrap
-
-#### `/dw-new-project`
-Bootstraps a new project from an empty directory. Runs a wide stack interview (frontend/backend/fullstack, language, framework, db, cache, queue, email, storage, search, auth, observability, reverse proxy, scheduler, CI, linter), then wraps the right official `create-*` tools (`pnpm create next-app`, `pnpm create vite`, `pnpm dlx create-t3-app`, `dotnet new webapi`, `cargo new`, etc.) to scaffold the apps. Composes a `docker-compose.dev.yml` from the bundled `docker-compose-recipes` skill (postgres, redis, mailhog by default for email-in-dev, minio, meilisearch, jaeger, traefik, etc.), seeds `.env.example`, root scripts (`dev:up`/`down`/`logs`/`reset`), `.gitignore`/`.dockerignore`, GitHub Action, README with port table, and a minimal `.dw/rules/index.md`. Hard gate: presents a one-pager + plan and waits for explicit approval before touching disk.
-
-### Containerization
-
-#### `/dw-dockerize`
-Reads an existing project, detects language / framework / package manager / runtime infra deps (postgres, redis, queue, email, storage, search, OTel) by parsing manifests and import statements, then proposes Docker artifacts. Modes: `--dev` (default if no Dockerfile exists) generates `docker-compose.dev.yml` + `Dockerfile.dev` from the bundled `docker-compose-recipes` skill; `--prod` generates a multi-stage `Dockerfile` (Conservative slim / Balanced alpine / Bold distroless — brainstormed with trade-offs) + optional `docker-compose.prod.yml` with non-root user, healthcheck, no secrets baked in; `--both` ships both; `--audit` (default if Docker artifacts already exist) reports findings against `security-review/infrastructure/docker.md` without overwriting. Hard gate: presents the file tree and waits for approval before any write. Sister command to `/dw-new-project` — they share the `docker-compose-recipes` bundled skill.
-
-### Architectural Decisions
-
-#### `/dw-adr`
-Records an Architecture Decision Record (ADR) for a non-trivial decision during PRD execution. Creates `.dw/spec/<prd>/adrs/adr-NNN.md` with Context / Decision / Alternatives / Consequences, and updates cross-references in the PRD/TechSpec/Task. Inspired by the ADR pattern from [Compozy](https://github.com/compozy/compozy).
-
-### Intelligence
-
-#### `/dw-intel`
-Queries codebase intelligence to answer questions about patterns, conventions, and architecture. Reads `.dw/intel/` (built by `/dw-map-codebase`) as primary source, falls back to `.dw/rules/` and direct grep when absent. Surfaces stale-index warnings (>7 days). Always cites sources with file paths and line numbers.
-
-#### `/dw-analyze-project`
-Scans the repository to identify tech stack, architectural patterns, naming conventions, and anti-patterns. Generates structured documentation in `.dw/rules/` with a project overview (`index.md`) and per-module rule files containing real code examples. Also invokes `/dw-map-codebase` to build the queryable index in `.dw/intel/` (the two are complementary — rules are human-readable, intel is machine-queryable).
-
-#### `/dw-deep-research`
-Conducts multi-source research with citation tracking and verification across quick, standard, deep, and ultradeep modes. Executes parallel information gathering, triangulation, and cross-reference verification through 8+ phases, producing a professional report with complete bibliography.
-
-#### `/dw-functional-doc`
-Generates a functional documentation dossier with screen mapping, E2E flows, and Playwright validation. Maps routes, components, and user journeys into structured documentation with evidence.
-
-#### `/dw-help`
-Displays the complete guide of available commands, integration flows, and when to use each one. Can be invoked without arguments for the full guide or with a specific command name for a detailed section.
-
-#### `/dw-find-skills`
-Discovers skills from the open agent skills ecosystem (`npx skills` / [skills.sh](https://skills.sh/)) when no `dw-*` already covers the request. Checks the leaderboard first, then runs `npx skills find <query>` if needed, vets each candidate (install count, source reputation, GitHub stars), and presents 1–3 options with the install commands. Asks whether to install globally (`-g`, lands in `~/.agents/skills/`) or locally (this repo) before running `npx skills add`. Falls back to `/dw-brainstorm` or `/dw-run-task` when no skill matches. Ports the `find-skills` Claude superpowers skill into a `dw-*` command so every supported platform gets the same discovery on-ramp.
+| Command | What | Invoked by |
+|---------|------|------------|
+| **`/dw-adr "decision"`** | Records an Architecture Decision Record at `.dw/spec/<prd>/adrs/`. | `/dw-plan techspec --council`; deviations from constitution |
+| **`/dw-intel "question"`** | Query codebase intelligence (`.dw/intel/`). `--build` (re)creates the index. | `/dw-plan`, `/dw-review`, `/dw-bugfix` |
+| **`/dw-secure-audit`** | Unified security: OWASP + Trivy SCA/secret/IaC + lockfile + supply-chain check. Hard gate. Flags: `--scan-only`, `--plan`, `--execute`. | `/dw-review`, `/dw-generate-pr` (for TS/Python/C#/Rust) |
+| **`/dw-find-skills "query"`** | Searches `npx skills` ecosystem, vets, installs. | manual when extending the bundle |
+| **`/dw-update`** | Updates dev-workflow to latest npm release with rollback snapshot. | manual maintenance |
 
 ## Workflow
 
 ```
 /dw-autopilot "wish"  ------>  Runs entire pipeline automatically
-                                (gates: PRD approval, Tasks approval, PR confirmation)
-    --- OR ---
+                                (3 gates: PRD approval, Tasks approval, PR confirmation)
+    --- OR step-by-step ---
 
-/dw-brainstorm  ------>  /dw-create-prd  -->  .dw/spec/prd-{name}/prd.md
-                            |
-                        /dw-create-techspec  -->  .dw/spec/prd-{name}/techspec.md
-                            |
-                        /dw-create-tasks  -->  .dw/spec/prd-{name}/tasks.md + {N}_task.md
-                            |
-                        /dw-run-task (one at a time)
-                            |       or
-                        /dw-run-plan (all tasks — wave-based parallel native)
-                            |
-                        /dw-run-qa  -->  .dw/spec/prd-{name}/QA/
-                            |
-                        /dw-fix-qa (if bugs found)
-                            |
-                        /dw-review-implementation  -->  PRD compliance check
-                            |
-                        /dw-code-review  -->  .dw/spec/prd-{name}/QA/dw-code-review.md
-                            |
-                        /dw-commit + /dw-generate-pr
+/dw-brainstorm  -->  /dw-plan           -->  .dw/spec/prd-{name}/{prd,techspec,tasks}.md
+                          |
+                    /dw-run              -->  atomic commits per task, dependency-aware
+                          |
+                    /dw-qa               -->  .dw/spec/prd-{name}/QA/ (UI / API / --ai)
+                          |
+                    /dw-review           -->  L2 PRD coverage + L3 code quality
+                          |
+                    /dw-commit + /dw-generate-pr
 
 Shortcuts:
   /dw-intel "question"         Query codebase intelligence
@@ -227,7 +163,7 @@ All wrappers point to `.dw/commands/` as the single source of truth.
 ```
 your-project/
 ├── .dw/
-│   ├── commands/          # 30 workflow command files
+│   ├── commands/          # 20 workflow command files (v1.0.0)
 │   ├── templates/         # Document templates (PRD, TechSpec, etc.)
 │   │   └── overrides/     # Project-local template customizations (override > core)
 │   ├── rules/             # Project-specific rules (run /dw-analyze-project)
@@ -326,16 +262,54 @@ Incident response (`dw-incident-response`) adapted from [`wilsto/claude-code-sta
 
 LLM evaluation (`dw-llm-eval`) trajectory-match modes (strict / unordered / subset / superset) and tool-argument matching strategies adapted from [`langchain-ai/agentevals`](https://github.com/langchain-ai/agentevals) (MIT). The broader oracle-ladder framing, judge-calibration discipline, and reference-dataset principle are distilled from the open evaluations literature (OpenAI evals cookbook, Anthropic evals guidance, the academic eval-of-LLM body of work) and rewritten in our voice.
 
-## Migration from v0.12.x
+## Migration from v0.x (1.0.0 is a consolidation release)
 
-The `dev-workflow update` command automatically removes the two replaced skills and installs the new ones — no manual action required:
+v1.0.0 consolidates 30 commands → 20. **The `dev-workflow update` command auto-removes obsolete wrappers** via the migrator that landed in v0.13.0; no manual action required.
 
-- `ui-ux-pro-max` → replaced by `dw-ui-discipline` (auto-removed on update)
-- `webapp-testing` → replaced by `dw-testing-discipline` (auto-removed on update)
+### Command renames (15 → 7 merged)
 
-The cleanup also detects and removes any **orphan `dw-*` wrappers** in `.claude/skills/`, `.agents/skills/`, and `.opencode/commands/` whose names no longer exist in the current scaffold (e.g., commands removed in v0.10 like `dw-execute-phase`, `dw-quick` that may still have wrappers from older installs).
+| Old (v0.x) | New (v1.0.0) |
+|-----------|--------------|
+| `/dw-create-prd` | `/dw-plan prd` |
+| `/dw-create-techspec` | `/dw-plan techspec` |
+| `/dw-create-tasks` | `/dw-plan tasks` |
+| `/dw-run-task <id>` | `/dw-run <id>` |
+| `/dw-run-plan` | `/dw-run` |
+| `/dw-code-review` | `/dw-review --code-only` |
+| `/dw-review-implementation` | `/dw-review --coverage-only` |
+| `/dw-run-qa` | `/dw-qa` |
+| `/dw-fix-qa` | `/dw-qa --fix` |
+| `/dw-security-check` | `/dw-secure-audit` |
+| `/dw-deps-audit` | `/dw-secure-audit --plan` |
+| `/dw-map-codebase` | `/dw-intel --build` |
+| `/dw-deep-research` | `/dw-brainstorm --research` |
+| `/dw-refactoring-analysis` | `/dw-brainstorm --refactor` |
 
-If you had **custom edits** inside `.agents/skills/ui-ux-pro-max/` or `.agents/skills/webapp-testing/`, back them up before running update — the migrator removes the entire directory. If you customized templates instead, those live in `.dw/templates/overrides/` (introduced in v0.11) and are preserved.
+### Removed (1)
+
+- `/dw-revert-task` → use `git revert <sha>` directly. No replacement.
+
+### Bundled skill swaps (already shipped in v0.13.0; carries over)
+
+- `ui-ux-pro-max` → `dw-ui-discipline`
+- `webapp-testing` → `dw-testing-discipline`
+
+### What the migrator does for you
+
+On the next `npx @brunosps00/dev-workflow update`, the following happens automatically:
+
+1. The 15 renamed commands' wrappers are detected as orphans (their names no longer exist in `lib/constants.js`) and removed from `.claude/skills/`, `.agents/skills/`, and `.opencode/commands/`.
+2. The migrator prints each removal with the friendly "old → new" mapping (e.g., `[orphan] Removing wrapper .agents/skills/dw-create-prd (replaced in v1.0.0 by 'dw-plan prd')`).
+3. The 20 new wrappers are installed for the consolidated commands.
+4. The 17 bundled skills are refreshed.
+
+### Backwards compatibility
+
+**There is none** — v1.0.0 is a clean cut per design. There are no aliases. Calling `/dw-create-prd` will not work; use `/dw-plan prd`. Update your team's runbooks and AI-agent instructions (CLAUDE.md / AGENTS.md) accordingly; the auto-trigger map in `agent-instructions.md` is already updated.
+
+### CLAUDE.md / AGENTS.md updates
+
+The Trigger Map block (between `<!-- dev-workflow:start -->` and `<!-- dev-workflow:end -->`) refreshes automatically on update with the v1.0.0 command surface. Your edits outside the markers are preserved.
 
 ## License
 

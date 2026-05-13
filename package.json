@@ -1,6 +1,6 @@
 {
   "name": "@brunosps00/dev-workflow",
-  "version": "0.15.0",
+  "version": "1.0.0",
   "description": "AI-driven development workflow commands for any project. Scaffolds a complete PRD-to-PR pipeline with multi-platform AI assistant support.",
   "bin": {
     "dev-workflow": "./bin/dev-workflow.js"
