@@ -1,128 +1,150 @@
 ---
 name: dw-ui-discipline
-description: Use BEFORE any UI work — enforces a hard-gate (brand authorities or curated defaults, surface job, state matrix, scene sentence), 14 anti-slop patterns, and WCAG 2.2 AA floor so UI ships with discipline instead of training-data defaults.
+description: Use BEFORE any UI work — runs a 4-question grounding (where do design decisions come from, what does this surface help the user do, what states does it have, who uses it where), then enforces the WCAG 2.2 AA floor and 14 visual-slop checks so UI ships with intent instead of training-data defaults.
 ---
 
 # UI Discipline
 
-> **Inspired by** [`pedronauck/skills/ui-craft`](https://github.com/pedronauck/skills/tree/main/skills/mine/ui-craft) (MIT). Hard-gate protocol, anti-slop catalog, state matrix enforcement, and accessibility-floor patterns adapted from Pedro Nauck's work; specifics rewritten for dev-workflow's redesign and review loops.
+Training-data defaults are the enemy. An ungrounded LLM proposing UI will reach for `#3B82F6` blue, `rounded-lg` radius, center-aligned text, and gradient backgrounds — because those screenshots dominate training data. The surface ends up looking like every other SaaS dashboard, and users can't tell what to look at first.
 
-The fastest path through UI work is the disciplined one. "It's just a small change" is the most common slop excuse. This skill blocks that excuse at four checkpoints before any design decision lands.
+This skill blocks that autopilot at four grounding questions before any visual decision lands. After the questions pass, it enforces an accessibility floor and runs a visual-slop catalog as the proposed design comes together.
 
-## When this skill applies
+## When to use
 
-- Any work invoked from `/dw-redesign-ui`, `/dw-create-techspec` (UI sections), `/dw-functional-doc`, or `/dw-code-review` when the diff touches UI.
-- Adding new screens, components, or surfaces.
-- Reviewing visual changes in a PR.
-- Auditing accessibility on existing surfaces.
+- Inside `/dw-redesign-ui` — both proposal and validation steps.
+- Inside `/dw-create-techspec` when the spec has UI sections.
+- Inside `/dw-functional-doc` when documenting screen-level patterns.
+- Inside `/dw-code-review` when the diff touches UI files (CSS, JSX, templates).
+- Inside `/dw-brainstorm` when the conversation drifts into visual direction.
 
-If you're tempted to skip the gate "because it's just a tweak" — that's the trigger. Run the gate.
+If you're tempted to skip this "because it's just a small tweak" — that's the trigger. Run the grounding.
 
-## The hard-gate (4 mandatory items before any UI work)
+## The four grounding questions
 
-Before proposing colors, layouts, components, or any visual decision, complete all four:
+Answer all four before proposing colors, layouts, components, or any visual decision.
 
-### 1. Brand authorities OR curated defaults
+### 1. Where do design decisions come from?
 
-Locate the project's design source of truth:
-- `.dw/rules/{frontend-module}.md` design system section
-- `DESIGN.md`, `BRAND.md`, or design tokens config (Tailwind, CSS vars, theme file)
-- Component library docs (shadcn/ui, MUI, Chakra, etc.)
+Find the project's design source-of-truth in this order:
+1. `.dw/rules/<frontend-module>.md` design system section.
+2. `DESIGN.md`, `BRAND.md`, `STYLE_GUIDE.md` at project root.
+3. Design token config — Tailwind theme, CSS variables in `theme.css`/`globals.css`, MUI/Chakra theme.
+4. Component library config — `components.json` for shadcn, theme exports.
+5. Storybook stories (implicit canonical components).
 
-If **none exist**, do NOT invent. Read `references/curated-defaults.md` — pick from the 10 neutral palettes + 10 font pairings shipped there. Mark the choice as a finding in the techspec ("no design authority found; used curated default <name>; recommend establishing one").
+If **at least one** exists: it wins. Defer to it. If a needed token is missing (e.g., a danger-secondary color), propose adding it to the authority FIRST, not inline.
 
-### 2. Surface job sentence
+If **none exists**: read `references/curated-defaults.md` and pick one of the 10 neutral palettes + one of the 10 font pairings shipped there. Mark the choice in the techspec/PR description: "Design source: no project authority found; using curated default `<name>`; recommend establishing `DESIGN.md`."
 
-Write one sentence: "This surface helps the user <do what> so that <outcome>." Vague language ("show data", "manage settings") fails — be specific ("filter overdue invoices so they can chase late payers in <30s").
+**Anti-patterns at this question:**
+- Inventing color hex values inline (`bg-[#FF6B35]`).
+- "I'll use Tailwind defaults" — that's training-data defaults, not project authority.
+- Copying values from "a site I like" without understanding what it solved.
+
+### 2. What does this surface help the user do?
+
+Write one sentence: **"This surface helps the user `<verb-phrase>` so that `<outcome>`."**
+
+Good examples:
+- "...helps the user filter overdue invoices so they can chase late payers in under 30 seconds."
+- "...helps the on-call engineer diagnose which deploy caused the spike so they can roll back without paging the team."
+- "...helps the manager approve or reject expense reports without leaving Slack."
+
+Bad examples:
+- "This surface displays invoice data." (no user, no outcome)
+- "Settings page for managing the account." (vague, no specificity)
+- "Dashboard." (one word)
 
 If you can't write the sentence, the requirements are unclear. Stop and clarify before proceeding.
 
-### 3. Complete state matrix
+### 3. What states does the surface have?
 
-Enumerate all states the surface can be in. See `references/state-matrix.md` for the full list:
-- `default`, `hover`, `active`, `focus-visible`, `disabled`, `loading`, `empty`, `error`, `success`
-- Plus any domain-specific states (read/unread, online/offline, etc.)
+Enumerate all states before designing the happy path. Minimum nine, plus domain-specific ones — see `references/state-matrix.md`:
+
+`default`, `hover`, `active`, `focus-visible`, `disabled`, `loading`, `empty`, `error`, `success` plus any domain states (read/unread, online/offline, stale/fresh, pending/approved/rejected, draft/saved/dirty, partial/complete, etc.).
 
 Missing a state at design time = production bug later. The "we'll add empty state later" trap is real.
 
-### 4. Scene sentence
+### 4. Who uses this surface, where, and in what mood?
 
-One sentence describing the physical context: **who** is using this, **where** (mobile bus, office desktop, on-call laptop), **what light** (dark room, bright outdoor), **what mood** (rushed, exploring, troubleshooting).
+One sentence: **"`<Who>` uses this on `<where>` in `<what light>` while `<what mood>`."**
 
-This forcing function prevents category-level defaults from becoming the answer. A "dashboard for an on-call engineer at 3am in a dark room troubleshooting a fire" produces different decisions than "dashboard for a manager during business hours."
+Good examples:
+- "An on-call engineer uses this on a dark-room laptop at 3am while troubleshooting a fire."
+- "A field nurse uses this on a phone in bright outdoor light while juggling clipboards."
+- "A receptionist uses this on a 24″ monitor at a busy front desk while talking to a visitor."
 
-## Required Reading Router
+Decisions cascade from the answer:
+- 3am dark room → dark mode, high contrast, no flashing animations.
+- Bright outdoor → minimum 7:1 contrast, larger touch targets, no thin fonts.
+- Busy front desk → glanceable info, no nested menus, large numbers.
 
-| Context | Read |
-|---------|------|
-| Any UI work | `references/hard-gate.md` (full protocol with examples) |
-| Interactive widgets (buttons, forms, modals) | `references/accessibility-floor.md` (WCAG 2.2 AA non-negotiable) |
-| Reviewing a UI diff | `references/anti-slop.md` (14 anti-patterns + 17 anti-defaults) |
-| Designing state coverage | `references/state-matrix.md` (full enumeration + checklist) |
-| No design authority exists in project | `references/curated-defaults.md` (10 palettes + 10 fonts) |
+Without this sentence, defaults take over: light mode, default contrasts, animations, regular touch targets. Production users hate it; you can't articulate why.
 
-## Anti-slop summary (full list in references/anti-slop.md)
+## Required reading by context
 
-The 14 patterns this skill catches:
+| Doing what | Read |
+|------------|------|
+| Any UI work (the full version of the grounding) | `references/hard-gate.md` |
+| Reviewing or proposing a design | `references/visual-slop.md` (14 patterns + specific anti-default values) |
+| Designing state coverage | `references/state-matrix.md` |
+| Interactive widget (button, form, modal, anything clickable) | `references/accessibility-floor.md` |
+| No design authority exists in the project | `references/curated-defaults.md` (palettes / fonts / scales) |
 
-1. **Visual sameness** — every section looks like every other section.
-2. **Weak hierarchy** — nothing draws the eye to what matters first.
-3. **Fake interactivity** — hover states that don't change anything functional.
-4. **Emoji spam** — emojis as decoration where icons or restraint would serve.
-5. **Gradient crutch** — gradients used to mask weak composition.
-6. **Glass everything** — frosted glass on every panel.
-7. **Centered all the things** — center-aligned text when left-aligned reads better.
-8. **AI gray washing** — neutral grays everywhere, no character.
-9. **Generic CTAs** — "Get Started", "Learn More", "Click Here" with no specificity.
-10. **Stock illustration** — generic figure-with-laptop hero art.
-11. **Drop shadow soup** — shadows on cards on shadows on borders.
-12. **Loading spinner default** — spinner as the only loading state for everything.
-13. **Empty state void** — empty list with no guidance on what to do next.
-14. **Notification-soup tray** — every UI event becomes a toast.
+## The 14 visual-slop patterns (full catalog in `references/visual-slop.md`)
 
-Plus 17 anti-defaults (specific values to NEVER use without intent — `#3B82F6` blue, `rounded-lg` everywhere, etc.) in `references/anti-slop.md`.
+Watch for these in proposed designs and PR diffs:
+
+1. **Uniform-section flatness** — every section looks like every other section; no anchor for the eye.
+2. **Soft hierarchy** — headings barely larger than body; primary CTA same color as secondary.
+3. **Decorative hover** — hover states that don't change anything functional or clickable.
+4. **Emoji as ornament** — emojis in headers, CTAs, section labels where they add no information.
+5. **Gradient cover** — gradients used to mask weak composition rather than serve a poetic hero.
+6. **Glass-on-everything** — frosted-glass effect on every panel, including ones with nothing behind.
+7. **Center-aligned by default** — body paragraphs and forms reading center where left would read better.
+8. **Grayscale wash** — neutral grays everywhere, no accent personality, no character.
+9. **Verb-less CTAs** — "Get Started", "Learn More", "Click Here", "Submit", "OK".
+10. **Stock-illustration hero** — figure-with-laptop, diverse-team-around-table, abstract floating shapes.
+11. **Shadow soup** — shadows on cards on shadows on borders on gradients on one element.
+12. **Generic spinner** — wall-clock spinner as the only loading state for every operation.
+13. **Silent empty state** — "No items found." centered. Nothing else. No guidance.
+14. **Toast everywhere** — every UI event becomes a toast; five stack up and none get read.
+
+Plus 17 anti-default values (specific colors, radii, font choices, spacing presets) that signal "no thought went into this" — full list in `references/visual-slop.md`.
 
 ## Accessibility floor — non-negotiable
 
 Before any interactive widget ships:
 
-- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 for body text, 3:1 for large text and UI components).
-- [ ] Focus-visible state exists and is distinct from hover.
-- [ ] Keyboard navigation works (tab order, escape closes modals, enter submits forms).
+- [ ] Color contrast meets WCAG 2.2 AA (4.5:1 body, 3:1 large text and UI components).
+- [ ] Focus-visible state distinct from hover.
+- [ ] Keyboard navigation works end-to-end.
 - [ ] ARIA labels for icon-only buttons.
-- [ ] Form errors are announced to screen readers.
+- [ ] Form errors announced to screen readers.
 - [ ] No keyboard traps.
+- [ ] Touch targets ≥24×24 CSS pixels (≥44×44 recommended on mobile).
+- [ ] Heading hierarchy is semantic (no skipped levels).
+- [ ] `prefers-reduced-motion` honored.
 
-Full verification recipes in `references/accessibility-floor.md`. This is a hard gate — `/dw-code-review` fails verdict if any interactive widget ships without these.
+Full verification recipes in `references/accessibility-floor.md`. `/dw-code-review` rejects the verdict if any interactive widget ships without these.
 
-## When the gate bends
+## When the grounding bends
 
-Real-world UI can't always be perfect:
+- **Bug fix in existing UI** — grounding applies only to the area touched, not the whole surface.
+- **Pure copy change** — only the "what does this help the user do" question still applies as a sanity check.
+- **Throwaway spike** — grounding skippable if the spike is explicitly marked non-production.
 
-- **Bug fix in existing UI** — gate applies only to the area touched, not the whole surface.
-- **Pure copy change** — gate is just "scene sentence still holds?" — quick check.
-- **Spike / exploration** — gate skipped if the spike is explicitly marked throwaway; production code must run the gate.
-
-In all bend cases, document the bend in the PR description (one line). "I skipped the state matrix because this is a one-line copy fix" is fine. "I skipped because I was in a hurry" is not.
+In all bend cases, document the bend in the PR (one line). "I skipped the state matrix because this is a one-line copy fix" is fine. "I skipped because I was in a hurry" is not.
 
 ## Integration with dev-workflow commands
 
-- `/dw-redesign-ui` runs the gate end-to-end. Steps 4 (propose design) and 7 (validate WCAG) consult this skill.
-- `/dw-create-techspec` UI sections must list which authorities were consulted (brand vs curated default) and reference the state matrix.
-- `/dw-code-review` checks the diff against `references/anti-slop.md` and the accessibility floor.
-- `/dw-functional-doc` documents the scene sentence in the overview.
+- `/dw-redesign-ui` runs the grounding end-to-end. Steps 4 (propose) and 7 (validate) consult this skill explicitly.
+- `/dw-create-techspec` UI sections must answer the 4 grounding questions and reference the state matrix.
+- `/dw-code-review` checks UI diffs against the 14 visual-slop patterns and the accessibility floor.
+- `/dw-functional-doc` records the surface-job and scene sentences in the overview for each screen.
 
-## Anti-patterns this skill prevents
+## Why this approach
 
-- "Just use the same hero as the marketing page" — without verifying the surface job differs.
-- "We'll add empty/error states later" — they're never added later.
-- "It looks fine on my desktop" — without checking mobile + keyboard + screen reader.
-- Designing in isolation from `.dw/rules/` documented patterns.
-- Inventing color values when the design system has tokens that fit.
-- Shipping interactive widgets without WCAG 2.2 AA verification.
+The shorter route — "agent loads a 161-palette catalog and picks one" — produces dashboards that look like every other dashboard because the agent has no constraint that pulls it away from training-data centers of mass.
 
-## Why this skill exists
-
-The previous bundled skill (`ui-ux-pro-max`) provided 161 color palettes and 57 font pairings — a CATALOG of taste. It had no gates, no anti-patterns, no enforcement. Agents loaded KB of palette data and still produced slop because there was no DISCIPLINE.
-
-This skill inverts that trade-off: 10 curated defaults (enough for 90% of cases) + a strong gate + an anti-slop catalog. Less context bytes, more leverage.
+The grounding pulls the design toward the specific surface, the specific user, the specific moment. Even with the same palette catalog, a "3am on-call dark room troubleshooting" design lands different choices than a "morning manager approving expenses" design. That difference is where surface quality lives.
