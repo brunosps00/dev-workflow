@@ -262,6 +262,8 @@ Incident response (`dw-incident-response`) adapted from [`wilsto/claude-code-sta
 
 LLM evaluation (`dw-llm-eval`) trajectory-match modes (strict / unordered / subset / superset) and tool-argument matching strategies adapted from [`langchain-ai/agentevals`](https://github.com/langchain-ai/agentevals) (MIT). The broader oracle-ladder framing, judge-calibration discipline, and reference-dataset principle are distilled from the open evaluations literature (OpenAI evals cookbook, Anthropic evals guidance, the academic eval-of-LLM body of work) and rewritten in our voice.
 
+Four patterns from [`mattpocock/skills`](https://github.com/mattpocock/skills) by Matt Pocock (MIT) were integrated **without adding new commands or skills** — instead they fold into the existing surface as internal modes and inline guidance: (1) **grill-with-docs** → `/dw-brainstorm` `grill` mode (interview discipline that stress-tests plan vocabulary against `.dw/rules/`); (2) **prototype** → `/dw-brainstorm` `prototype` mode (LOGIC terminal app or UI variant dispatch); (3) **improve-codebase-architecture** → `dw-simplification/references/deep-modules.md` (deletion test, locality, leverage, seam, adapter diagnostic invoked by the `refactor-audit` mode); (4) **zoom-out** → one-paragraph guidance in `agent-instructions.md`. The same release also collapses `/dw-brainstorm`'s six legacy flags into a single full-flow entry point that auto-dispatches modes based on project signals.
+
 ## Migration from v0.x (1.0.0 is a consolidation release)
 
 v1.0.0 consolidates 30 commands → 20. **The `dev-workflow update` command auto-removes obsolete wrappers** via the migrator that landed in v0.13.0; no manual action required.
