@@ -311,6 +311,10 @@ On the next `npx @brunosps00/dev-workflow update`, the following happens automat
 
 The Trigger Map block (between `<!-- dev-workflow:start -->` and `<!-- dev-workflow:end -->`) refreshes automatically on update with the v1.0.0 command surface. Your edits outside the markers are preserved.
 
+### Skill conventions
+
+Skill description format ("pushy" trigger phrases ≤200 chars, "Use when X. Triggers on Y." pattern) and structural conventions (`SKILL.md` + `references/` / `scripts/` / `assets/` / `agents/` subdirectories, explicit `allowed-tools` in frontmatter) follow the official guidance from [`anthropics/skills/skill-creator`](https://github.com/anthropics/skills/tree/main/skills/skill-creator) (Apache 2.0). dev-workflow's 20 bundled skills are not derived from skill-creator's content — only its conventions are followed for auto-trigger reliability across Claude Code, Codex CLI, Copilot, and OpenCode.
+
 ## License
 
 MIT
