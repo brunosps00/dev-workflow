@@ -11,14 +11,34 @@ You are a brainstorming facilitator for the current workspace. This command exis
 ## Pipeline Position
 **Predecessor:** (user idea) | **Successor:** `/dw-plan prd`
 
-## Flags
+## How this command works (auto-dispatch, not flag switchboard)
 
-- **(default)**: normal brainstorm with 3-7 options (conservative, balanced, bold) and trade-offs. If the product has PRDs or rules, a **Product Inventory** is produced automatically and each option carries a classification tag.
-- **`--onepager`**: at the end of the brainstorm, generate a durable one-pager at `.dw/spec/ideas/<slug>.md` (using `.dw/templates/idea-onepager.md`) with Feature Inventory + Classification & Rationale + MVP Scope + Not Doing + Assumptions. Use when you want a persisted product artifact before moving to `/dw-plan prd`.
-- **`--council`**: after the normal brainstorm, invoke the `dw-council` skill to stress-test the top 2-3 options via 3-5 archetypes (pragmatic-engineer, architect-advisor, security-advocate, product-mind, devils-advocate). Useful when the choice is high-impact and there is genuine dissent between paths.
-- **`--research`**: heavyweight multi-source research mode. Pipeline: scope → plan → retrieve (parallel sources) → triangulate → outline-refine → synthesize → critique → refine → report. Output: cited research document. Use for state-of-the-art reviews, technology comparisons, regulatory landscape mapping. Sub-modes: `quick` (3 phases, 2-5min), `standard` (default, 6 phases, 5-10min), `deep` (8 phases, 10-20min), `ultradeep` (8+ phases, 20-45min).
-- **`--refactor`**: code-smell catalog mode. Audits a target directory or PRD scope for code smells using Martin Fowler's taxonomy (bloaters, change preventers, dispensables, couplers, conditional complexity, DRY violations). Maps each smell to a concrete refactoring technique with before/after sketches. Severity-ordered P0-P3 plan. Output: refactoring opportunities document.
-- Flags are composable where it makes sense: `--onepager --council` produces the one-pager after the council debate. `--research --onepager` saves the research output as a durable one-pager. `--refactor --onepager` saves the refactor plan as a durable one-pager. `--research --refactor` is NOT supported (pick one or the other — different ideation surfaces).
+`/dw-brainstorm` runs **FULL** by default. It opens with a **Signal Reading** phase that inspects the user's request, the project state (PRDs, rules, intel, recent commits), and the conversation so far, then **dispatches one or more internal modes**. The user does not pick a mode — the command does.
+
+Internal modes (the dispatcher picks 1+):
+
+| Mode | Auto-fires when |
+|------|-----------------|
+| **option-matrix** (always-on default) | Default surface: 3-7 options (conservative / balanced / bold) with `[IMPROVES] / [CONSOLIDATES] / [NEW]` tags. Always runs unless a hard override says otherwise. |
+| **grill** | Vocabulary feels unsettled — user terms differ from `.dw/rules/` / `.dw/constitution.md`, or two synonyms compete in the same conversation, or a contributor proposes a name that clashes with the glossary. |
+| **prototype** | User asks "is this state model right?" / "what should this look like?" with no clear answer; or the next sensible step is to RUN code, not write words. |
+| **council** | Two or more competing approaches surface with no obvious winner; or consensus forms too quickly (false-consensus signal). |
+| **research** | The question depends on external state-of-the-art ("what's the current best practice for X", multi-source comparisons, regulatory or framework landscape). |
+| **refactor-audit** | User points at a directory or describes a code area as "messy", "needs cleanup", "tech debt"; or a quarterly health-check is requested. |
+| **onepager** | The conversation has converged enough to deserve a durable product artifact (`.dw/spec/ideas/<slug>.md`); or the user signals they're about to call `/dw-plan prd` next. |
+
+Modes can chain inside one session — grill can surface a design question that the dispatcher then sends to prototype; refactor-audit can produce findings that the dispatcher sends to council for stress-testing.
+
+### Optional overrides (rarely needed)
+
+- **`--mode=<name>`** — force a specific dispatch and skip Signal Reading. Names: `option-matrix`, `grill`, `prototype`, `council`, `research`, `refactor-audit`, `onepager`. Combine with `+` to chain explicitly: `--mode=grill+onepager`.
+- **`--quiet`** — skip Signal Reading entirely and run only `option-matrix` as a minimal facilitator.
+
+Power users who already know what they want can pass `--mode=`. Everyone else gets auto-dispatch by default — the command reads the room and acts.
+
+### Migration note (transitional)
+
+Old flag invocations (`--onepager`, `--council`, `--research`, `--refactor`, `--grill`, `--prototype`) remain accepted for one minor cycle and map to the equivalent `--mode=` value. New code should use `--mode=` or rely on auto-dispatch.
 
 ## Decision Flowchart: Brainstorm vs Direct PRD
 
@@ -42,15 +62,16 @@ digraph brainstorm_decision {
 
 When available in the project under `./.agents/skills/`, use these skills to enrich ideation:
 
-- `dw-council` (opt-in via `--council`): multi-advisor stress-test of the most promising options with mandatory steel-manning and concession tracking. **DO NOT invoke by default** — only when the flag is present or when consensus forms too quickly (false-consensus signal).
-- `dw-ui-discipline`: use when brainstorming involves frontend or UI direction — its hard-gate (scene sentence, surface job) is a generative forcing function during ideation, not just a review check
-- `vercel-react-best-practices`: use when brainstorming React/Next.js architecture or performance trade-offs
-- `security-review`: use when brainstorming touches auth, data handling, or security-sensitive features
+- `dw-council`: invoked by the dispatcher's **council** mode — multi-advisor stress-test of the most promising options with mandatory steel-manning and concession tracking. The dispatcher fires it when 2+ paths tie OR consensus forms too quickly (false-consensus signal). Not invoked on every brainstorm — only when signals justify it.
+- `dw-simplification`: invoked by the dispatcher's **refactor-audit** mode — applies Chesterton's Fence + complexity metrics + the new **deep-modules** reference (deletion test, locality, leverage, interface depth) to every flagged smell.
+- `dw-ui-discipline`: use when brainstorming involves frontend or UI direction — its hard-gate (scene sentence, surface job) is a generative forcing function during ideation, not just a review check. Also picked up by the **prototype** mode's UI branch.
+- `vercel-react-best-practices`: use when brainstorming React/Next.js architecture or performance trade-offs.
+- `security-review`: use when brainstorming touches auth, data handling, or security-sensitive features.
 
 ## Template Reference
 
 - Brainstorm matrix template: `.dw/templates/brainstorm-matrix.md` (relative to workspace root)
-- Durable one-pager template: `.dw/templates/idea-onepager.md` (used with `--onepager` flag)
+- Durable one-pager template: `.dw/templates/idea-onepager.md` (used by the **onepager** mode)
 
 Use this command when the user wants to:
 - Generate ideas for product, UX, architecture, or automation
@@ -62,6 +83,19 @@ Use this command when the user wants to:
 ## Required Behavior
 
 <critical>The brainstorm is a **product-level** phase, not technical. DO NOT dive into architecture, stack, endpoints, schemas. That's the techspec's job. Here we work user journeys, value, features, and boundaries.</critical>
+
+### 0. Signal Reading (always first, unless `--quiet` or explicit `--mode=`)
+
+Before producing any output, **read the situation**:
+
+1. Inspect `.dw/spec/prd-*/`, `.dw/rules/`, `.dw/constitution.md`, `.dw/intel/` if they exist. Note the project's current vocabulary and recent PRDs.
+2. Inspect recent git activity (`git log --oneline -20`) to detect ongoing work.
+3. Re-read the user's request against the Auto-Dispatch table at the top of this file. Match signals to modes.
+4. Decide the dispatch: **option-matrix** always runs unless an explicit mode override skips it. Other modes (grill, prototype, council, research, refactor-audit, onepager) fire **additively** when their signals are present.
+5. State the dispatch decision to the user in one short line: e.g., "Dispatching: option-matrix + onepager (PRD is one step away)" or "Dispatching: grill (vocabulary unsettled in current PRD)". Do not bury this — surface it before running.
+6. Then proceed with the modes in this order (when chained): grill → research → option-matrix → council → refactor-audit → prototype → onepager. Skip modes not in the dispatch.
+
+### Standard flow (option-matrix mode)
 
 1. Start by summarizing the problem in 1 to 3 sentences.
 2. **Reframe as "How Might We"**: turn the raw idea into `How might we [verb] for [user] so that [outcome]?`. This pulls the team out of premature "solution mode".
@@ -80,7 +114,7 @@ Use this command when the user wants to:
    - Approximate effort level
 7. Whenever it makes sense, include conservative, balanced, and bold alternatives.
 8. Close with a pragmatic recommendation and clear next steps.
-9. **If the `--onepager` flag is present**: at the end, generate `.dw/spec/ideas/<slug>.md` using `.dw/templates/idea-onepager.md`, filling Feature Inventory, Classification & Rationale, Recommended Direction (product language), MVP Scope (user stories), Not Doing, Key Assumptions, and Open Questions. Report the path to the user.
+9. **If the dispatcher selected `onepager` mode** (auto-fires when conversation has converged enough, or user signals they're heading to `/dw-plan prd` next): at the end, generate `.dw/spec/ideas/<slug>.md` using `.dw/templates/idea-onepager.md`, filling Feature Inventory, Classification & Rationale, Recommended Direction (product language), MVP Scope (user stories), Not Doing, Key Assumptions, and Open Questions. Report the path to the user.
 
 ## Preferred Response Format
 
@@ -104,7 +138,7 @@ Use this command when the user wants to:
 - Recommend 1 or 2 paths
 - Explain why they win in the current context
 
-### 6. One-pager (if `--onepager`)
+### 6. One-pager (if `onepager` mode fired)
 - Path of the created file at `.dw/spec/ideas/<slug>.md`
 
 ### 7. Next Steps
@@ -141,13 +175,15 @@ At the end, always leave the user in one of these situations:
 - With a clear recommendation (including an IMPROVES/CONSOLIDATES/NEW classification)
 - With better questions to decide
 - With a next workspace command to follow
-- With the one-pager at `.dw/spec/ideas/<slug>.md` (if `--onepager` was used)
-- With the research report at `~/Documents/<Topic>_Research_<date>/` (if `--research`)
-- With the refactor plan at `<target>/refactor-plan.md` (if `--refactor`)
+- With the one-pager at `.dw/spec/ideas/<slug>.md` (if **onepager** mode fired)
+- With the research report at `~/Documents/<Topic>_Research_<date>/` (if **research** mode fired)
+- With the refactor plan at `<target>/refactor-plan.md` (if **refactor-audit** mode fired)
+- With sharpened glossary entries in `.dw/rules/` (if **grill** mode fired)
+- With a runnable throwaway prototype + verdict template (if **prototype** mode fired)
 
-## Mode: `--research` (multi-source research)
+## Mode: research (multi-source research)
 
-Activated by the `--research` flag. Replaces the default brainstorm with a structured research pipeline that produces a cited document with verified claims.
+Fires when the question depends on external state-of-the-art (multi-source comparisons, framework / regulatory landscape, decisions needing cited evidence). Override: `--mode=research`. Replaces the default option-matrix with a structured research pipeline that produces a cited document with verified claims.
 
 <critical>Every factual claim MUST be cited immediately with [N] in the same sentence</critical>
 <critical>NEVER fabricate citations — if no source is found, say so explicitly</critical>
@@ -165,7 +201,7 @@ Activated by the `--research` flag. Replaces the default brainstorm with a struc
 ```
 Selection
 ├── Initial exploration → quick (3 phases, 2-5 min)
-├── Standard research → standard (6 phases, 5-10 min) [DEFAULT for --research]
+├── Standard research → standard (6 phases, 5-10 min) [DEFAULT for research]
 ├── Critical decision → deep (8 phases, 10-20 min)
 └── Comprehensive review → ultradeep (8+ phases, 20-45 min)
 ```
@@ -216,9 +252,9 @@ Target lengths: quick 2-4k words; standard 4-8k; deep 8-15k; ultradeep 15-20k+.
 - Label speculation explicitly.
 - Admit uncertainty: "No sources found for X."
 
-## Mode: `--refactor` (code-smell catalog)
+## Mode: refactor-audit (code-smell catalog + deep-modules)
 
-Activated by the `--refactor` flag. Audits a target codebase area for refactoring opportunities using Martin Fowler's smell taxonomy.
+Fires when the user points at a directory or describes a code area as "messy" / "needs cleanup" / "tech debt", or when a quarterly health-check is requested. Override: `--mode=refactor-audit`. Audits the target area for refactoring opportunities using Martin Fowler's smell taxonomy combined with the deep-modules analysis (deletion test, locality, leverage, interface depth) bundled in the `dw-simplification` skill.
 
 <critical>ASK EXACTLY 3 CLARIFICATION QUESTIONS BEFORE STARTING THE ANALYSIS</critical>
 
@@ -292,6 +328,111 @@ Saved to `<target>/refactor-plan.md`:
 - Proposing refactors that aren't tested or testable → high risk, won't ship.
 - Ignoring documented architectural decisions in `.dw/rules/` → flagging intentional design as smell.
 
+## Mode: grill (domain-grilling)
+
+Fires when vocabulary feels unsettled — user terms differ from `.dw/rules/` / `.dw/constitution.md`, two synonyms compete in the same conversation, or a contributor proposes a name that clashes with the glossary. Override: `--mode=grill`. Replaces the option-generation default with an **interview-style stress-test** of the plan/PRD against the project's domain vocabulary. Each round of questions sharpens one piece. Updates `.dw/rules/` (or `.dw/constitution.md`) inline as terms crystallize — never deferred to "after the conversation."
+
+<critical>Ask ONE question at a time. Wait for the answer. Don't dump a list of 5 questions and hope for the best.</critical>
+
+### When to use grill mode
+
+- Before `/dw-plan prd` when the domain feels unsettled or the team uses competing terms.
+- After `/dw-plan prd` when reviewers flag ambiguous language in the PRD.
+- During architectural discussion when "module", "service", "component" are being used interchangeably and you need to pin the canonical term.
+- When a contributor proposes a name that doesn't match the project's existing glossary.
+
+### During-session disciplines
+
+1. **Challenge against the glossary.** Read `.dw/rules/index.md` + per-module `.dw/rules/<module>.md` + `.dw/constitution.md`. Flag terminology conflicts the instant the user uses a term that differs from (or contradicts) what's already documented.
+
+2. **Sharpen fuzzy language.** When the user says "the user thing" or "the order stuff", propose a precise canonical term. Don't pretend you understood — push back.
+
+3. **Discuss concrete scenarios.** Force precision via specific edge cases: "What happens to the Order in state X when event Y arrives during retry Z?" Vague answers go back as further questions.
+
+4. **Cross-reference code.** When the user states a behavior, glance at the codebase to confirm it. Surface contradictions: "You said the API returns `OrderId` but `src/api/orders.ts:42` returns `{ order_id, status }`." Don't argue from generalities.
+
+5. **Update `.dw/rules/` inline.** When a term crystallizes, write it into the appropriate rules file in the same conversation turn. Lazy file creation: if the file doesn't exist, create it. Format follows the glossary discipline established by the project (see `.dw/rules/index.md` for shape).
+
+6. **Skip implementation details in the glossary.** `.dw/rules/` and `.dw/constitution.md` describe vocabulary and principles — not implementation. "Order: a customer's request to purchase one or more items, in one of these states: pending, paid, shipped, delivered, refunded" is fine. "Order: a TypeScript class in `src/orders/`" is implementation leak.
+
+### ADR creation discipline
+
+Only propose an ADR via `/dw-adr` when **all three** hold:
+
+| Criterion | Test |
+|-----------|------|
+| **Hard to reverse** | If we change this in 6 months, does it cost >1 week of work? |
+| **Surprising without context** | Would a new contributor reasonably reach a different decision? |
+| **Genuine trade-off** | Was there a real alternative we considered and chose against? |
+
+If any is missing, skip the ADR. Don't ADR every casual decision — that turns the ADR folder into noise.
+
+### Output
+
+grill mode produces:
+- **Updated `.dw/rules/<module>.md`** or `.dw/constitution.md` with crystallized terms.
+- **Updated PRD / TechSpec** if grilling happens mid-plan (terms in the artifact are aligned with the glossary).
+- **Optional `.dw/spec/<prd>/adrs/adr-NNN.md`** if criteria above hold.
+- **NO** option matrix or recommendation (that's option-matrix mode; grill is purely about sharpening). If the dispatcher chained grill+option-matrix, the option matrix runs in a separate phase.
+
+### When the discipline bends
+
+- **Greenfield project with no `.dw/rules/`**: grill anyway; the conversation produces the FIRST entries in `.dw/rules/index.md`. That's the value.
+- **Cosmetic terminology disagreements** ("should we call it `userId` or `user_id`?"): skip grill mode; use a coding-conventions ADR or `.dw/rules/index.md` Naming section.
+
+## Mode: prototype (throwaway prototype)
+
+Fires when the user asks "is this state model right?" / "what should this look like?" with no clear answer — i.e., the next sensible step is to RUN code, not write words. Override: `--mode=prototype`. Builds a **throwaway prototype that answers a single question**. The question decides the shape — pick a branch.
+
+<critical>The prototype is throwaway from day one. Don't polish. Don't add tests. Don't extract abstractions. The point is to LEARN something fast and then DELETE or absorb.</critical>
+
+### Pick a branch
+
+| User's question | Branch |
+|-----------------|--------|
+| "Does this state/logic model feel right?" | **LOGIC** — interactive terminal app that pushes the state machine through edge cases that are hard to reason about on paper. |
+| "What should this look like?" | **UI** — several radically different UI variations on a single route, switchable via a URL search param and a floating bottom bar. |
+
+If the question is ambiguous, ask the user. If user not reachable: default by surrounding code (backend module → LOGIC; page/component → UI) and state the assumption at the top of the prototype.
+
+### Rules (apply to both branches)
+
+1. **Throwaway from day one, clearly marked.** Place the prototype next to the module/page it's prototyping for (so context is obvious) but name it so a casual reader can see it's a prototype (`prototype-<slug>.ts`, `prototype-route.tsx`, etc.).
+
+2. **One command to run.** Whatever the project's task runner supports — `pnpm <name>`, `python <path>`, `bun <path>`, etc. The user must start it without thinking.
+
+3. **No persistence by default.** State lives in memory. Persistence is what the prototype is CHECKING, not what it depends on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear `PROTOTYPE — wipe me` name.
+
+4. **Skip the polish.** No tests, no error handling beyond what makes the prototype runnable, no abstractions.
+
+5. **Surface the state.** After every action (LOGIC) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
+
+6. **Delete or absorb when done.** When the prototype has answered its question, either delete it or fold the validated decision into real code. Don't leave it rotting in the repo.
+
+### When done
+
+The **answer** is the only thing worth keeping. Capture it durably:
+- Commit message that closes the prototype: "removed prototype X; decided <answer> based on <observation>"
+- Or an ADR (if the criteria from grill mode hold)
+- Or `.dw/spec/<prd>/NOTES.md` if mid-PRD
+- Or an issue comment if user-driven
+
+If the user isn't around, leave a `PROTOTYPE VERDICT: <pending>` placeholder so the next pass can fill it in before deletion.
+
+### Output
+
+prototype mode produces:
+- **Throwaway code file(s)** in the appropriate location.
+- A `NOTES.md` next to the prototype with the QUESTION it's answering.
+- After the user runs it and answers the question, instructions to remove the prototype + capture the verdict.
+
+### Anti-patterns
+
+- Building a prototype that's actually a feature in disguise — production-quality code, tests, deployment config. That's not a prototype; it's a first draft.
+- Leaving the prototype in the repo "in case we need it later" — six months later it's load-bearing.
+- Not capturing the verdict — the prototype answered the question and the answer evaporated.
+- Multiple prototypes stacked up at once — pick one question, answer it, move.
+
 ## Inspired by
 
 The codebase-grounded idea refinement pattern is inspired by [`addyosmani/agent-skills@idea-refine`](https://skills.sh/addyosmani/agent-skills/idea-refine) (Addy Osmani, Google — 1.4K+ installs). Adaptations for dev-workflow:
@@ -301,6 +442,8 @@ The codebase-grounded idea refinement pattern is inspired by [`addyosmani/agent-
 - Output at `.dw/spec/ideas/<slug>.md` (sibling of `prd-<slug>/`) instead of `docs/ideas/` — preserves dev-workflow path conventions.
 - Integration with the existing pipeline: `/dw-plan prd` accepts the one-pager as input, reducing clarification questions.
 
-Credit: Addy Osmani and the `idea-refine` pattern.
+The **grill** and **prototype** modes are adapted from [`mattpocock/skills/grill-with-docs`](https://github.com/mattpocock/skills/tree/main/grill-with-docs) and [`mattpocock/skills/prototype`](https://github.com/mattpocock/skills/tree/main/prototype) (Matt Pocock, MIT). dev-workflow adaptation: integrated as INTERNAL auto-dispatched modes rather than separate skills, paths rebased on `.dw/rules/` + `.dw/spec/<prd>/`, ADR creation gated on the 3-criteria test (hard-to-reverse + surprising + genuine trade-off).
+
+Credit: Addy Osmani (idea-refine) and Matt Pocock (grill-with-docs, prototype).
 
 </system_instructions>
