@@ -1,6 +1,6 @@
 ---
 name: dw-simplification
-description: Use when simplifying code. Chesterton's Fence (understand WHY first), behavior-preserving refactor, complexity metrics. Triggers from /dw-review --code-only and /dw-brainstorm --refactor.
+description: Use when simplifying code. Chesterton's Fence (WHY first), behavior-preserving refactor, complexity metrics, deep-modules analysis. Triggers from /dw-review and /dw-brainstorm refactor-audit.
 allowed-tools:
   - Read
   - Edit
@@ -18,7 +18,7 @@ Behavioral discipline for simplifying code without breaking it. The trap of refa
 Read this skill when:
 
 - `/dw-review --code-only` flagged a complexity issue (deep nesting, long function, duplication).
-- `/dw-brainstorm --refactor` proposed a simplification target.
+- `/dw-brainstorm` dispatched its **refactor-audit** mode and proposed a simplification target.
 - The user explicitly asks to "clean this up" / "simplify X".
 - During `/dw-run` if the implementation accidentally produced complex code that wants pre-commit cleanup.
 
@@ -117,11 +117,13 @@ For changes that altered cyclomatic complexity, optionally run a complexity anal
 
 In the formal Level 3 review (post-Level 2 chain from `dw-review-implementation`), code-review flags complexity issues using the patterns above. Each flagged issue references this skill: "consider simplifying via guard clauses; apply Chesterton's Fence — verify why the nested check exists before flattening."
 
-## How `dw-refactoring-analysis` uses this
+## How `/dw-brainstorm` refactor-audit mode uses this
 
-The analysis catalogs code smells (Fowler vocabulary). For each smell, the proposed refactor cites:
+The refactor-audit mode dispatched by `/dw-brainstorm` catalogs code smells (Fowler vocabulary) AND runs the deep-modules analysis (`references/deep-modules.md`) against the target area. For each smell or shallow-module flag, the proposed refactor cites:
+
 1. Which simplification rule applies (early return / extract method / lookup table / etc.).
 2. Whether Chesterton's Fence concerns block the refactor (existing tests inadequate? no recent commits explaining the structure? → flag as YELLOW, don't act).
+3. Whether the deep-modules test points the other way (some "code smells" are actually deep-module wrappers that absorb complexity; the fix is to make the wrapper deeper, not to flatten it).
 
 ## Anti-patterns
 
@@ -136,7 +138,10 @@ The analysis catalogs code smells (Fowler vocabulary). For each smell, the propo
 - `references/chestertons-fence.md` — the protocol in detail; case studies of "obvious-but-wrong" removals.
 - `references/complexity-metrics.md` — when each metric (cyclomatic, cognitive, depth, fanout) actually matters; how to measure cheaply.
 - `references/behavior-preserving.md` — characterization tests, refactor with test gate, rollback patterns, codemod tooling per language.
+- `references/deep-modules.md` — high-leverage modules behind small interfaces; deletion test, locality, leverage, seam, adapter diagnostic; anti-patterns (shallow wrapper, god-module). Invoked by `/dw-brainstorm` refactor-audit mode.
 
 ## Inspired by
 
-Adapted from [`addyosmani/agent-skills/code-simplification`](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT license). Core principles (Chesterton's Fence, behavior preservation, scope discipline, Rule of 500) preserved. dev-workflow integration: invoked by `dw-code-review` and `dw-refactoring-analysis` via Complementary Skills.
+Adapted from [`addyosmani/agent-skills/code-simplification`](https://github.com/addyosmani/agent-skills) by Addy Osmani (MIT license). Core principles (Chesterton's Fence, behavior preservation, scope discipline, Rule of 500) preserved. dev-workflow integration: invoked by `dw-code-review` and `/dw-brainstorm` refactor-audit mode via Complementary Skills.
+
+The deep-modules reference is adapted from [`mattpocock/skills/improve-codebase-architecture`](https://github.com/mattpocock/skills/tree/main/improve-codebase-architecture) by Matt Pocock (MIT license). Core framing (deep modules = high leverage at small interface, deletion test, shallow-wrapper anti-pattern) preserved; paths and integration points rebased on dev-workflow conventions.
