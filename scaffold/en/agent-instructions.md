@@ -26,9 +26,7 @@ This project uses [`@brunosps00/dev-workflow`](https://www.npmjs.com/package/@br
 | "Just the code quality review" | `/dw-review --code-only` |
 | "Time to commit" / changes are validated and ready | `/dw-commit` |
 | "Open a PR" / "Ship this" | `/dw-generate-pr` |
-| "Brainstorm X" / "Explore ideas" | `/dw-brainstorm "X"` |
-| "Research X" / "Compare A vs B with citations" | `/dw-brainstorm --research "X"` |
-| "Code-health audit" / "Find tech debt" / "Refactoring opportunities" | `/dw-brainstorm --refactor` |
+| "Brainstorm X" / "Explore ideas" / "Research X" / "Code-health audit" / "Find tech debt" | `/dw-brainstorm "X"` (auto-dispatches grill / prototype / council / research / refactor-audit / onepager based on signals) |
 | "Where is X?" / "What uses Y?" / "How is Z structured?" | `/dw-intel "<question>"` |
 | "Rebuild the codebase index" / "Refresh intel" | `/dw-intel --build` |
 | "Redesign this UI" / "Audit and ship a new design" | `/dw-redesign-ui "<target>"` |
@@ -57,6 +55,12 @@ When any of these apply, answer directly and do **not** invoke a `dw-*` command:
 - Aesthetic preference: "I prefer this style" — apply, don't run a pipeline.
 - User explicitly says "do this directly" / "skip autopilot" / "no need for a PRD" — honor it.
 - The conversation is already inside a `dw-*` flow (you're already executing tasks; don't start a new pipeline).
+
+## Zoom-out pattern (for unfamiliar code areas)
+
+When you land in an area of the codebase you don't know and orientation costs more than the task itself, **don't dive into files first** — ask an exploring agent to produce a map. Give it the project's domain glossary (`.dw/rules/index.md`) and tell it: "zoom out one level — show me the relevant modules, their public surfaces, who calls them, and the data flow between them, using domain glossary vocabulary." Get the lay of the land, then dive. This avoids the trap of reading the deepest file first and reconstructing the architecture from leaves upward.
+
+Adapted from [`mattpocock/skills/zoom-out`](https://github.com/mattpocock/skills/tree/main/zoom-out) (MIT).
 
 ## Workflow Reference
 
