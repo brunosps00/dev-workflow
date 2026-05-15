@@ -26,7 +26,7 @@ npx @brunosps00/dev-workflow install-deps
 
 ## Commands
 
-dev-workflow v1.0.2 ships **22 commands** organized into four tiers. Most users only invoke Tier 1 + Tier 2.
+dev-workflow v1.0.3 ships **23 commands** organized into four tiers. Most users only invoke Tier 1 + Tier 2.
 
 ### Tier 1 — Gateway (3)
 
@@ -61,6 +61,7 @@ Use these when you want step-by-step control instead of `/dw-autopilot`.
 | **`/dw-functional-doc`** | Maps screens + user flows into a functional doc, validated end-to-end with Playwright. |
 | **`/dw-new-project`** | Bootstrap a new project from empty directory. Stack interview, wraps official `create-*` tools, composes docker-compose for dev, seeds `.env`, scripts, CI, `.dw/rules/`. |
 | **`/dw-dockerize`** | Reads existing project, detects stack + runtime deps, proposes Dockerfile + docker-compose for dev/prod with explicit trade-offs (Conservative/Balanced/Bold). |
+| **`/dw-install-azure-skills`** | **Opt-in.** Clones curated Azure skills from [`MicrosoftDocs/Agent-Skills`](https://github.com/MicrosoftDocs/Agent-Skills) (CC-BY-4.0) into `.agents/skills/azure/` and registers the [Microsoft Learn MCP Server](https://learn.microsoft.com/en-us/training/support/mcp-get-started) (HTTP, no-auth). Interactive category selection (Compute / Data & Storage / AI & ML / Networking / Identity & Security / DevOps / Observability / Integration / Architecture / All). Re-run to refresh from upstream. Also available as CLI: `npx @brunosps00/dev-workflow install-azure-skills`. |
 
 ### Tier 4 — Hidden/Internal (5)
 
@@ -234,13 +235,15 @@ Installed via `npx @brunosps00/dev-workflow install-deps`:
 ## Options
 
 ```bash
-npx @brunosps00/dev-workflow init                  # Interactive language selection
-npx @brunosps00/dev-workflow init --lang=en        # English, skip prompt
-npx @brunosps00/dev-workflow init --lang=pt-br     # Portuguese, skip prompt
-npx @brunosps00/dev-workflow init --force          # Overwrite existing files
-npx @brunosps00/dev-workflow update                # Update commands/templates only
-npx @brunosps00/dev-workflow install-deps          # Install Playwright, react-doctor; check Trivy, Docker
-npx @brunosps00/dev-workflow help                  # Show help
+npx @brunosps00/dev-workflow init                          # Interactive language selection
+npx @brunosps00/dev-workflow init --lang=en                # English, skip prompt
+npx @brunosps00/dev-workflow init --lang=pt-br             # Portuguese, skip prompt
+npx @brunosps00/dev-workflow init --force                  # Overwrite existing files
+npx @brunosps00/dev-workflow update                        # Update commands/templates only
+npx @brunosps00/dev-workflow install-deps                  # Install Playwright, react-doctor; check Trivy, Docker
+npx @brunosps00/dev-workflow install-azure-skills          # Opt-in: Azure skills + Microsoft Learn MCP
+npx @brunosps00/dev-workflow install-azure-skills --products=azure-aks,azure-openai  # Subset override
+npx @brunosps00/dev-workflow help                          # Show help
 ```
 
 ## Getting Started
@@ -266,6 +269,8 @@ UI discipline (`dw-ui-discipline`) and testing doctrine (`dw-testing-discipline`
 Incident response (`dw-incident-response`) adapted from [`wilsto/claude-code-starter-kit/incident-response`](https://github.com/wilsto/claude-code-starter-kit) (MIT). The 5-phase workflow structure and runbook templates come from there. wilsto credits the upstream `wshobson/agents` plugin `incident-response` (v1.3.0); attribution chain preserved. Additional reading cited in the skill: Google SRE Book, Etsy Debriefing Facilitation Guide, PagerDuty Incident Response Documentation.
 
 LLM evaluation (`dw-llm-eval`) trajectory-match modes (strict / unordered / subset / superset) and tool-argument matching strategies adapted from [`langchain-ai/agentevals`](https://github.com/langchain-ai/agentevals) (MIT). The broader oracle-ladder framing, judge-calibration discipline, and reference-dataset principle are distilled from the open evaluations literature (OpenAI evals cookbook, Anthropic evals guidance, the academic eval-of-LLM body of work) and rewritten in our voice.
+
+Optional Azure integration (v1.0.3). The `/dw-install-azure-skills` command and `npx @brunosps00/dev-workflow install-azure-skills` CLI pull curated agent skills from [`MicrosoftDocs/Agent-Skills`](https://github.com/MicrosoftDocs/Agent-Skills) (CC-BY-4.0, by Microsoft) into `.agents/skills/azure/` and register the [Microsoft Learn MCP Server](https://learn.microsoft.com/en-us/training/support/mcp-get-started) (HTTP endpoint, no authentication required) into `.claude/settings.json`. The MCP server exposes three tools — `microsoft_docs_search`, `microsoft_docs_fetch`, `microsoft_code_sample_search` — that give the agent live access to Microsoft Learn documentation. **Not installed by default**: `init` and `update` do not touch `.agents/skills/azure/` or register the MCP. Users explicitly invoke the command when they begin Azure-focused work. The 10 categories (Compute, Data & Storage, AI & ML, Networking, Identity & Security, DevOps, Observability, Integration, Architecture, All) are dev-workflow's curated grouping over the 200+ skills in the upstream repo; the `--products=<csv>` flag lets advanced users pick individual services. Re-running the command refreshes from upstream; `dev-workflow update` deliberately does not touch these external skills so the Microsoft upstream release cadence is decoupled from the dev-workflow npm release cadence. Skills are copied verbatim from the upstream repo (CC-BY-4.0 permits this with attribution); the agent-facing `.dw/references/azure-mcp-instructions.md` is a clean-room adaptation of Microsoft's "Set instructions" guidance.
 
 Session continuity and adaptive routing patterns adapted from [`tech-leads-club/agent-skills/tlc-spec-driven`](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) by Felipe Rodrigues (CC-BY-4.0, v1.0.2). Eight patterns were absorbed selectively after a comparative analysis confirmed that the majority of the skill duplicates existing dev-workflow capabilities (PRD/TechSpec/Tasks pipeline, constitution discipline, source-grounding, two-tier memory, verify-before-complete, brownfield mapping, sub-agent delegation, atomic commits). Patterns adopted: (1) `STATE.md` cross-session working memory at `.dw/STATE.md` + new `/dw-pause` and `/dw-resume` commands; (2) Auto-Sizing Matrix (Small/Medium/Large/Complex) formalized in `CLAUDE.md`/`AGENTS.md` above the Trigger Map; (3) Concerns Map (`.dw/rules/concerns.md`) generated by a new Step 9 in `/dw-analyze-project` and consumed on-demand by `/dw-plan`, `/dw-run`, and `/dw-bugfix`; (4) Context Budget discipline as a new section in `dw-memory` with reference `dw-memory/references/context-budget.md`; (5) Interactive UAT walkthrough as `/dw-qa --uat`; (6) Quick-mode persistence — bugfixes now land in `.dw/bugfixes/NNN-<slug>/{TASK.md, SUMMARY.md, fix-report.md}` and remain queryable via `/dw-intel`; (7) Safety valve in `/dw-bugfix` Step 5.0 that forces escalation to `/dw-plan` when scope exceeds 5 tasks or has cross-dependencies; (8) Cross-skill awareness — `/dw-intel --build` now indexes `.dw/bugfixes/*/SUMMARY.md` into `bugfixes.json`, and `dw-codebase-intel` documents the new `bugfix-history` and `risk-area` query shapes. Patterns explicitly REJECTED: `.specs/` directory structure (dev-workflow uses `.dw/`), Knowledge Verification Chain (already covered by `dw-source-grounding`), Specify/Design/Tasks/Execute naming (dev-workflow keeps PRD/TechSpec/Tasks/Run), Skill Integrations pattern with mermaid-studio/codenavi delegation, and literal text copying (everything is clean-room reimplementation from the conceptual patterns; CC-BY-4.0 attribution is for derivative ideas, not borrowed prose).
 

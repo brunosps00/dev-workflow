@@ -2,6 +2,7 @@
 
 const { run } = require('../lib/init');
 const installDeps = require('../lib/install-deps');
+const installAzureSkills = require('../lib/install-azure-skills');
 const uninstall = require('../lib/uninstall');
 
 const args = process.argv.slice(2);
@@ -22,16 +23,20 @@ const HELP_TEXT = `
     npx dev-workflow init [--force] [--lang=en|pt-br]
     npx dev-workflow update [--lang=en|pt-br]
     npx dev-workflow install-deps
+    npx dev-workflow install-azure-skills [--products=<csv>]
     npx dev-workflow help
 
   Commands:
-    init           Scaffold .dw/ (commands, templates, references, scripts, skills, rules, MCPs)
-    update         Update managed files (commands, templates, references, scripts, skills, wrappers, MCPs)
-                   Preserves: .dw/rules/, .dw/spec/, user data
-    install-deps   Install system dependencies (Playwright browsers, MCP servers)
-    uninstall      Remove all managed files (commands, templates, wrappers, skills, MCPs)
-                   Preserves: .dw/rules/, .dw/spec/, .dw/intel/ (user data)
-    help           Show this help message
+    init                   Scaffold .dw/ (commands, templates, references, scripts, skills, rules, MCPs)
+    update                 Update managed files (commands, templates, references, scripts, skills, wrappers, MCPs)
+                           Preserves: .dw/rules/, .dw/spec/, .dw/bugfixes/, .dw/STATE.md, .agents/skills/azure/, user data
+    install-deps           Install system dependencies (Playwright browsers, MCP servers)
+    install-azure-skills   Opt-in: clone curated Azure skills from MicrosoftDocs/Agent-Skills
+                           into .agents/skills/azure/ and register the Microsoft Learn MCP
+                           server (HTTP, no-auth). Interactive category selection.
+    uninstall              Remove all managed files (commands, templates, wrappers, skills, MCPs)
+                           Preserves: .dw/rules/, .dw/spec/, .dw/intel/ (user data)
+    help                   Show this help message
 
   Options:
     --force        Overwrite existing files (init only; update always overwrites managed files)
@@ -57,6 +62,9 @@ async function main() {
       break;
     case 'install-deps':
       installDeps.run();
+      break;
+    case 'install-azure-skills':
+      await installAzureSkills.run();
       break;
     case 'uninstall':
       uninstall.run();

@@ -57,6 +57,7 @@ Before picking a command from the Trigger Map, gauge the change's actual scope. 
 | "Open a new project" / "Bootstrap a stack" | `/dw-new-project` |
 | "Dockerize this" / "Add docker-compose" | `/dw-dockerize` |
 | "Functional doc" / "Map screens and flows" | `/dw-functional-doc` |
+| "Install Azure skills" / "Setup Microsoft docs MCP" / "Add Azure expertise" / "I'm going to work on Azure" | `/dw-install-azure-skills` |
 
 **Priority:** when in doubt between two commands, `/dw-autopilot` is the safest default for any non-trivial feature request — it composes the rest.
 
