@@ -58,6 +58,7 @@ Antes de escolher um comando da Trigger Map, dimensione o escopo real da mudanç
 | "Dockeriza isso" / "Adiciona docker-compose" | `/dw-dockerize` |
 | "Functional doc" / "Mapeia screens e flows" | `/dw-functional-doc` |
 | "Instala skills Azure" / "Configura MCP do Microsoft docs" / "Adiciona expertise Azure" / "Vou trabalhar com Azure" | `/dw-install-azure-skills` |
+| "Instala skills AWS" / "Configura MCP da AWS" / "Adiciona expertise AWS" / "Vou trabalhar com AWS" | `/dw-install-aws-skills` |
 
 **Prioridade:** na dúvida entre dois comandos, `/dw-autopilot` é o default mais seguro pra qualquer pedido de feature não-trivial — ele compõe os demais.
 

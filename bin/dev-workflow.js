@@ -3,6 +3,7 @@
 const { run } = require('../lib/init');
 const installDeps = require('../lib/install-deps');
 const installAzureSkills = require('../lib/install-azure-skills');
+const installAwsSkills = require('../lib/install-aws-skills');
 const uninstall = require('../lib/uninstall');
 
 const args = process.argv.slice(2);
@@ -24,6 +25,7 @@ const HELP_TEXT = `
     npx dev-workflow update [--lang=en|pt-br]
     npx dev-workflow install-deps
     npx dev-workflow install-azure-skills [--products=<csv>]
+    npx dev-workflow install-aws-skills [--region=<aws-region>]
     npx dev-workflow help
 
   Commands:
@@ -34,6 +36,10 @@ const HELP_TEXT = `
     install-azure-skills   Opt-in: clone curated Azure skills from MicrosoftDocs/Agent-Skills
                            into .agents/skills/azure/ and register the Microsoft Learn MCP
                            server (HTTP, no-auth). Interactive category selection.
+    install-aws-skills     Opt-in: clone curated AWS skills from aws/agent-toolkit-for-aws
+                           into .agents/skills/aws/ and register the unified AWS MCP Server
+                           (stdio via mcp-proxy-for-aws). Requires uv, aws cli, and AWS
+                           credentials. Interactive category selection.
     uninstall              Remove all managed files (commands, templates, wrappers, skills, MCPs)
                            Preserves: .dw/rules/, .dw/spec/, .dw/intel/ (user data)
     help                   Show this help message
@@ -65,6 +71,9 @@ async function main() {
       break;
     case 'install-azure-skills':
       await installAzureSkills.run();
+      break;
+    case 'install-aws-skills':
+      await installAwsSkills.run();
       break;
     case 'uninstall':
       uninstall.run();
